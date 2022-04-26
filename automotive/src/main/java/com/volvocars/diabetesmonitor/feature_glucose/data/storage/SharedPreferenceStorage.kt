@@ -1,7 +1,6 @@
 package com.volvocars.diabetesmonitor.feature_glucose.data.storage
 
 import android.content.SharedPreferences
-import android.util.Log
 import com.volvocars.diabetesmonitor.core.util.Constants.DEFAULT_CRITICAL_ALARM_INTERVAL
 import com.volvocars.diabetesmonitor.core.util.Constants.KEY_ALARM_LOW
 import com.volvocars.diabetesmonitor.core.util.Constants.KEY_ALARM_NOTIFICATION_INTERVAL
