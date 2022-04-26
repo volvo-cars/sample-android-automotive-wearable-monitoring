@@ -18,7 +18,6 @@ import com.volvocars.diabetesmonitor.databinding.FragmentLoginBinding
 import com.volvocars.diabetesmonitor.feature_glucose.presentation.diabetes_monitor.DiabetesMonitorFragment
 import com.volvocars.diabetesmonitor.service.NotificationService
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
