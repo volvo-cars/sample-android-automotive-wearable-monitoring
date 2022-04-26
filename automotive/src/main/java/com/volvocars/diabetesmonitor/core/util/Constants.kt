@@ -26,7 +26,6 @@ object Constants {
     const val ACTION_REQUIRE_CONFIGURATION = "require_configuration"
     const val ACTION_REQUIRE_NETWORK = "require_network"
     const val ACTION_SHOW_GLUCOSE_VALUES = "show_glucose_values"
-    const val ACTION_CRITICAL_NOTIFICATION = "critical_notification"
 
     // PK for sharedPreferenceStorage
     const val KEY_INSTANCE = "instance_setting"
