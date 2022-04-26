@@ -2,7 +2,6 @@ package com.volvocars.diabetesmonitor.di
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.volvocars.diabetesmonitor.DiabetesMonitorApp
 import com.volvocars.diabetesmonitor.core.util.GlucoseUtils
 import com.volvocars.diabetesmonitor.feature_glucose.data.repository.FakeDiabetesRepository
 import com.volvocars.diabetesmonitor.feature_glucose.data.storage.SharedPreferenceStorage
