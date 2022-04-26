@@ -27,7 +27,7 @@
     <string name="configurationsRequired_title">Konfiguration nödvändig</string>
     <string name="configurationsRequired_text">Du behöver konfiguera appen för att starta övervakning av glukosvärden.</string>
     <string name="missing_network_title">Nätverksanslutning saknas</string>
-    <string name="missing_network_text" translatable="false">Kan inte få tillgång till nätverk, kolla dina nätverksinställnignar och försök igen</string>
+    <string name="missing_network_text">Kan inte få tillgång till nätverk, kolla dina nätverksinställnignar och försök igen</string>
     <string name="alarmLow_notification_buttonText_parking">Hitta parkering</string>
     <string name="notification_info_title">Glukos: %1$s %2$s</string>
     <string name="notification_info_text">Skillnad: %1$s</string>
