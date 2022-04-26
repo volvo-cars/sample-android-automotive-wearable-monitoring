@@ -1,0 +1,152 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-parcelize'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+}
+
+android {
+    compileSdkVersion rootProject.ext.compile_version
+    buildToolsVersion rootProject.ext.build_tools_version
+
+    defaultConfig {
+        applicationId rootProject.ext.application_id
+        minSdkVersion rootProject.ext.min_android_sdk_version
+        targetSdkVersion rootProject.ext.target_android_sdk_version
+        versionCode rootProject.ext.version_code
+        versionName rootProject.ext.version_name
+
+        testInstrumentationRunner "com.volvocars.diabetesmonitor.HiltTestRunner"
+    }
+
+    // Sign with the platform key. This gives the app access to privileged permissions on non-release devices/emulators.
+//    signingConfigs {
+//        platform {
+//            storeFile file("../platform.keystore")
+//            storePassword 'android'
+//            keyAlias 'platform'
+//            keyPassword 'android'
+//        }
+//    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+//            signingConfig signingConfigs.platform
+        }
+//        debug {
+//            signingConfig signingConfigs.platform
+//        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+        useIR = true
+    }
+
+    kapt {
+        correctErrorTypes true
+    }
+
+    buildFeatures {
+        viewBinding true
+    }
+
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
+
+//    packagingOptions {
+//        resources {
+//            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+//        }
+//    }
+    namespace 'com.volvocars.diabetesmonitor'
+}
+dependencies {
+    implementation(group: 'com.volvocars.automotive', name: 'volvo-ui', version: '0.0.1-alpha', ext: 'aar')
+    implementation project(':car-ui-lib')
+
+    // Kotlin app and core
+    implementation "androidx.appcompat:appcompat:$app_compat_version"
+    implementation "androidx.core:core-ktx:$androidx_core_ktx_version"
+
+    // CardView
+    implementation "androidx.cardview:cardview:1.0.0"
+
+    // ConstraintsLayout
+    implementation "androidx.constraintlayout:constraintlayout:$androidx_constraintlayout_version"
+
+    // Coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
+
+    // Dagger - Hilt
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    kapt "com.google.dagger:hilt-compiler:$hilt_version"
+
+    // Data Store
+    implementation "androidx.datastore:datastore-preferences:$datastore_version"
+
+    // Fragment
+    implementation "androidx.fragment:fragment-ktx:$fragment_ktx"
+
+    // Gson
+    implementation "com.google.code.gson:gson:$gson_version"
+    implementation "com.squareup.retrofit2:converter-gson:$gson_converter_version"
+
+    // Lifecycle
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-service:$lifecycle_version"
+
+    // MPAndroidChart
+    implementation "com.github.PhilJay:MPAndroidChart:v$mp_android_chart_version"
+
+    // Preference
+    implementation "androidx.preference:preference-ktx:$androidx_preference_ktx_version"
+
+    // Retrofit
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+
+    // Room
+    implementation "androidx.room:room-runtime:$room_version"
+    implementation "androidx.room:room-ktx:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+
+    // WorkManger
+    implementation "androidx.work:work-runtime-ktx:$work_version"
+    implementation 'androidx.work:work-testing:2.7.1'
+
+    // WorkManager Hilt
+    implementation "androidx.hilt:hilt-work:$work_hilt_version"
+    kapt "androidx.hilt:hilt-compiler:$work_hilt_version"
+
+    // Local unit tests
+    testImplementation "com.google.truth:truth:$truth_version"
+    testImplementation "junit:junit:$junit_version"
+    testImplementation "io.mockk:mockk:$mockk_version"
+    testImplementation "com.squareup.okhttp3:mockwebserver:$mockwebserver_version"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version"
+
+    // Instrumented test
+    debugImplementation "androidx.fragment:fragment-testing:$fragment_version"
+    androidTestImplementation "androidx.test.ext:junit:$androidx_test_ext_junit_version"
+    androidTestImplementation "androidx.test.ext:truth:$truth_ext_version"
+    androidTestImplementation "com.google.dagger:hilt-android-testing:$hilt_version"
+    androidTestImplementation "com.google.truth:truth:$truth_version"
+    androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version"
+    androidTestImplementation "io.mockk:mockk-android:$mockk_version"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
+    androidTestImplementation "androidx.test:runner:$androidx_test_version"
+    kaptAndroidTest "com.google.dagger:hilt-android-compiler:$hilt_version"
+}
+

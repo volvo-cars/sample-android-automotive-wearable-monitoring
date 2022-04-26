@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Diabetes Monitor</string>
+    <string name="action_sign_in">Anslut</string>
+    <string name="welcome">Välkommen</string>
+    <string name="login_failed">Inloggning misslyckades</string>
+    <string name="api_not_enabled">API\'et är inte tillgänglig för den här enheten</string>
+    <string name="url_not_valid_https">URL\'en behöver börja med https</string>
+    <string name="url_field_blank">URL\'en kan inte vara tom</string>
+    <string name="unit">Enhet</string>
+    <string name="thresholds_preferences">Tröskelvärden</string>
+    <string name="thresholds_high">Hög</string>
+    <string name="thresholds_targetHigh">Målvärde hög</string>
+    <string name="thresholds_low">Låg</string>
+    <string name="thresholds_targetLow">Målvärde låg</string>
+    <string name="settings_toolbar_title">Inställningar</string>
+    <string name="alarm_preferences">Alarm</string>
+    <string name="glucoseNotification_checkbox_preference">Aktivera notifiering för glukosvärden</string>
+    <string name="glucoseNotification_setting">Glukos notifieringar</string>
+    <string name="alarmLow_setting">Larm lågtvärde</string>
+    <string name="alarmLow_checkbox_preference">Aktivera larm för lågt glukos</string>
+    <string name="alarmLow_notification_interval">Minuter mellan kritiska alarm</string>
+    <string name="not_set">Inte angivet</string>
+    <string name="general_preferences">Generelt</string>
+    <string name="instance_setting">Instans</string>
+    <string name="time_format">Tidsformat</string>
+    <string name="configurationsRequired_title">Konfiguration nödvändig</string>
+    <string name="configurationsRequired_text">Du behöver konfiguera appen för att starta övervakning av glukosvärden.</string>
+    <string name="missing_network_title">Nätverksanslutning saknas</string>
+    <string name="missing_network_text" translatable="false">Kan inte få tillgång till nätverk, kolla dina nätverksinställnignar och försök igen</string>
+    <string name="alarmLow_notification_buttonText_parking">Hitta parkering</string>
+    <string name="notification_info_title">Glukos: %1$s %2$s</string>
+    <string name="notification_info_text">Skillnad: %1$s</string>
+    <string name="alarmLow_notification_title">Lågt glukos!</string>
+    <string name="alarmLow_notification_text">Dina glukosvärden börjar bli låga</string>
+    <string name="alarmLow_notification_buttonText_snack">Hitta snacks</string>
+    <string name="you_are_logged_in_with_instance">Du är inloggad med instans url \n %1$s</string>
+    <string name="other_preferences">Övrigt</string>
+    <string name="last_updated">Senast Uppdaterad</string>
+    <string name="difference">Skillnad</string>
+</resources>

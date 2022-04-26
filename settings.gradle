@@ -1,0 +1,3 @@
+rootProject.name = "Diabetesmonitor"
+include ':automotive'
+include ':car-ui-lib'

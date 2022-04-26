@@ -1,0 +1,75 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+buildscript {
+    ext.kotlin_version = "1.6.20-M1"
+    ext.hilt_version = '2.38.1'
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:7.1.3'
+        classpath "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-android-extensions-runtime:$kotlin_version"
+        classpath "com.google.dagger:hilt-android-gradle-plugin:$hilt_version"
+    }
+
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+        maven {
+            url "https://devrelvolvocars.jfrog.io/artifactory/automotive-ui-artifacts/"
+            credentials {
+                username "$artifactory_user"
+                password "$artifactory_password"
+            }
+        }
+    }
+}
+
+// Build tools versions
+ext {
+    application_id = "com.volvocars.diabetesmonitor"
+    build_tools_version = "30.0.3"
+    compile_version = 31
+    min_android_sdk_version = 29
+    target_android_sdk_version = 30
+    version_code = 1
+    version_name = "1.0"
+
+    androidx_core_ktx_version = '1.7.0'
+    androidx_constraintlayout_version = '2.1.3'
+    androidx_preference_ktx_version = '1.2.0'
+    androidx_test_ext_junit_version = '1.1.3'
+    androidx_test_version = '1.4.0'
+    app_compat_version = '1.4.1'
+    car_ui_version = '30.0'
+    coroutines_version = '1.6.0'
+    datastore_version = '1.0.0'
+    espresso_version = '3.4.0'
+    fragment_version = '1.4.1'
+    fragment_ktx = '1.3.6'
+    gson_version = '2.8.9'
+    gson_converter_version = '2.9.0'
+    junit_version = '4.13.2'
+    lifecycle_version = '2.4.1'
+    mp_android_chart_version = '3.1.0'
+    navigation_version = '2.3.5'
+    mockk_version = '1.11.0'
+    mockwebserver_version = '4.2.1'
+    retrofit_version = '2.9.0'
+    room_version = '2.4.2'
+    truth_version = '1.0'
+    truth_ext_version = '1.4.0'
+    work_version = '2.7.1'
+    work_hilt_version = '1.0.0'
+}
+
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}

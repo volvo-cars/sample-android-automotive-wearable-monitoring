@@ -1,0 +1,71 @@
+package com.volvocars.diabetesmonitor.feature_glucose.data.remote.dto
+
+import android.os.Parcelable
+import com.volvocars.diabetesmonitor.feature_glucose.domain.model.Settings
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.RawValue
+
+@Parcelize
+data class SettingsDto(
+    val alarmHigh: Boolean,
+    val alarmHighMins: List<Long>,
+    val alarmLow: Boolean,
+    val alarmLowMins: List<Long>,
+    val alarmPumpBatteryLow: Boolean,
+    val alarmTimeagoUrgent: Boolean,
+    val alarmTimeagoUrgentMins: Long,
+    val alarmTimeagoWarn: Boolean,
+    val alarmTimeagoWarnMins: Long,
+    val alarmTypes: List<String>,
+    val alarmUrgentHigh: Boolean,
+    val alarmUrgentHighMins: List<Long>,
+    val alarmUrgentLow: Boolean,
+    val alarmUrgentLowMins: List<Long>,
+    val alarmUrgentMins: List<Long>,
+    val alarmWarnMins: List<Long>,
+    val authDefaultRoles: String,
+    val baseURL: String,
+    val customTitle: String,
+    val DEFAULT_FEATURES: List<String>,
+    val editMode: Boolean,
+    val enable: List<String>,
+    val focusHours: Long,
+    val heartbeat: Long,
+    val insecureUseHttp: Boolean,
+    val language: String,
+    val nightMode: Boolean,
+    val scaleY: String,
+    val secureCsp: Boolean,
+    val secureHstsHeader: Boolean,
+    val secureHstsHeaderIncludeSubdomains: Boolean,
+    val secureHstsHeaderPreload: Boolean,
+    val showForecast: String,
+    val showPlugins: String,
+    val showRawbg: String,
+    val theme: String,
+    val thresholds: @RawValue ThresholdsDto,
+    val timeFormat: Long,
+    val units: String,
+) : Parcelable {
+    fun toSettings(): Settings = Settings(
+        alarmHigh = alarmHigh,
+        alarmHighMins = alarmHighMins,
+        alarmLow = alarmLow,
+        alarmLowMins = alarmLowMins,
+        alarmPumpBatteryLow = alarmPumpBatteryLow,
+        alarmTimeagoUrgent = alarmTimeagoUrgent,
+        alarmTimeagoUrgentMins = alarmTimeagoUrgentMins,
+        alarmTimeagoWarn = alarmTimeagoWarn,
+        alarmTimeagoWarnMins = alarmTimeagoWarnMins,
+        alarmUrgentHigh = alarmUrgentHigh,
+        alarmUrgentHighMins = alarmUrgentHighMins,
+        alarmUrgentLow = alarmUrgentLow,
+        alarmUrgentLowMins = alarmUrgentLowMins,
+        alarmUrgentMins = alarmUrgentMins,
+        alarmWarnMins = alarmWarnMins,
+        baseURL = baseURL,
+        thresholds = thresholds.toThresholds(),
+        timeFormat = timeFormat,
+        units = units,
+    )
+}
