@@ -18,15 +18,6 @@
             app:layout_constraintStart_toStartOf="parent" />
 
 
-    <ImageView
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_blue_circle_for_diabetes"
-            app:layout_constraintTop_toTopOf="@+id/diabetes_circle_guideline"
-            android:contentDescription="@string/diabetes_circle" />
-
     <EditText
             android:id="@+id/url"
             android:layout_width="0dp"
