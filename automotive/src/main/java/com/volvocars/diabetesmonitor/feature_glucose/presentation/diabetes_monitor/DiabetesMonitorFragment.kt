@@ -9,11 +9,9 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.text.format.DateUtils
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -34,7 +32,6 @@ import com.volvocars.diabetesmonitor.databinding.FragmentDiabetesMonitorBinding
 import com.volvocars.diabetesmonitor.feature_glucose.domain.model.Glucose
 import com.volvocars.diabetesmonitor.feature_glucose.presentation.settings.DiabetesSettingsActivity
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
