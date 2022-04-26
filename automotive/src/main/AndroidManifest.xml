@@ -22,9 +22,6 @@
         android:theme="@style/Theme.DiabetesMonitor">
 
         <meta-data
-            android:name="com.android.automotive"
-            android:resource="@xml/automotive_app_desc" />
-        <meta-data
             android:name="distractionOptimized"
             android:value="true" />
 
