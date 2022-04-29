@@ -73,7 +73,8 @@ android {
     namespace 'com.volvocars.diabetesmonitor'
 }
 dependencies {
-    implementation(group: 'com.volvocars.automotive', name: 'volvo-ui', version: '0.0.1-alpha', ext: 'aar')
+//    implementation(group: 'com.volvocars.automotive', name: 'volvo-ui', version: '0.0.1-alpha', ext: 'aar')
+    implementation files('libs/volvo-ui-0.0.1-alpha.aar')
     implementation project(':car-ui-lib')
 
     // Kotlin app and core

@@ -21,13 +21,13 @@ allprojects {
         google()
         mavenCentral()
         maven { url 'https://jitpack.io' }
-        maven {
-            url "https://devrelvolvocars.jfrog.io/artifactory/automotive-ui-artifacts/"
-            credentials {
-                username "$artifactory_user"
-                password "$artifactory_password"
-            }
-        }
+//        maven {
+//            url "https://devrelvolvocars.jfrog.io/artifactory/automotive-ui-artifacts/"
+//            credentials {
+//                username "$artifactory_user"
+//                password "$artifactory_password"
+//            }
+//        }
     }
 }
 
