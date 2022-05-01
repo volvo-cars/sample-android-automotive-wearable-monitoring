@@ -5,16 +5,20 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.PeriodicWorkRequest
 import com.volvocars.diabetesmonitor.feature_glucose.data.storage.SharedPreferenceStorage
+import com.volvocars.diabetesmonitor.feature_glucose.domain.use_case.FetchGlucoseValues
 import com.volvocars.diabetesmonitor.feature_glucose.domain.use_case.ObserveCachedGlucoseValues
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.collect
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltViewModel
 class DiabetesMonitorViewModel @Inject constructor(
     private val observeCachedGlucoseValues: ObserveCachedGlucoseValues,
+    val fetchGlucoseValues: FetchGlucoseValues,
     val sharedPreferenceStorage: SharedPreferenceStorage,
     val glucoseFetchWorker: PeriodicWorkRequest
 ) : ViewModel() {
