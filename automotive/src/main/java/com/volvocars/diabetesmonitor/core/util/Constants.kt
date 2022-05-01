@@ -8,6 +8,7 @@ object Constants {
     const val THRESHOLD_TARGET_HIGH_DEFAULT_VALUE = 180L
     const val TIME_FORMAT_DEFAULT_VALUE = 24L
     const val DEFAULT_CRITICAL_ALARM_INTERVAL = 5L
+    const val GLUCOSE_FETCH_INTERVAL_DEFUALT_VALUE = 5
 
     // Notification service
     const val KEY_NOTIFICATION_CHANNEL_ID = "nightscout.notification.channel"
@@ -32,6 +33,7 @@ object Constants {
     const val KEY_TIME_FORMAT = "time_format"
     const val KEY_MMOL = "mmol"
     const val KEY_UNIT = "unit"
+    const val KEY_GLUCOSE_FETCH_INTERVAL = "glucose_fetch_interval"
     const val KEY_THRESHOLD_HIGH = "thresholds_high"
     const val KEY_THRESHOLD_TARGET_HIGH = "thresholds_targetHigh"
     const val KEY_THRESHOLD_LOW = "thresholds_low"
