@@ -2,8 +2,10 @@ package com.volvocars.diabetesmonitor.feature_glucose.data.storage
 
 import android.content.SharedPreferences
 import com.volvocars.diabetesmonitor.core.util.Constants.DEFAULT_CRITICAL_ALARM_INTERVAL
+import com.volvocars.diabetesmonitor.core.util.Constants.GLUCOSE_FETCH_INTERVAL_DEFUALT_VALUE
 import com.volvocars.diabetesmonitor.core.util.Constants.KEY_ALARM_LOW
 import com.volvocars.diabetesmonitor.core.util.Constants.KEY_ALARM_NOTIFICATION_INTERVAL
+import com.volvocars.diabetesmonitor.core.util.Constants.KEY_GLUCOSE_FETCH_INTERVAL
 import com.volvocars.diabetesmonitor.core.util.Constants.KEY_INSTANCE
 import com.volvocars.diabetesmonitor.core.util.Constants.KEY_MMOL
 import com.volvocars.diabetesmonitor.core.util.Constants.KEY_NOTIFICATION_ENABLED
@@ -67,6 +69,17 @@ class SharedPreferenceStorage @Inject constructor(
      */
     override fun getTimeFormat(): Long {
         return sharedPreferences.get(KEY_TIME_FORMAT, TIME_FORMAT_DEFAULT_VALUE)
+    }
+
+    override fun setGlucoseFetchInterval(value: Int) {
+        sharedPreferences.put(KEY_GLUCOSE_FETCH_INTERVAL, value)
+    }
+
+    override fun getGlucoseFetchInterval(): Int {
+        return sharedPreferences.get(
+            KEY_GLUCOSE_FETCH_INTERVAL,
+            GLUCOSE_FETCH_INTERVAL_DEFUALT_VALUE
+        )
     }
 
     /**

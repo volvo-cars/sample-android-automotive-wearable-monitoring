@@ -7,7 +7,6 @@ import com.volvocars.diabetesmonitor.feature_glucose.domain.model.ServerStatus
  */
 interface Storage {
     fun setPreferenceFromServerStatus(serverStatus: ServerStatus)
-    fun getUnit(): String
     fun setBaseUrl(value: String)
     fun getBaseUrl(): String
     fun getThresholdLow(): Long
@@ -26,8 +25,11 @@ interface Storage {
     fun setGlucoseNotificationEnabled(value: Boolean)
     fun setGlucoseAlarmLowEnabled(value: Boolean)
     fun setUnit(value: String)
+    fun getUnit(): String
     fun setTimeFormat(value: Long)
     fun getTimeFormat(): Long
+    fun setGlucoseFetchInterval(value: Int)
+    fun getGlucoseFetchInterval(): Int
     fun setThresholdValue(threshold: String, value: Long)
     fun setCriticalNotificationInterval(value: Long)
     fun getCriticalNotificationInterval(): Long

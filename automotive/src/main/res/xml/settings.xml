@@ -17,6 +17,12 @@
             android:key="@string/pk_unit"
             android:summary="@string/not_set"
             android:title="@string/unit" />
+        <com.android.car.ui.preference.CarUiEditTextPreference
+            android:dialogTitle="Glucose Fetch Interval"
+            android:inputType="numberDecimal"
+            android:key="pk_glucose_fetch_interval"
+            android:summary="5"
+            app:title="Glucose Fetch Interval" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/thresholds_preferences">
         <com.android.car.ui.preference.CarUiEditTextPreference
