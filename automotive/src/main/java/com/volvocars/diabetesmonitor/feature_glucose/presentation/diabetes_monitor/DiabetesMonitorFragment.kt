@@ -8,6 +8,8 @@ import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.View
@@ -32,9 +34,12 @@ import com.volvocars.diabetesmonitor.databinding.FragmentDiabetesMonitorBinding
 import com.volvocars.diabetesmonitor.feature_glucose.domain.model.Glucose
 import com.volvocars.diabetesmonitor.feature_glucose.presentation.settings.DiabetesSettingsActivity
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -48,6 +53,21 @@ class DiabetesMonitorFragment : Fragment() {
 
     private lateinit var minuteUpdateReceiver: BroadcastReceiver
 
+    lateinit var glucoseFetchHandler: Handler
+    private val glucoseFetcher = object : Runnable {
+        override fun run() {
+            val url = viewModel.sharedPreferenceStorage.getBaseUrl()
+            lifecycleScope.launch(Dispatchers.IO) {
+                viewModel.fetchGlucoseValues.invoke(url, 24).collect()
+            }
+
+            val timeInMillis = TimeUnit.MINUTES.toMillis(
+                viewModel.sharedPreferenceStorage.getGlucoseFetchInterval().toLong()
+            )
+            glucoseFetchHandler.postDelayed(this, timeInMillis)
+        }
+    }
+
     @Inject
     lateinit var glucoseUtil: GlucoseUtils
 
@@ -57,6 +77,7 @@ class DiabetesMonitorFragment : Fragment() {
         _binding = FragmentDiabetesMonitorBinding.inflate(inflater)
         binding.appToolbar.setMenuItems(initMenuItems())
 
+        glucoseFetchHandler = Handler(Looper.getMainLooper())
         _locale = Locale.getDefault()
         // Inflate the layout for this fragment
         return binding.root
@@ -74,6 +95,7 @@ class DiabetesMonitorFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        glucoseFetchHandler.post(glucoseFetcher)
         WorkManager.getInstance(requireContext()).enqueueUniquePeriodicWork(
             Constants.GLUCOSE_FETCH_WORK_ID,
             ExistingPeriodicWorkPolicy.REPLACE,
@@ -85,6 +107,7 @@ class DiabetesMonitorFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
+        glucoseFetchHandler.removeCallbacksAndMessages(glucoseFetcher)
         requireActivity().unregisterReceiver(minuteUpdateReceiver)
     }
 
@@ -92,6 +115,7 @@ class DiabetesMonitorFragment : Fragment() {
         super.onDestroy()
         _binding = null
     }
+
 
     private fun initMenuItems() = listOf<MenuItem>(
         MenuItem.builder(requireContext()).setToSettings().setOnClickListener {
