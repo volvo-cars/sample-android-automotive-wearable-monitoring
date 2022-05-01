@@ -8,6 +8,7 @@ import androidx.preference.EditTextPreference
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.work.WorkManager
+import com.android.car.ui.preference.CarUiEditTextPreference
 import com.android.car.ui.preference.CarUiListPreference
 import com.android.car.ui.preference.PreferenceFragment
 import com.volvocars.diabetesmonitor.R
@@ -29,6 +30,7 @@ class DiabetesSettingsFragment : PreferenceFragment() {
 
     private lateinit var unitPreference: CarUiListPreference
     private lateinit var timeFormatPreference: ListPreference
+    private lateinit var fetchGlucoseIntervalPreference: EditTextPreference
     private lateinit var thresholdTargetLowPreference: EditTextPreference
     private lateinit var thresholdLowPreference: EditTextPreference
     private lateinit var thresholdTargetHighPreference: EditTextPreference
@@ -87,6 +89,7 @@ class DiabetesSettingsFragment : PreferenceFragment() {
                 } else getString(R.string.not_set)
             }
 
+
         unitPreference =
             findPreference<CarUiListPreference>(Constants.KEY_UNIT)?.apply {
                 summaryProvider = dropDownPreferenceSummaryProvider
@@ -109,6 +112,27 @@ class DiabetesSettingsFragment : PreferenceFragment() {
                 }
             }!!
         timeFormatPreference.value = sharedPreferenceStorage.getTimeFormat().toString()
+
+        fetchGlucoseIntervalPreference =
+            findPreference<CarUiEditTextPreference>("pk_glucose_fetch_interval")?.apply {
+                setOnPreferenceChangeListener { _, newValue ->
+                    val value = newValue?.toString()?.toInt() ?: 1
+                    sharedPreferenceStorage.setGlucoseFetchInterval(value)
+                    true
+                }
+                setSummaryProvider {
+                    if (!text.isNullOrEmpty()) {
+                        text
+                    } else {
+                        "5"
+                    }
+                }
+                setOnPreferenceClickListener {
+                    true
+                }
+            }!!
+        fetchGlucoseIntervalPreference.text =
+            sharedPreferenceStorage.getGlucoseFetchInterval().toString()
 
         thresholdLowPreference = initThresholdPreference(getString(R.string.pk_thresholds_low))
 
@@ -154,15 +178,14 @@ class DiabetesSettingsFragment : PreferenceFragment() {
                     glucoseUtils.sgvToUnitText(text)
                 } else getString(R.string.not_set)
             }
-            onPreferenceChangeListener =
-                Preference.OnPreferenceChangeListener { preference, newValue ->
-                    val value: Float = newValue?.toString()?.toFloat() ?: 0.0f
-                    sharedPreferenceStorage.setThresholdValue(
-                        preference.key,
-                        glucoseUtils.unitToSvg(value).toLong()
-                    )
-                    true
-                }
+            setOnPreferenceChangeListener { preference, newValue ->
+                val value: Float = newValue?.toString()?.toFloat() ?: 0.0f
+                sharedPreferenceStorage.setThresholdValue(
+                    preference.key,
+                    glucoseUtils.unitToSvg(value).toLong()
+                )
+                true
+            }
             setOnBindEditTextListener {
                 it.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
             }
