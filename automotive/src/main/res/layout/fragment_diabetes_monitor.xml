@@ -4,15 +4,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.android.car.ui.toolbar.Toolbar
+    <com.android.car.ui.toolbar.TabLayout
         android:id="@+id/app_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="?attr/actionBarSize"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:logo="@mipmap/diabetes_monitor_ic_launcher_round"
-        app:title="Diabetes Monitor" />
+        app:layout_constraintTop_toTopOf="parent" />
+    <!--    <com.android.car.ui.toolbar.Toolbar -->
+    <!--        android:id="@+id/app_toolbar"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:minHeight="?attr/actionBarSize"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="parent"-->
+    <!--        app:logo="@mipmap/diabetes_monitor_ic_launcher_round"-->
+    <!--        app:title="Diabetes Monitor" />-->
 
     <LinearLayout
         android:id="@+id/glucoseData"

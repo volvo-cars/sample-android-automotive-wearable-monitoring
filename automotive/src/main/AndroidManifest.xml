@@ -36,7 +36,7 @@
 
         <activity
             android:name=".feature_glucose.presentation.settings.DiabetesSettingsActivity"
-            android:exported="false"
+            android:exported="true"
             android:label="Settings"
             android:theme="@style/Theme.CarUi.WithToolbar">
             <intent-filter>

@@ -20,6 +20,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.WorkManager
 import com.android.car.ui.toolbar.MenuItem
+import com.android.car.ui.toolbar.Tab
 import com.github.mikephil.charting.components.LimitLine
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
@@ -75,8 +76,13 @@ class DiabetesMonitorFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentDiabetesMonitorBinding.inflate(inflater)
-        binding.appToolbar.setMenuItems(initMenuItems())
-
+//        binding.appToolbar.setTabs(
+//            listOf(
+//                Tab.builder().setText("One").build(),
+//                Tab.builder().setText("Two").build()
+//            ), 0
+//        )
+//        binding.appToolbar.setMenuItems(initMenuItems())
         glucoseFetchHandler = Handler(Looper.getMainLooper())
         _locale = Locale.getDefault()
         // Inflate the layout for this fragment
