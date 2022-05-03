@@ -74,8 +74,9 @@ android {
 }
 dependencies {
     implementation 'com.android.car.ui:car-ui-lib:2.0.0'
-//    implementation(group: 'com.volvocars.automotive', name: 'volvo-ui', version: '0.0.1-alpha', ext: 'aar')
-//    implementation project(':car-ui-lib')
+
+    implementation "androidx.asynclayoutinflater:asynclayoutinflater:1.0.0"
+
 
     // Kotlin app and core
     implementation "androidx.appcompat:appcompat:$app_compat_version"

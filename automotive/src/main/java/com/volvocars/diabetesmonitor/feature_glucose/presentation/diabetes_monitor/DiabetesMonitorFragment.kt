@@ -76,12 +76,6 @@ class DiabetesMonitorFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentDiabetesMonitorBinding.inflate(inflater)
-//        binding.appToolbar.setTabs(
-//            listOf(
-//                Tab.builder().setText("One").build(),
-//                Tab.builder().setText("Two").build()
-//            ), 0
-//        )
 //        binding.appToolbar.setMenuItems(initMenuItems())
         glucoseFetchHandler = Handler(Looper.getMainLooper())
         _locale = Locale.getDefault()
