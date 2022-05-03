@@ -224,7 +224,7 @@ class NotificationService : LifecycleService() {
      * @return true if the glucose value is out of range otherwise false
      */
     private fun glucoseValueBecomingOutOfRange(glucose: Glucose): Boolean {
-        return glucose.sgv >= preferenceStorage.getThresholdTargetHigh() || glucose.sgv <= preferenceStorage.getThresholdTargetLow()
+        return glucose.sgv >= preferenceStorage.getThresholdHigh() || glucose.sgv <= preferenceStorage.getThresholdLow()
     }
 
     companion object {
