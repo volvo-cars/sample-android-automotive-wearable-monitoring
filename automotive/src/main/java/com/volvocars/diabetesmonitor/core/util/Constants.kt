@@ -8,7 +8,7 @@ object Constants {
     const val THRESHOLD_TARGET_HIGH_DEFAULT_VALUE = 180L
     const val TIME_FORMAT_DEFAULT_VALUE = 24L
     const val DEFAULT_CRITICAL_ALARM_INTERVAL = 5L
-    const val GLUCOSE_FETCH_INTERVAL_DEFUALT_VALUE = 5
+    const val GLUCOSE_FETCH_INTERVAL_DEFAULT_VALUE = 5
 
     // Notification service
     const val KEY_CRITICAL_NOTIFICATION_CHANNEL_ID = "com.volvocars.diabetesmonitor.critical_notification"
