@@ -20,25 +20,23 @@ android {
         testInstrumentationRunner "com.volvocars.diabetesmonitor.HiltTestRunner"
     }
 
-    // Sign with the platform key. This gives the app access to privileged permissions on non-release devices/emulators.
-//    signingConfigs {
-//        platform {
-//            storeFile file("../platform.keystore")
-//            storePassword 'android'
-//            keyAlias 'platform'
-//            keyPassword 'android'
-//        }
-//    }
-
+    signingConfigs {
+        platform {
+            storeFile file("../platform.keystore")
+            storePassword 'android'
+            keyAlias 'platform'
+            keyPassword 'android'
+        }
+    }
+    useLibrary 'android.car'
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-//            signingConfig signingConfigs.platform
         }
-//        debug {
-//            signingConfig signingConfigs.platform
-//        }
+        debug {
+            signingConfig signingConfigs.platform
+        }
     }
 
     compileOptions {

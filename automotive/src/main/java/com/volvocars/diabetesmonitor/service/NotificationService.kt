@@ -73,6 +73,9 @@ class NotificationService : LifecycleService() {
         notificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
+        notificationManager.createNotificationChannel(infoNotificationChannel)
+        notificationManager.createNotificationChannel(criticalNotificationChannel)
+
         lifecycleScope.launch {
             observeGlucoseValues.invoke(2).collect { glucoseList ->
                 _glucoseValues.emit(glucoseList)
@@ -103,6 +106,7 @@ class NotificationService : LifecycleService() {
         return super.onStartCommand(intent, flags, startId)
     }
 
+
     /**
      * Show info notification
      *
@@ -116,7 +120,6 @@ class NotificationService : LifecycleService() {
         if (preferenceStorage.getGlucoseNotificationEnabled()) {
             defaultNotification.setContentTitle(contentTitle)
             defaultNotification.setContentText(contentText)
-            notificationManager.createNotificationChannel(infoNotificationChannel)
             startForeground(SHOW_INFO_NOTIFICATION_ID, defaultNotification.build())
         } else {
             stopForeground(true)
@@ -143,7 +146,6 @@ class NotificationService : LifecycleService() {
         }
 
         criticalNotification.setContentText(contentText)
-        notificationManager.createNotificationChannel(criticalNotificationChannel)
         notificationManager.notify(
             SHOW_CRITICAL_NOTIFICATION_ID,
             criticalNotification.build()

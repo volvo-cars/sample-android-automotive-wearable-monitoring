@@ -11,8 +11,10 @@ object Constants {
     const val GLUCOSE_FETCH_INTERVAL_DEFUALT_VALUE = 5
 
     // Notification service
-    const val KEY_NOTIFICATION_CHANNEL_ID = "nightscout.notification.channel"
-    const val KEY_NOTIFICATION_CHANNEL_NAME = "diabetes_monitor_notifications"
+    const val KEY_CRITICAL_NOTIFICATION_CHANNEL_ID = "com.volvocars.diabetesmonitor.critical_notification"
+    const val KEY_CRITICAL_NOTIFICATION_CHANNEL_NAME = "glucose_out_of_range"
+    const val KEY_NOTIFICATION_CHANNEL_ID = "com.volvocars.diabetesmonitor.information_notification"
+    const val KEY_NOTIFICATION_CHANNEL_NAME = "show_glucose_values"
     const val KEY_IMPORTANCE_HIGH = "notify_importance_high"
     const val KEY_IMPORTANCE_DEFAULT = "notify_importance_default"
     const val KEY_CONTENT_INTENT = "content_intent"
