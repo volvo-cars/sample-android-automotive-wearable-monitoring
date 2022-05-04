@@ -20,8 +20,14 @@ jobs:
         - name: Grant execute permission for gradlew
           run: chmod +x gradlew
         - name: Build with Gradle
-          run: ./gradlew build
+          env:
+            artifactory_user: ${{ secrets.ARTIFACTORY_USER }}
+            artifactory_password: ${{ secrets.ARTIFACTORY_PASSWORD }}
+          run: ./gradlew build              
         - name: Build debug APK
+          env:
+            artifactory_user: ${{ secrets.ARTIFACTORY_USER }}
+            artifactory_password: ${{ secrets.ARTIFACTORY_PASSWORD }}
           run: bash ./gradlew assembleDebug --stacktrace
         - name: Upload APK
           uses: actions/upload-artifact@v1
