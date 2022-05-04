@@ -1,6 +1,0 @@
-// The version the car-ui-lib has been compiled for. You may change this if, for instance,
-// more versions of the lib are added to the module.
-def targetAndroidSdk = 30.0
-
-configurations.maybeCreate("default")
-artifacts.add("default", file("car-ui-${targetAndroidSdk}.aar"))

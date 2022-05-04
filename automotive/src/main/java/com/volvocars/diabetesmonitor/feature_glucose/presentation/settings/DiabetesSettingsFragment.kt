@@ -11,13 +11,13 @@ import androidx.work.WorkManager
 import com.android.car.ui.preference.CarUiEditTextPreference
 import com.android.car.ui.preference.CarUiListPreference
 import com.android.car.ui.preference.PreferenceFragment
+import com.volvocars.diabetesmonitor.feature_glucose.presentation.MainActivity
 import com.volvocars.diabetesmonitor.R
 import com.volvocars.diabetesmonitor.core.util.Constants
 import com.volvocars.diabetesmonitor.core.util.Constants.ACTION_SHOW_GLUCOSE_VALUES
 import com.volvocars.diabetesmonitor.core.util.GlucoseUtils
 import com.volvocars.diabetesmonitor.feature_glucose.domain.storage.Storage
 import com.volvocars.diabetesmonitor.feature_glucose.domain.use_case.DeleteCachedGlucoseValues
-import com.volvocars.diabetesmonitor.feature_glucose.presentation.login.LoginFragment
 import com.volvocars.diabetesmonitor.service.NotificationService
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -65,8 +65,7 @@ class DiabetesSettingsFragment : PreferenceFragment() {
             logout()
 
             // Navigate back to login page.
-            activity?.supportFragmentManager?.beginTransaction()?.replace(this.id, LoginFragment())
-                ?.commit()
+            startActivity(Intent(context, MainActivity::class.java))
             true
         }
 
@@ -239,6 +238,7 @@ class DiabetesSettingsFragment : PreferenceFragment() {
         CoroutineScope(Dispatchers.IO).launch {
             deleteCachedGlucoseValues.invoke()
         }
+
     }
 
     companion object {

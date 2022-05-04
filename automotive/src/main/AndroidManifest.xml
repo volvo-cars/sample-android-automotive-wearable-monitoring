@@ -21,23 +21,29 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DiabetesMonitor">
 
-        <meta-data
-            android:name="distractionOptimized"
-            android:value="true" />
-
         <activity
-            android:name=".MainActivity"
+            android:name=".feature_glucose.presentation.MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.CarUi.WithToolbar">
+            android:theme="@style/Theme.CarUi.NoToolbar">
+            <meta-data
+                android:name="distractionOptimized"
+                android:value="true" />
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <activity
+            android:name=".feature_glucose.presentation.SignedInActivity"
+            android:exported="false"
+            android:theme="@style/Theme.CarUi.WithToolbar" />
+
+        <activity
             android:name=".feature_glucose.presentation.settings.DiabetesSettingsActivity"
-            android:exported="true"
+            android:exported="false"
             android:label="Settings"
             android:theme="@style/Theme.CarUi.WithToolbar">
             <intent-filter>

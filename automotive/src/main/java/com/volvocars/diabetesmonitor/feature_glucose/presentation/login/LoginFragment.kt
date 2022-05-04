@@ -12,6 +12,7 @@ import android.widget.Toast.LENGTH_LONG
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.volvocars.diabetesmonitor.feature_glucose.presentation.SignedInActivity
 import com.volvocars.diabetesmonitor.core.util.Constants.ACTION_REQUIRE_CONFIGURATION
 import com.volvocars.diabetesmonitor.core.util.Constants.ACTION_SHOW_GLUCOSE_VALUES
 import com.volvocars.diabetesmonitor.databinding.FragmentLoginBinding
@@ -112,6 +113,7 @@ class LoginFragment : Fragment() {
                 viewModel.sharedPreferenceStorage.getGlucoseNotificationEnabled()
             )
         }
+        startActivity(Intent(context, SignedInActivity::class.java))
 
         // Navigate to the monitoring view.
         activity?.supportFragmentManager?.beginTransaction()

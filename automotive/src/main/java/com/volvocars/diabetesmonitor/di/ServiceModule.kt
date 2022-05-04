@@ -7,7 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.core.app.NotificationCompat
-import com.volvocars.diabetesmonitor.MainActivity
+import com.volvocars.diabetesmonitor.feature_glucose.presentation.MainActivity
 import com.volvocars.diabetesmonitor.R
 import com.volvocars.diabetesmonitor.core.util.Constants.KEY_CONTENT_INTENT
 import com.volvocars.diabetesmonitor.core.util.Constants.KEY_CRITICAL_NOTIFICATION

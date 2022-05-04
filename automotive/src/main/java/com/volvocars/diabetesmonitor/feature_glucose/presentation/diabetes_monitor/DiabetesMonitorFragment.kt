@@ -76,7 +76,6 @@ class DiabetesMonitorFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentDiabetesMonitorBinding.inflate(inflater)
-//        binding.appToolbar.setMenuItems(initMenuItems())
         glucoseFetchHandler = Handler(Looper.getMainLooper())
         _locale = Locale.getDefault()
         // Inflate the layout for this fragment
@@ -115,13 +114,6 @@ class DiabetesMonitorFragment : Fragment() {
         super.onDestroy()
         _binding = null
     }
-
-
-    private fun initMenuItems() = listOf<MenuItem>(
-        MenuItem.builder(requireContext()).setToSettings().setOnClickListener {
-            startActivity(Intent(context, DiabetesSettingsActivity::class.java))
-        }.build(),
-    )
 
     /**
      * Get notified when system locale changes
