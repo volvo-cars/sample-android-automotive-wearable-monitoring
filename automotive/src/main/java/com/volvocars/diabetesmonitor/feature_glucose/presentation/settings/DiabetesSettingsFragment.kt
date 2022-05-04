@@ -146,6 +146,10 @@ class DiabetesSettingsFragment : PreferenceFragment() {
 
         criticalNotificationIntervalPreference =
             findPreference(getString(R.string.pk_alarmLow_notification_interval))!!
+        criticalNotificationIntervalPreference.setOnPreferenceChangeListener { _, newValue ->
+            sharedPreferenceStorage.setCriticalNotificationInterval(newValue.toString().toLong())
+            true
+        }
         criticalNotificationIntervalPreference.summaryProvider = editTextPreferenceSummaryProvider
 
         glucoseNotificationPreference =
