@@ -1,8 +1,9 @@
 package com.volvocars.diabetesmonitor.feature_glucose.data.storage
 
 import android.content.SharedPreferences
+import android.util.Log
 import com.volvocars.diabetesmonitor.core.util.Constants.DEFAULT_CRITICAL_ALARM_INTERVAL
-import com.volvocars.diabetesmonitor.core.util.Constants.GLUCOSE_FETCH_INTERVAL_DEFUALT_VALUE
+import com.volvocars.diabetesmonitor.core.util.Constants.GLUCOSE_FETCH_INTERVAL_DEFAULT_VALUE
 import com.volvocars.diabetesmonitor.core.util.Constants.KEY_ALARM_LOW
 import com.volvocars.diabetesmonitor.core.util.Constants.KEY_ALARM_NOTIFICATION_INTERVAL
 import com.volvocars.diabetesmonitor.core.util.Constants.KEY_GLUCOSE_FETCH_INTERVAL
@@ -25,6 +26,7 @@ import com.volvocars.diabetesmonitor.core.util.get
 import com.volvocars.diabetesmonitor.core.util.put
 import com.volvocars.diabetesmonitor.feature_glucose.domain.model.ServerStatus
 import com.volvocars.diabetesmonitor.feature_glucose.domain.storage.Storage
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 /**
@@ -78,7 +80,7 @@ class SharedPreferenceStorage @Inject constructor(
     override fun getGlucoseFetchInterval(): Int {
         return sharedPreferences.get(
             KEY_GLUCOSE_FETCH_INTERVAL,
-            GLUCOSE_FETCH_INTERVAL_DEFUALT_VALUE
+            GLUCOSE_FETCH_INTERVAL_DEFAULT_VALUE
         )
     }
 
@@ -236,10 +238,12 @@ class SharedPreferenceStorage @Inject constructor(
      * @return interval as millis
      */
     override fun getCriticalNotificationIntervalMillis(): Long {
-        return sharedPreferences.get(
-            KEY_ALARM_NOTIFICATION_INTERVAL,
-            DEFAULT_CRITICAL_ALARM_INTERVAL
-        ) * 60 * 1000
+        return TimeUnit.MINUTES.toMillis(
+            sharedPreferences.get(
+                KEY_ALARM_NOTIFICATION_INTERVAL,
+                DEFAULT_CRITICAL_ALARM_INTERVAL
+            )
+        )
     }
 
     /**
