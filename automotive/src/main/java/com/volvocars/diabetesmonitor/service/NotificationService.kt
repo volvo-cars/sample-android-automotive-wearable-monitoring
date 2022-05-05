@@ -28,12 +28,13 @@ import com.volvocars.diabetesmonitor.feature_glucose.data.storage.SharedPreferen
 import com.volvocars.diabetesmonitor.feature_glucose.domain.model.Glucose
 import com.volvocars.diabetesmonitor.feature_glucose.domain.use_case.ObserveCachedGlucoseValues
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Named
+import kotlin.concurrent.schedule
 
 @AndroidEntryPoint
 class NotificationService : LifecycleService() {
@@ -64,6 +65,9 @@ class NotificationService : LifecycleService() {
     @Inject
     @Named(KEY_IMPORTANCE_DEFAULT)
     lateinit var infoNotificationChannel: NotificationChannel
+
+    private var lastCriticalUpdate = 0L
+    private var criticalGlucoseTimer: TimerTask? = null
 
     private val _glucoseValues = MutableSharedFlow<List<Glucose>>()
     private val glucoseValues = _glucoseValues.asSharedFlow()
@@ -144,13 +148,13 @@ class NotificationService : LifecycleService() {
             notificationManager.cancel(SHOW_CRITICAL_NOTIFICATION_ID)
             return
         }
-
         criticalNotification.setContentText(contentText)
         notificationManager.notify(
             SHOW_CRITICAL_NOTIFICATION_ID,
             criticalNotification.build()
         )
     }
+
 
     /**
      *  Check if the device has an internet connection or not
@@ -206,14 +210,24 @@ class NotificationService : LifecycleService() {
 
                 showInfoNotification(contentTitle, contentText)
 
-                if (glucoseValueBecomingOutOfRange(currentGlucoseValue)) {
-                    val criticalContentText =
-                        getString(R.string.alarmLow_notification_text, glucoseValueText, unit)
+                val criticalUpdater = preferenceStorage.getCriticalNotificationIntervalMillis()
 
-                    showCriticalNotification(criticalContentText)
+                if (glucoseValueBecomingOutOfRange(currentGlucoseValue)) {
+                    if ((System.currentTimeMillis() - lastCriticalUpdate) > criticalUpdater) {
+                        val criticalContentText =
+                            getString(
+                                R.string.alarmLow_notification_text,
+                                glucoseValueText,
+                                unit
+                            )
+                        showCriticalNotification(criticalContentText)
+                        lastCriticalUpdate = System.currentTimeMillis()
+                    }
                 } else {
                     // If the glucose values isn't outside the thresholds,
                     // cancel the potentially current notification
+                    criticalGlucoseTimer?.cancel()
+                    criticalGlucoseTimer = null
                     notificationManager.cancel(SHOW_CRITICAL_NOTIFICATION_ID)
                 }
             }
