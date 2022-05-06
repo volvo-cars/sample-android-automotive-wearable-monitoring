@@ -20,7 +20,6 @@
         android:roundIcon="@mipmap/diabetes_monitor_ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.DiabetesMonitor">
-
         <activity
             android:name=".feature_glucose.presentation.MainActivity"
             android:exported="true"
@@ -35,12 +34,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".feature_glucose.presentation.SignedInActivity"
             android:exported="false"
             android:theme="@style/Theme.CarUi.WithToolbar" />
-
         <activity
             android:name=".feature_glucose.presentation.settings.DiabetesSettingsActivity"
             android:exported="false"
