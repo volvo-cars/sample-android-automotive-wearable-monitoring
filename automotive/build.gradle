@@ -7,6 +7,8 @@ plugins {
 }
 
 android {
+    namespace 'com.volvocars.diabetesmonitor'
+
     compileSdkVersion rootProject.ext.compile_version
     buildToolsVersion rootProject.ext.build_tools_version
 
@@ -62,12 +64,6 @@ android {
         }
     }
 
-//    packagingOptions {
-//        resources {
-//            excludes += '/META-INF/{AL2.0,LGPL2.1}'
-//        }
-//    }
-    namespace 'com.volvocars.diabetesmonitor'
 }
 dependencies {
     implementation project(':car-ui-lib')
