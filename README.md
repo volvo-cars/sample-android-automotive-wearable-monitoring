@@ -1,4 +1,4 @@
-# Diabetes Monitor Application
+# Sample Android Automotive Wearable Monitoring
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/volvo-cars/automotive-media-sample/blob/main/LICENSE.md)
 
