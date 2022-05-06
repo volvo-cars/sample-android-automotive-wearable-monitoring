@@ -2,9 +2,7 @@
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/volvo-cars/automotive-media-sample/blob/main/LICENSE.md)
 
-This is an example of how you can connect devices to a Volvo Cars Infotainment system. However, we
-at Volvo Cars are not medical devices experts and do not intend to use this application in
-production. It's just happening to be a Glucose Monitor Application that we use as an example.
+This is an example of how you can connect devices to the Volvo Cars Infotainment system. However, we at Volvo Cars are not medical device experts and do not intend to use this application in production. It's just happening to be a Glucose Monitor Application that we use as an example.
 
 This project is following the clean architecture approach, by having an domain, data and
 presentation layer.
