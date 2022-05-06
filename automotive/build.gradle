@@ -20,23 +20,22 @@ android {
         testInstrumentationRunner "com.volvocars.diabetesmonitor.HiltTestRunner"
     }
 
-    signingConfigs {
-        platform {
-            storeFile file("../platform.keystore")
-            storePassword 'android'
-            keyAlias 'platform'
-            keyPassword 'android'
-        }
-    }
-    useLibrary 'android.car'
+//    signingConfigs {
+//        platform {
+//            storeFile file("../platform.keystore")
+//            storePassword 'android'
+//            keyAlias 'platform'
+//            keyPassword 'android'
+//        }
+//    }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-        debug {
-            signingConfig signingConfigs.platform
-        }
+//        debug {
+//            signingConfig signingConfigs.platform
+//        }
     }
 
     compileOptions {
@@ -71,7 +70,6 @@ android {
     namespace 'com.volvocars.diabetesmonitor'
 }
 dependencies {
-    implementation(group: 'com.volvocars.automotive', name: 'volvo-ui', version: '0.0.1-alpha', ext: 'aar')
     implementation project(':car-ui-lib')
 
     // Kotlin app and core
