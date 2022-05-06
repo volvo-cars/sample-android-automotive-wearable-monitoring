@@ -45,6 +45,11 @@ This layer handles three things for now;
    PreferenceScreen. If no user is signed in, then a Notification will show that the user needs to
    configure the app (sign in).
 
+## Dependancy Info
+
+1. If you want to use the Volvo UI Library for the application - reach out to developer.portal@volvocars.com for more information.
+
+
 ## MAD Scorecard
 
 ![MAD Scores summary](assets/mad_scorecard/summary.png "MAD scoreboard summary")
@@ -64,3 +69,10 @@ This layer handles three things for now;
 ## License
 
 Apache License 2.0
+
+## Disclaimer
+
+All information, thoughts, and code described here is intended for sample, informational and educational purposes only. Use of code from this repository is without warranty or support of any kind.
+Each element of the system can fail at any time rendering the system unusable. There is no password protected privacy or security provided by these tools; all data you upload can be available for anyone on the Internet to read if they have your specific URL to view your data. Please review the LICENSE found within each repository for further details. This is not a project of the Volvo Cars Corporation. Volvo Cars or Nightscout has no affiliation with Dexcom or any other company, service or product mentioned anywhere on this website.
+Do not use any of this repository information or code to make medical decisions - as this is purely a sample for connecting wearable to the car.
+
