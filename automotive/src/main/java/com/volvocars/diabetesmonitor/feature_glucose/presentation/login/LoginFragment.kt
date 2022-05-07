@@ -12,11 +12,11 @@ import android.widget.Toast.LENGTH_LONG
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import com.volvocars.diabetesmonitor.R
 import com.volvocars.diabetesmonitor.core.util.Constants.ACTION_REQUIRE_CONFIGURATION
 import com.volvocars.diabetesmonitor.core.util.Constants.ACTION_SHOW_GLUCOSE_VALUES
 import com.volvocars.diabetesmonitor.databinding.FragmentLoginBinding
-import com.volvocars.diabetesmonitor.feature_glucose.presentation.SignedInActivity
-import com.volvocars.diabetesmonitor.feature_glucose.presentation.diabetes_monitor.DiabetesMonitorFragment
 import com.volvocars.diabetesmonitor.service.NotificationService
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -114,12 +114,7 @@ class LoginFragment : Fragment() {
             )
         }
 
-        startActivity(Intent(requireContext(), SignedInActivity::class.java))
-
-        // Navigate to the monitoring view.
-//        activity?.supportFragmentManager?.beginTransaction()
-//            ?.replace(this.id, DiabetesMonitorFragment())?.commit()
-
+        findNavController().navigate(R.id.diabetesMonitorFragment)
     }
 
     private fun sendCommandToService(action: String, state: Boolean) {
