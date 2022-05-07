@@ -17,7 +17,6 @@ import com.volvocars.diabetesmonitor.core.util.Constants.ACTION_SHOW_GLUCOSE_VAL
 import com.volvocars.diabetesmonitor.core.util.GlucoseUtils
 import com.volvocars.diabetesmonitor.feature_glucose.domain.storage.Storage
 import com.volvocars.diabetesmonitor.feature_glucose.domain.use_case.DeleteCachedGlucoseValues
-import com.volvocars.diabetesmonitor.feature_glucose.presentation.login.LoginFragment
 import com.volvocars.diabetesmonitor.service.NotificationService
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -64,9 +63,9 @@ class DiabetesSettingsFragment : PreferenceFragment() {
         logoutPreference.setOnPreferenceClickListener {
             logout()
 
-            // Navigate back to login page.
-            activity?.supportFragmentManager?.beginTransaction()?.replace(this.id, LoginFragment())
-                ?.commit()
+            // Navigate back to login page
+            activity?.finish()
+
             true
         }
 
@@ -243,6 +242,7 @@ class DiabetesSettingsFragment : PreferenceFragment() {
         CoroutineScope(Dispatchers.IO).launch {
             deleteCachedGlucoseValues.invoke()
         }
+
     }
 
     companion object {

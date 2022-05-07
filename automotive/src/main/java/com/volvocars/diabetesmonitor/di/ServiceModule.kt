@@ -8,8 +8,12 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.core.app.NotificationCompat
+<<<<<<< HEAD
 import androidx.core.app.NotificationCompat.VISIBILITY_PUBLIC
 import com.volvocars.diabetesmonitor.MainActivity
+=======
+import com.volvocars.diabetesmonitor.feature_glucose.presentation.MainActivity
+>>>>>>> fix/car-ui-lib2.0
 import com.volvocars.diabetesmonitor.R
 import com.volvocars.diabetesmonitor.core.util.Constants
 import com.volvocars.diabetesmonitor.core.util.Constants.KEY_CONTENT_INTENT

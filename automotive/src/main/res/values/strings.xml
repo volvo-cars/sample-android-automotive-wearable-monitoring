@@ -1,10 +1,9 @@
 <resources>
-    <string name="app_name">Diabetes Monitor</string>
+    <string name="app_name">Sample Wearable Monitoring</string>
 
     <!-- Strings related to login -->
     <string name="prompt_uri" translatable="false">URL</string>
     <string name="action_sign_in">Connect</string>
-    <string name="welcome">Welcome</string>
     <string name="login_failed">"Login failed"</string>
     <string name="api_not_enabled">The API is not enabled for this device</string>
     <string name="url_not_valid_https">This URL is not valid, need to start with https</string>
@@ -88,7 +87,5 @@
     <string name="alarmLow_notification_text" formatted="true">Your glucose values are becoming out of range (%1$s %2$s)</string>
     <string name="alarmLow_notification_buttonText_snack">Find me a snack</string>
     <string name="alarmLow_notification_buttonText_parking">Find parking</string>
-    <string name="diabetes_circle" translatable="false">"Diabetes Circle "</string>
-    <string name="name" translatable="false">Name</string>
 
 </resources>

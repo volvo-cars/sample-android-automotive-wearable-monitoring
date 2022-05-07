@@ -66,14 +66,18 @@ android {
 
 }
 dependencies {
-    implementation project(':car-ui-lib')
-
     // Kotlin app and core
     implementation "androidx.appcompat:appcompat:$app_compat_version"
     implementation "androidx.core:core-ktx:$androidx_core_ktx_version"
 
+    // AsyncLayoutInflater
+    implementation "androidx.asynclayoutinflater:asynclayoutinflater:$async_layout_inflater_version"
+
     // CardView
     implementation "androidx.cardview:cardview:1.0.0"
+
+    // CarUI
+    implementation "com.android.car.ui:car-ui-lib:$car_ui_lib_version"
 
     // ConstraintsLayout
     implementation "androidx.constraintlayout:constraintlayout:$androidx_constraintlayout_version"
@@ -85,9 +89,6 @@ dependencies {
     // Dagger - Hilt
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-compiler:$hilt_version"
-
-    // Data Store
-    implementation "androidx.datastore:datastore-preferences:$datastore_version"
 
     // Fragment
     implementation "androidx.fragment:fragment-ktx:$fragment_ktx"
@@ -102,6 +103,11 @@ dependencies {
 
     // MPAndroidChart
     implementation "com.github.PhilJay:MPAndroidChart:v$mp_android_chart_version"
+
+    // Navigation
+    implementation "androidx.navigation:navigation-fragment-ktx:$navigation_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$navigation_version"
+    implementation "androidx.navigation:navigation-dynamic-features-fragment:$navigation_version"
 
     // Preference
     implementation "androidx.preference:preference-ktx:$androidx_preference_ktx_version"
