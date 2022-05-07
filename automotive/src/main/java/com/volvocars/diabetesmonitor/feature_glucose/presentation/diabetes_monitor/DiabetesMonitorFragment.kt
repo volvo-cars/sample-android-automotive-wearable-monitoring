@@ -19,8 +19,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.WorkManager
-import com.android.car.ui.toolbar.MenuItem
-import com.android.car.ui.toolbar.Tab
 import com.github.mikephil.charting.components.LimitLine
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
@@ -33,7 +31,6 @@ import com.volvocars.diabetesmonitor.core.util.Constants
 import com.volvocars.diabetesmonitor.core.util.GlucoseUtils
 import com.volvocars.diabetesmonitor.databinding.FragmentDiabetesMonitorBinding
 import com.volvocars.diabetesmonitor.feature_glucose.domain.model.Glucose
-import com.volvocars.diabetesmonitor.feature_glucose.presentation.settings.DiabetesSettingsActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
@@ -78,7 +75,9 @@ class DiabetesMonitorFragment : Fragment() {
         _binding = FragmentDiabetesMonitorBinding.inflate(inflater)
         glucoseFetchHandler = Handler(Looper.getMainLooper())
         _locale = Locale.getDefault()
-        // Inflate the layout for this fragment
+
+
+
         return binding.root
     }
 
