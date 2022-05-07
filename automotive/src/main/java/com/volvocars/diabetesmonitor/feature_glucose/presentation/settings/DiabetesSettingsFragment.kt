@@ -11,7 +11,6 @@ import androidx.work.WorkManager
 import com.android.car.ui.preference.CarUiEditTextPreference
 import com.android.car.ui.preference.CarUiListPreference
 import com.android.car.ui.preference.PreferenceFragment
-import com.volvocars.diabetesmonitor.feature_glucose.presentation.MainActivity
 import com.volvocars.diabetesmonitor.R
 import com.volvocars.diabetesmonitor.core.util.Constants
 import com.volvocars.diabetesmonitor.core.util.Constants.ACTION_SHOW_GLUCOSE_VALUES
@@ -64,8 +63,9 @@ class DiabetesSettingsFragment : PreferenceFragment() {
         logoutPreference.setOnPreferenceClickListener {
             logout()
 
-            // Navigate back to login page.
-            startActivity(Intent(context, MainActivity::class.java))
+            // Navigate back to login page
+            activity?.finish()
+
             true
         }
 
