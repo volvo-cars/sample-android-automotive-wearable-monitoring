@@ -40,11 +40,9 @@ class MainActivity : FragmentActivity() {
 
     override fun onResume() {
         super.onResume()
+
         if (storage.userSignedIn()) {
             navController.navigate(R.id.diabetesMonitorFragment)
-            toolbarController.setMenuItems(listOf())
-        } else {
-            navController.navigate(R.id.loginFragment)
             toolbarController.setMenuItems(
                 listOf(
                     MenuItem.builder(this).setToSettings().setOnClickListener {
@@ -53,6 +51,11 @@ class MainActivity : FragmentActivity() {
                         }
                     }.build()
                 )
+            )
+        } else {
+            navController.navigate(R.id.loginFragment)
+            toolbarController.setMenuItems(
+                listOf()
             )
         }
     }
