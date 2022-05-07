@@ -8,14 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.core.app.NotificationCompat
-<<<<<<< HEAD
-import androidx.core.app.NotificationCompat.VISIBILITY_PUBLIC
-import com.volvocars.diabetesmonitor.MainActivity
-=======
-import com.volvocars.diabetesmonitor.feature_glucose.presentation.MainActivity
->>>>>>> fix/car-ui-lib2.0
 import com.volvocars.diabetesmonitor.R
-import com.volvocars.diabetesmonitor.core.util.Constants
 import com.volvocars.diabetesmonitor.core.util.Constants.KEY_CONTENT_INTENT
 import com.volvocars.diabetesmonitor.core.util.Constants.KEY_CRITICAL_NOTIFICATION
 import com.volvocars.diabetesmonitor.core.util.Constants.KEY_CRITICAL_NOTIFICATION_CHANNEL_ID
@@ -27,6 +20,7 @@ import com.volvocars.diabetesmonitor.core.util.Constants.KEY_IMPORTANCE_HIGH
 import com.volvocars.diabetesmonitor.core.util.Constants.KEY_INFORMATION_NOTIFICATION
 import com.volvocars.diabetesmonitor.core.util.Constants.KEY_NOTIFICATION_CHANNEL_ID
 import com.volvocars.diabetesmonitor.core.util.Constants.KEY_NOTIFICATION_CHANNEL_NAME
+import com.volvocars.diabetesmonitor.feature_glucose.presentation.MainActivity
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
