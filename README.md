@@ -4,8 +4,20 @@
 
 This is a sample application of how you can connect wearables to the Volvo Cars Infotainment system.
 However, we at Volvo Cars are not medical device experts and do not intend to use this application
-in production. It's just happening to be a Glucose Monitor Application that showcase as an example.
+in production. It's just happening to be a Glucose Monitor Application that showcases as an example.
 Read more about this at the [disclaimer](#disclaimer).
+
+## Permissions
+
+To get permissions to
+show [heads-up notifications](https://developer.android.com/training/cars/notifications#hun), you
+need to sign your app with the platform keys and set the notification channel importance level to at
+least IMPORTANCE_HIGH.
+
+Look in the [build.gradle](./automotive/build.gradle) to see how to sign your app with the
+platform.keystore file.
+
+This is a development key and not considered secret or sensitive.
 
 ## Project Structure
 
