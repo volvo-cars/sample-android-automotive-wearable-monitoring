@@ -2,14 +2,15 @@
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/volvo-cars/sample-android-automotive-wearable-monitoring/blob/main/LICENSE.md)
 
-This is an example of how you can connect devices to the Volvo Cars Infotainment system. However, we at Volvo Cars are not medical device experts and do not intend to use this application in production. It's just happening to be a Glucose Monitor Application that we use as an example.
+This is a sample application of how you can connect wearables to the Volvo Cars Infotainment system.
+However, we at Volvo Cars are not medical device experts and do not intend to use this application
+in production. It's just happening to be a Glucose Monitor Application that showcase as an example.
+Read more about this at the [disclaimer](#disclaimer).
 
 ## Project Structure
 
 This project is following the clean architecture approach, by having an domain, data and
 presentation layer.
-
-Project structure
 
 ### Core Layer
 
@@ -47,10 +48,10 @@ This layer handles three things for now;
    PreferenceScreen. If no user is signed in, then a Notification will show that the user needs to
    configure the app (sign in).
 
-## Dependancy Info
+## Dependency Info
 
-1. If you want to use the Volvo UI Library for the application - reach out to developer.portal@volvocars.com for more information.
-
+1. If you want to use the Volvo UI Library for the application - reach out to
+   developer.portal@volvocars.com for more information.
 
 ## MAD Scorecard
 
@@ -74,7 +75,13 @@ Apache License 2.0
 
 ## Disclaimer
 
-All information, thoughts, and code described here is intended for sample, informational and educational purposes only. Use of code from this repository is without warranty or support of any kind.
-Each element of the system can fail at any time rendering the system unusable. There is no password protected privacy or security provided by these tools; all data you upload can be available for anyone on the Internet to read if they have your specific URL to view your data. Please review the LICENSE found within each repository for further details. This is not a project of the Volvo Cars Corporation. Volvo Cars or Nightscout has no affiliation with Dexcom or any other company, service or product mentioned anywhere on this website.
-Do not use any of this repository information or code to make medical decisions - as this is purely a sample for connecting wearable to the car.
+All information, thoughts, and code described here is intended for sample, informational and
+educational purposes only. Use of code from this repository is without warranty or support of any
+kind. Each element of the system can fail at any time rendering the system unusable. There is no
+password protected privacy or security provided by these tools; all data you upload can be available
+for anyone on the Internet to read if they have your specific URL to view your data. Please review
+the LICENSE found within each repository for further details. This is not a project of the Volvo
+Cars Corporation. Volvo Cars or Nightscout has no affiliation with Dexcom or any other company,
+service or product mentioned anywhere on this website. Do not use any of this repository information
+or code to make medical decisions - as this is purely a sample for connecting wearable to the car.
 

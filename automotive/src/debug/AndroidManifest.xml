@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <application android:icon="@mipmap/diabetes_monitor_ic_launcher">
+    <application android:icon="@mipmap/wearable_monitor_ic_launcher">
         <activity
                 android:name=".HiltTestActivity"
                 android:exported="false" />

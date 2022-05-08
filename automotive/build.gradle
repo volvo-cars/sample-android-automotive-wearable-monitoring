@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace 'com.volvocars.diabetesmonitor'
+    namespace 'com.volvocars.wearable_monitor'
 
     compileSdkVersion rootProject.ext.compile_version
     buildToolsVersion rootProject.ext.build_tools_version
@@ -19,7 +19,7 @@ android {
         versionCode rootProject.ext.version_code
         versionName rootProject.ext.version_name
 
-        testInstrumentationRunner "com.volvocars.diabetesmonitor.HiltTestRunner"
+        testInstrumentationRunner "com.volvocars.wearable_monitor.HiltTestRunner"
     }
 
 //    signingConfigs {

@@ -13,11 +13,11 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
-        android:name=".DiabetesMonitorApp"
+        android:name=".WearableMonitorApp"
         android:allowBackup="true"
-        android:icon="@mipmap/diabetes_monitor_ic_launcher"
+        android:icon="@mipmap/wearable_monitor_ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/diabetes_monitor_ic_launcher_round"
+        android:roundIcon="@mipmap/wearable_monitor_ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.DiabetesMonitor">
 
@@ -38,7 +38,7 @@
         </activity>
 
         <activity
-            android:name=".feature_glucose.presentation.settings.DiabetesSettingsActivity"
+            android:name=".feature_glucose.presentation.settings.WearableSettingsActivity"
             android:exported="false"
             android:label="Settings"
             android:theme="@style/Theme.CarUi.WithToolbar">
