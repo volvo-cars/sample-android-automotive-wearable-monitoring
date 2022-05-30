@@ -2,7 +2,6 @@
 <resources>
     <string name="app_name">Diabetes Monitor</string>
     <string name="action_sign_in">Anslut</string>
-    <string name="welcome">Välkommen</string>
     <string name="login_failed">Inloggning misslyckades</string>
     <string name="api_not_enabled">API\'et är inte tillgänglig för den här enheten</string>
     <string name="url_not_valid_https">URL\'en behöver börja med https</string>
@@ -30,9 +29,9 @@
     <string name="missing_network_text">Kan inte få tillgång till nätverk, kolla dina nätverksinställnignar och försök igen</string>
     <string name="alarmLow_notification_buttonText_parking">Hitta parkering</string>
     <string name="notification_info_title">Glukos: %1$s %2$s</string>
-    <string name="notification_info_text">Skillnad: %1$s</string>
+    <string name="notification_info_text">Skillnad: %1$s %2$s</string>
     <string name="alarmLow_notification_title">Lågt glukos!</string>
-    <string name="alarmLow_notification_text">Dina glukosvärden börjar bli låga</string>
+    <string name="alarmLow_notification_text">Dina glukosvärden börjar bli låga (%1$s %2$s)</string>
     <string name="alarmLow_notification_buttonText_snack">Hitta snacks</string>
     <string name="you_are_logged_in_with_instance">Du är inloggad med instans url \n %1$s</string>
     <string name="other_preferences">Övrigt</string>
