@@ -36,4 +36,4 @@ jobs:
           cache: gradle
 
       - name: Unit tests
-        run: ./gradlew :app:testDebugUnitTest
+        run: ./gradlew :automotive:testDebugUnitTest
