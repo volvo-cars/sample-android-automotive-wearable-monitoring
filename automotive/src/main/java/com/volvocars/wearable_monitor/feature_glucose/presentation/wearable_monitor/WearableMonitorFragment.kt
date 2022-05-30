@@ -82,7 +82,7 @@ class WearableMonitorFragment : Fragment() {
         glucoseFetchHandler = Handler(Looper.getMainLooper())
         _locale = Locale.getDefault()
 
-        toolbarController = CarUi.requireToolbar(activity!!)
+        toolbarController = CarUi.requireToolbar(requireActivity())
         toolbarController.setMenuItems(initMenuItems())
 
         return binding.root
