@@ -64,6 +64,10 @@ android {
         }
     }
 
+    lint {
+        baseline = file("lint-baseline.xml")
+    }
+
 }
 dependencies {
     // Kotlin app and core
