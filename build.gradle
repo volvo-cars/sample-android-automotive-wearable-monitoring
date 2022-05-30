@@ -41,7 +41,7 @@ ext {
     androidx_test_version = '1.4.0'
     async_layout_inflater_version = '1.0.0'
     app_compat_version = '1.4.1'
-    car_ui_lib_version = '2.0.0'
+    car_ui_lib_version = '2.2.1'
     coroutines_version = '1.6.0'
     espresso_version = '3.4.0'
     fragment_version = '1.4.1'
