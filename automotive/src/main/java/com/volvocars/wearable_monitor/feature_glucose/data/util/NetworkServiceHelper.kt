@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.retry
-import retrofit2.Response
 
 /**
  * Do a network call and return the response inside a [Resource]
@@ -20,13 +19,14 @@ import retrofit2.Response
 @InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 fun <T> fetchRemoteData(
-    call: suspend () -> Response<T>,
+    call: suspend () -> T,
 ) = flow {
     emit(Resource.Loading())
-    val callResponse = call()
-    val state = when (callResponse.isSuccessful && callResponse.body() != null) {
-        true -> Resource.Success(callResponse.body()!!)
-        else -> Resource.Error(callResponse.message())
+    val state = try {
+        val callResponse = call()
+        Resource.Success(callResponse)
+    } catch (e: Exception) {
+        Resource.Error(e.message.toString())
     }
     emit(state)
 }.flowOn(Dispatchers.IO).retry(2) {
