@@ -6,9 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.Network
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresPermission
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
@@ -117,7 +115,6 @@ class NotificationService : LifecycleService() {
      * @param contentTitle Notification title
      * @param contentText Notification text
      */
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun showInfoNotification(contentTitle: String, contentText: String) {
         if (preferenceStorage.getGlucoseNotificationEnabled()) {
             defaultNotification.setContentTitle(contentTitle)
@@ -138,14 +135,17 @@ class NotificationService : LifecycleService() {
         showInfoNotification(contentTitle, contentText)
     }
 
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun showCriticalNotification(contentText: String) {
+    /**
+     * Show critical notification when values becomes out of threshold range
+     */
+    private fun showCriticalNotification(contentTitle: String, contentText: String) {
         // If not critical notification is enabled, cancel current notification and return
         if (!preferenceStorage.getGlucoseAlarmLowEnabled()) {
             notificationManager.cancel(SHOW_CRITICAL_NOTIFICATION_ID)
             return
         }
+
+        criticalNotification.setContentTitle(contentTitle)
         criticalNotification.setContentText(contentText)
         notificationManager.notify(
             SHOW_CRITICAL_NOTIFICATION_ID,
@@ -212,14 +212,41 @@ class NotificationService : LifecycleService() {
 
                 if (glucoseValueBecomingOutOfRange(currentGlucoseValue)) {
                     if ((System.currentTimeMillis() - lastCriticalUpdate) > criticalUpdater) {
-                        val criticalContentText =
-                            getString(
-                                R.string.alarmLow_notification_text,
-                                glucoseValueText,
-                                unit
-                            )
-                        showCriticalNotification(criticalContentText)
+
+                        val criticalContentTitle = when {
+                            currentGlucoseValue.sgv < preferenceStorage.getThresholdLow() -> {
+                                getString(R.string.alarm_low_notification_title)
+                            }
+                            currentGlucoseValue.sgv > preferenceStorage.getThresholdHigh() -> {
+                                getString(R.string.alarm_high_notification_title)
+                            }
+                            else -> {
+                                ""
+                            }
+                        }
+
+                        val criticalContentText = when {
+                            currentGlucoseValue.sgv < preferenceStorage.getThresholdLow() -> {
+                                getString(
+                                    R.string.alarm_low_notification_text,
+                                    glucoseValueText,
+                                    unit
+                                )
+                            }
+                            currentGlucoseValue.sgv > preferenceStorage.getThresholdLow() -> {
+                                getString(
+                                    R.string.alarm_high_notification_text,
+                                    glucoseValueText, unit
+                                )
+                            }
+                            else -> {
+                                ""
+                            }
+                        }
+
+                        showCriticalNotification(criticalContentTitle, criticalContentText)
                         lastCriticalUpdate = System.currentTimeMillis()
+
                     }
                 } else {
                     // If the glucose values isn't outside the thresholds,

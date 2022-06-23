@@ -123,15 +123,14 @@ object ServiceModule {
                     0
                 )
             )
-            .setContentTitle(context.getString(R.string.alarmLow_notification_title))
             .addAction(
                 0,
-                context.getString(R.string.alarmLow_notification_buttonText_snack),
+                context.getString(R.string.alarm_critical_notification_buttonText_snack),
                 findSnackIntent
             )
             .addAction(
                 0,
-                context.getString(R.string.alarmLow_notification_buttonText_parking),
+                context.getString(R.string.alarm_critical_notification_buttonText_parking),
                 findParkingIntent
             )
 

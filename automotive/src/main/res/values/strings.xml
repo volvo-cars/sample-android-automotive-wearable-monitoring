@@ -83,9 +83,11 @@
     <string name="notification_info_text" formatted="true">Difference: %1$s %2$s</string>
 
     <!-- Notification low glucose messages -->
-    <string name="alarmLow_notification_title">Low glucose!</string>
-    <string name="alarmLow_notification_text" formatted="true">Your glucose values are becoming out of range (%1$s %2$s)</string>
-    <string name="alarmLow_notification_buttonText_snack">Find me a snack</string>
-    <string name="alarmLow_notification_buttonText_parking">Find parking</string>
+    <string name="alarm_high_notification_title">High glucose value!</string>
+    <string name="alarm_high_notification_text" formatted="true">Your glucose value are high (%1$s %2$s)</string>
+    <string name="alarm_low_notification_title">Low glucose value!</string>
+    <string name="alarm_low_notification_text" formatted="true">Your glucose value are low (%1$s %2$s)</string>
+    <string name="alarm_critical_notification_buttonText_snack">Find me a snack</string>
+    <string name="alarm_critical_notification_buttonText_parking">Find parking</string>
 
 </resources>
