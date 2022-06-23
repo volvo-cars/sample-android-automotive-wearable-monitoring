@@ -1,13 +1,13 @@
 package com.volvocars.wearable_monitor.feature_glucose.data.remote.dto
 
-import android.os.Parcelable
 import com.volvocars.wearable_monitor.feature_glucose.domain.model.DeviceStatus
-import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.SerialName
 
-@Parcelize
+@kotlinx.serialization.Serializable
 data class DeviceStatusDto(
+    @SerialName("advanced")
     val advanced: Boolean,
-) : Parcelable {
+) {
     fun toDeviceStatus(): DeviceStatus = DeviceStatus(
         advanced = advanced
     )

@@ -1,24 +1,33 @@
 package com.volvocars.wearable_monitor.feature_glucose.data.remote.dto
 
-import android.os.Parcelable
 import com.volvocars.wearable_monitor.feature_glucose.domain.model.ServerStatus
-import kotlinx.parcelize.Parcelize
-import kotlinx.parcelize.RawValue
+import kotlinx.serialization.SerialName
 
-@Parcelize
+@kotlinx.serialization.Serializable
 data class ServerStatusDto(
+    @SerialName("apiEnabled")
     val apiEnabled: Boolean,
+    @SerialName("authorized")
     val authorized: String?,
+    @SerialName("boluscalcEnabled")
     val boluscalcEnabled: Boolean,
+    @SerialName("careportalEnabled")
     val careportalEnabled: Boolean,
-    val extendedSettings: @RawValue ExtendedSettingsDto,
+    @SerialName("extendedSettings")
+    val extendedSettings: ExtendedSettingsDto,
+    @SerialName("name")
     val name: String,
+    @SerialName("serverTime")
     val serverTime: String,
+    @SerialName("serverTimeEpoch")
     val serverTimeEpoch: Long,
-    val settings: @RawValue SettingsDto,
+    @SerialName("settings")
+    val settings: SettingsDto,
+    @SerialName("status")
     val status: String,
+    @SerialName("version")
     val version: String,
-) : Parcelable {
+) {
     fun toServerStatus(): ServerStatus = ServerStatus(
         apiEnabled = apiEnabled,
         name = name,

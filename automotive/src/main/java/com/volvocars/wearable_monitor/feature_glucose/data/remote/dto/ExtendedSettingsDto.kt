@@ -1,19 +1,21 @@
 package com.volvocars.wearable_monitor.feature_glucose.data.remote.dto
 
-import android.os.Parcelable
 import com.volvocars.wearable_monitor.feature_glucose.domain.model.ExtendedSettings
-import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.RawValue
+import kotlinx.serialization.SerialName
 
-@Parcelize
+@kotlinx.serialization.Serializable
 data class ExtendedSettingsDto(
+    @SerialName("basal")
     val basal: BasalDto,
-    val devicestatus: DeviceStatusDto,
-    val profile: @RawValue ProfileDto,
-) : Parcelable {
+    @SerialName("devicestatus")
+    val deviceStatus: DeviceStatusDto,
+    @SerialName("profile")
+    val profile: ProfileDto,
+) {
     fun toExtendedSettings(): ExtendedSettings = ExtendedSettings(
         basal = basal.toBasal(),
-        devicestatus = devicestatus.toDeviceStatus(),
+        devicestatus = deviceStatus.toDeviceStatus(),
         profile = profile.toProfile()
     )
 }

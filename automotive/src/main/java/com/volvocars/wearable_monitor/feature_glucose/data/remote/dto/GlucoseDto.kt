@@ -1,21 +1,27 @@
 package com.volvocars.wearable_monitor.feature_glucose.data.remote.dto
 
-import android.os.Parcelable
 import com.volvocars.wearable_monitor.feature_glucose.data.local.entity.GlucoseEntity
-import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.SerialName
 
-@Parcelize
+@kotlinx.serialization.Serializable
 data class GlucoseDto(
-    val _id: String,
+    @SerialName("_id")
+    val id: String,
+    @SerialName("sgv")
     val sgv: Int,
+    @SerialName("date")
     val date: Long,
+    @SerialName("dateString")
     val dateString: String,
+    @SerialName("trend")
     val trend: String,
+    @SerialName("direction")
     val direction: String,
+    @SerialName("type")
     val type: String,
-) : Parcelable {
+) {
     fun toGlucoseEntity() = GlucoseEntity(
-        id = _id,
+        id = id,
         sgv = sgv,
         date = date,
         dateString = dateString,

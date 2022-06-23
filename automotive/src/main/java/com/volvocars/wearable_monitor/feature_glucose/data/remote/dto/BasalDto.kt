@@ -1,13 +1,13 @@
 package com.volvocars.wearable_monitor.feature_glucose.data.remote.dto
 
-import android.os.Parcelable
 import com.volvocars.wearable_monitor.feature_glucose.domain.model.Basal
-import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.SerialName
 
-@Parcelize
+@kotlinx.serialization.Serializable
 data class BasalDto(
+    @SerialName("render")
     val render: String,
-) : Parcelable {
+) {
     fun toBasal(): Basal = Basal(
         render
     )

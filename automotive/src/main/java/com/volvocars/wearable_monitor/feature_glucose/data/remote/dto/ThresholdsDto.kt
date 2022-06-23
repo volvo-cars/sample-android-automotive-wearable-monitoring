@@ -1,16 +1,15 @@
 package com.volvocars.wearable_monitor.feature_glucose.data.remote.dto
 
-import android.os.Parcelable
 import com.volvocars.wearable_monitor.feature_glucose.domain.model.Thresholds
-import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.SerialName
 
-@Parcelize
+@kotlinx.serialization.Serializable
 data class ThresholdsDto(
-    val bgHigh: Long,
-    val bgLow: Long,
-    val bgTargetBottom: Long,
-    val bgTargetTop: Long
-) : Parcelable {
+    @SerialName("bgHigh") val bgHigh: Long,
+    @SerialName("bgLow") val bgLow: Long,
+    @SerialName("bgTargetBottom") val bgTargetBottom: Long,
+    @SerialName("bgTargetTop") val bgTargetTop: Long
+) {
     fun toThresholds(): Thresholds = Thresholds(
         bgHigh,
         bgLow,
