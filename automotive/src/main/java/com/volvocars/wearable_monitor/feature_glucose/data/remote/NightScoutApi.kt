@@ -2,26 +2,17 @@ package com.volvocars.wearable_monitor.feature_glucose.data.remote
 
 import com.volvocars.wearable_monitor.feature_glucose.data.remote.dto.GlucoseDto
 import com.volvocars.wearable_monitor.feature_glucose.data.remote.dto.ServerStatusDto
-import retrofit2.Response
-import retrofit2.http.GET
-import retrofit2.http.Headers
-import retrofit2.http.Query
-import retrofit2.http.Url
+import io.ktor.client.*
+import io.ktor.client.request.*
+import javax.inject.Inject
 
-/**
- * API calls to NightScout
- */
-interface NightScoutApi {
-    @GET
-    @Headers("Accept: application/json")
+class NightScoutApi @Inject constructor(private val client: HttpClient) {
     suspend fun getGlucose(
-        @Url url: String,
-        @Query("count") count: Int,
-    ): Response<List<GlucoseDto>>
+        url: String,
+        count: Int,
+    ): List<GlucoseDto> = client.get("$url/api/v1/entries.json") {
+        parameter("count", count)
+    }
 
-    @GET
-    @Headers("Accept: application/json")
-    suspend fun getStatus(
-        @Url url: String,
-    ): Response<ServerStatusDto>
+    suspend fun getStatus(url: String): ServerStatusDto = client.get("$url/api/v1/status.json")
 }
