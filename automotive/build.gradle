@@ -4,20 +4,21 @@ plugins {
     id 'kotlin-parcelize'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
+    id 'kotlinx-serialization'
 }
 
 android {
     namespace 'com.volvocars.wearable_monitor'
 
-    compileSdkVersion rootProject.ext.compile_version
-    buildToolsVersion rootProject.ext.build_tools_version
+    compileSdkVersion rootProject.ext.versions.compileSdk
+    buildToolsVersion rootProject.ext.versions.build_tools
 
     defaultConfig {
-        applicationId rootProject.ext.application_id
-        minSdkVersion rootProject.ext.min_android_sdk_version
-        targetSdkVersion rootProject.ext.target_android_sdk_version
-        versionCode rootProject.ext.version_code
-        versionName rootProject.ext.version_name
+        applicationId rootProject.ext.versions.application_id
+        minSdkVersion rootProject.ext.versions.minSdk
+        targetSdkVersion rootProject.ext.versions.targetSdk
+        versionCode rootProject.ext.versions.code
+        versionName rootProject.ext.versions.name
 
         testInstrumentationRunner "com.volvocars.wearable_monitor.HiltTestRunner"
     }
@@ -74,84 +75,80 @@ android {
 }
 dependencies {
     // Kotlin app and core
-    implementation "androidx.appcompat:appcompat:$app_compat_version"
-    implementation "androidx.core:core-ktx:$androidx_core_ktx_version"
+    implementation "androidx.appcompat:appcompat:${versions.androidX.app_compat}"
+    implementation "androidx.core:core-ktx:${versions.androidX.core_ktx}"
 
     // AsyncLayoutInflater
-    implementation "androidx.asynclayoutinflater:asynclayoutinflater:$async_layout_inflater_version"
-
-    // CardView
-    implementation "androidx.cardview:cardview:1.0.0"
+    implementation "androidx.asynclayoutinflater:asynclayoutinflater:${versions.androidX.async_layout_inflater}"
 
     // CarUI
-    implementation "com.android.car.ui:car-ui-lib:$car_ui_lib_version"
+    implementation "com.android.car.ui:car-ui-lib:${versions.car_ui_lib}"
 
     // ConstraintsLayout
-    implementation "androidx.constraintlayout:constraintlayout:$androidx_constraintlayout_version"
+    implementation "androidx.constraintlayout:constraintlayout:${versions.androidX.constraintlayout}"
 
     // Coroutines
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.coroutines}"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:${versions.coroutines}"
 
     // Dagger - Hilt
-    implementation "com.google.dagger:hilt-android:$hilt_version"
-    kapt "com.google.dagger:hilt-compiler:$hilt_version"
+    implementation "com.google.dagger:hilt-android:${versions.hilt}"
+    kapt "com.google.dagger:hilt-compiler:${versions.hilt}"
 
     // Fragment
-    implementation "androidx.fragment:fragment-ktx:$fragment_ktx"
+    implementation "androidx.fragment:fragment-ktx:${versions.androidX.fragment_ktx}"
 
     // Gson
-    implementation "com.google.code.gson:gson:$gson_version"
-    implementation "com.squareup.retrofit2:converter-gson:$gson_converter_version"
+    implementation "com.google.code.gson:gson:${versions.gson}"
+
+    // Ktor
+    implementation 'io.ktor:ktor-client-android:1.6.7'
+    implementation 'io.ktor:ktor-client-serialization:1.5.0'
+    implementation 'io.ktor:ktor-client-logging-jvm:1.5.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.0.1'
 
     // Lifecycle
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-service:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:${versions.androidX.lifecycle}"
+    implementation "androidx.lifecycle:lifecycle-service:${versions.androidX.lifecycle}"
 
     // MPAndroidChart
-    implementation "com.github.PhilJay:MPAndroidChart:v$mp_android_chart_version"
+    implementation "com.github.PhilJay:MPAndroidChart:v${versions.mp_android_chart}"
 
     // Navigation
-    implementation "androidx.navigation:navigation-fragment-ktx:$navigation_version"
-    implementation "androidx.navigation:navigation-ui-ktx:$navigation_version"
-    implementation "androidx.navigation:navigation-dynamic-features-fragment:$navigation_version"
+    implementation "androidx.navigation:navigation-fragment-ktx:${versions.androidX.navigation}"
+    implementation "androidx.navigation:navigation-ui-ktx:${versions.androidX.navigation}"
+    implementation "androidx.navigation:navigation-dynamic-features-fragment:${versions.androidX.navigation}"
 
     // Preference
-    implementation "androidx.preference:preference-ktx:$androidx_preference_ktx_version"
-
-    // Retrofit
-    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "androidx.preference:preference-ktx:${versions.androidX.preference_ktx}"
 
     // Room
-    implementation "androidx.room:room-runtime:$room_version"
-    implementation "androidx.room:room-ktx:$room_version"
-    kapt "androidx.room:room-compiler:$room_version"
+    implementation "androidx.room:room-runtime:${versions.androidX.room}"
+    implementation "androidx.room:room-ktx:${versions.androidX.room}"
+    kapt "androidx.room:room-compiler:${versions.androidX.room}"
 
     // WorkManger
-    implementation "androidx.work:work-runtime-ktx:$work_version"
-    implementation 'androidx.work:work-testing:2.7.1'
+    implementation "androidx.work:work-runtime-ktx:${versions.androidX.work}"
+    implementation "androidx.work:work-testing:${versions.androidX.work}"
 
     // WorkManager Hilt
-    implementation "androidx.hilt:hilt-work:$work_hilt_version"
-    kapt "androidx.hilt:hilt-compiler:$work_hilt_version"
+    implementation "androidx.hilt:hilt-work:${versions.androidX.work_hilt}"
+    kapt "androidx.hilt:hilt-compiler:${versions.androidX.work_hilt}"
 
     // Local unit tests
-    testImplementation "com.google.truth:truth:$truth_version"
-    testImplementation "junit:junit:$junit_version"
-    testImplementation "io.mockk:mockk:$mockk_version"
-    testImplementation "com.squareup.okhttp3:mockwebserver:$mockwebserver_version"
-    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version"
+    testImplementation "com.google.truth:truth:${versions.truth}"
+    testImplementation "junit:junit:${versions.junit}"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:${versions.coroutines}"
 
     // Instrumented test
-    debugImplementation "androidx.fragment:fragment-testing:$fragment_version"
-    androidTestImplementation "androidx.test.ext:junit:$androidx_test_ext_junit_version"
-    androidTestImplementation "androidx.test.ext:truth:$truth_ext_version"
-    androidTestImplementation "com.google.dagger:hilt-android-testing:$hilt_version"
-    androidTestImplementation "com.google.truth:truth:$truth_version"
-    androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version"
-    androidTestImplementation "io.mockk:mockk-android:$mockk_version"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
-    androidTestImplementation "androidx.test:runner:$androidx_test_version"
-    kaptAndroidTest "com.google.dagger:hilt-android-compiler:$hilt_version"
+    debugImplementation "androidx.fragment:fragment-testing:${versions.fragment}"
+    androidTestImplementation "androidx.test.ext:junit:${versions.androidX.test_ext_junit}"
+    androidTestImplementation "androidx.test.ext:truth:${versions.truth_ext}"
+    androidTestImplementation "com.google.dagger:hilt-android-testing:${versions.hilt}"
+    androidTestImplementation "com.google.truth:truth:${versions.truth}"
+    androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:${versions.coroutines}"
+    androidTestImplementation "androidx.test.espresso:espresso-core:${versions.espresso}"
+    androidTestImplementation "androidx.test:runner:${versions.androidX.test}"
+    kaptAndroidTest "com.google.dagger:hilt-android-compiler:${versions.hilt}"
 }
 
