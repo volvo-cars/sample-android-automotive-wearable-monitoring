@@ -5,8 +5,8 @@ import android.content.SharedPreferences
 import com.volvocars.wearable_monitor.R
 import com.volvocars.wearable_monitor.core.util.GlucoseUtils
 import com.volvocars.wearable_monitor.feature_glucose.domain.storage.Storage
-import com.volvocars.wearable_monitor.feature_glucose.data.remote.NightScoutApi
 import com.volvocars.wearable_monitor.feature_glucose.data.local.GlucoseDatabase
+import com.volvocars.wearable_monitor.feature_glucose.data.remote.NightScoutApi
 import com.volvocars.wearable_monitor.feature_glucose.data.repository.DiabetesRepositoryImpl
 import com.volvocars.wearable_monitor.feature_glucose.domain.repository.DiabetesRepository
 import com.volvocars.wearable_monitor.feature_glucose.domain.use_case.DeleteCachedGlucoseValues
