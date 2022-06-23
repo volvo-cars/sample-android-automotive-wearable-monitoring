@@ -1,5 +1,6 @@
 package com.volvocars.wearable_monitor.feature_glucose.data.repository
 
+import android.util.Log
 import com.volvocars.wearable_monitor.core.util.Resource
 import com.volvocars.wearable_monitor.feature_glucose.data.local.GlucoseDao
 import com.volvocars.wearable_monitor.feature_glucose.data.remote.NightScoutApi
@@ -45,14 +46,12 @@ class DiabetesRepositoryImpl @Inject constructor(
                 }
             },
             fetch = {
-                val urlWithHeader = "$url/api/v1/entries.json"
                 delay(1000)
-                api.getGlucose(urlWithHeader, counts).body()
-                    ?.map { it.toGlucoseEntity() }
+                api.getGlucose(url, counts).map { it.toGlucoseEntity() }
             },
             saveFetchResult = { glucoseValues ->
                 dao.deleteAllGlucoseEntities()
-                dao.insertGlucoseEntityList(glucoseValues!!)
+                dao.insertGlucoseEntityList(glucoseValues)
             }
         )
 
@@ -66,8 +65,7 @@ class DiabetesRepositoryImpl @Inject constructor(
      *   The url annotator can maybe be replaced with an interceptor later.
      */
     override fun fetchServerStatus(url: String): Flow<Resource<ServerStatus>> {
-        val urlWithHeader = "$url/api/v1/status"
-        return fetchRemoteData { api.getStatus(urlWithHeader) }.map { response ->
+        return fetchRemoteData { api.getStatus(url) }.map { response ->
             when (response) {
                 is Resource.Success -> {
                     Resource.Success(response.data?.toServerStatus())
