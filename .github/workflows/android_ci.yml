@@ -49,4 +49,9 @@ jobs:
                     cache: gradle
 
             -   name: Check Licenses
-                run: ./gradlew :automotive:testDebugUnitTest
+                run: ./gradlew automotive:exportLibraryDefinitions -PaboutLibraries.exportPath=.
+            -   name: Upload archive to workflow
+                    uses: actions/upload-artifact@v3
+                    with:
+                        name: licenses-info
+                        path: aboutlibraries.json
