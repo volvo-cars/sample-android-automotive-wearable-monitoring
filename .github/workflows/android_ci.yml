@@ -49,5 +49,5 @@ jobs:
                 distribution: 'temurin'
                 cache: gradle
 
-          - name: Unit tests
+          - name: Dependency Check Analyze
             run: ./gradlew dependencyCheckAnalyze
