@@ -46,9 +46,9 @@ jobs:
                     distribution: 'temurin'
                     cache: gradle
             -   name: Check Licenses
-                run: ./gradlew automotive:exportLibraryDefinitions -PaboutLibraries.exportPath=.
+                run: ./gradlew automotive:exportLibraryDefinitions -PaboutLibraries.exportPath=src/main/resources/
             -   name: Upload archive to workflow
                 uses: actions/upload-artifact@v3
                 with:
                     name: licenses-info
-                    path: aboutlibraries.json
+                    path: src/main/resources/aboutlibraries.json
