@@ -3,7 +3,7 @@ buildscript {
     ext.versions = [
         'application_id'  : "com.volvocars.wearable_monitor",
         'build_tools'     : "30.0.3",
-        'build_gradle'    : '7.3.1',
+        'build_gradle'    : '7.3.0',
         'kotlin'          : "1.6.21",
         'hilt'            : '2.40.1',
         'minSdk'          : 29,
@@ -36,11 +36,12 @@ buildscript {
         'truth'           : '1.0',
         'truth_ext'       : '1.4.0',
     ]
-
-
     repositories {
         google()
         mavenCentral()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
     }
     dependencies {
         classpath "com.android.tools.build:gradle:${versions.build_gradle}"
@@ -49,9 +50,8 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-android-extensions-runtime:${versions.kotlin}"
         classpath "com.google.dagger:hilt-android-gradle-plugin:${versions.hilt}"
         classpath "org.jetbrains.kotlin:kotlin-serialization:${versions.kotlin}"
-        classpath 'org.owasp:dependency-check-gradle:7.2.1'
+        classpath "com.mikepenz.aboutlibraries.plugin:aboutlibraries-plugin:10.5.1"
     }
-
 }
 
 allprojects {
