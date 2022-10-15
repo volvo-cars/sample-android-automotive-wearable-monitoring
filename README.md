@@ -85,6 +85,8 @@ This layer handles three things for now;
 
 Apache License 2.0
 
+[Dependencies licenses information](/automotive/src/main/resources/aboutlibraries.json)
+
 ## Disclaimer
 
 All information, thoughts, and code described here is intended for sample, informational and
