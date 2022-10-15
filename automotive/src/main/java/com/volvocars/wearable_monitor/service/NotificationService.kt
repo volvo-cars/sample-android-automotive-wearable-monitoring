@@ -121,7 +121,7 @@ class NotificationService : LifecycleService() {
             defaultNotification.setContentText(contentText)
             startForeground(SHOW_INFO_NOTIFICATION_ID, defaultNotification.build())
         } else {
-            stopForeground(true)
+            stopForeground(STOP_FOREGROUND_REMOVE)
             notificationManager.cancel(SHOW_INFO_NOTIFICATION_ID)
         }
     }
