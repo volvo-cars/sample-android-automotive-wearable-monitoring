@@ -1,2 +1,2 @@
-rootProject.name = "Diabetesmonitor"
+rootProject.name = "wearable-monitor"
 include ':automotive'
