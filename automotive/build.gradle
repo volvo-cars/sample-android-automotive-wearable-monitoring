@@ -1,0 +1,155 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-parcelize'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+    id 'kotlinx-serialization'
+    id 'com.mikepenz.aboutlibraries.plugin'
+}
+
+android {
+    namespace 'com.volvocars.wearable_monitor'
+
+    compileSdkVersion rootProject.ext.versions.compileSdk
+    buildToolsVersion rootProject.ext.versions.build_tools
+
+    defaultConfig {
+        applicationId rootProject.ext.versions.application_id
+        minSdkVersion rootProject.ext.versions.minSdk
+        targetSdkVersion rootProject.ext.versions.targetSdk
+        versionCode rootProject.ext.versions.code
+        versionName rootProject.ext.versions.name
+
+        testInstrumentationRunner "com.volvocars.wearable_monitor.HiltTestRunner"
+    }
+
+    signingConfigs {
+        platform {
+            storeFile file("../platform.keystore")
+            storePassword 'android'
+            keyAlias 'platform'
+            keyPassword 'android'
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            signingConfig signingConfigs.platform
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+        useIR = true
+    }
+
+    kapt {
+        correctErrorTypes true
+    }
+
+    buildFeatures {
+        viewBinding true
+    }
+
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
+
+    lint {
+        baseline = file("lint-baseline.xml")
+    }
+    lintOptions {
+        disable "JvmStaticProvidesInObjectDetector", "FieldSiteTargetOnQualifierAnnotation", "ModuleCompanionObjects", "ModuleCompanionObjectsNotInModuleParent", "ResourceType"
+    }
+
+}
+dependencies {
+    // Kotlin app and core
+    implementation "androidx.appcompat:appcompat:${versions.androidX.app_compat}"
+    implementation "androidx.core:core-ktx:${versions.androidX.core_ktx}"
+
+    // AsyncLayoutInflater
+    implementation "androidx.asynclayoutinflater:asynclayoutinflater:${versions.androidX.async_layout_inflater}"
+
+    // CarUI
+    implementation "com.android.car.ui:car-ui-lib:${versions.car_ui_lib}"
+
+    // ConstraintsLayout
+    implementation "androidx.constraintlayout:constraintlayout:${versions.androidX.constraintlayout}"
+
+    // Coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.coroutines}"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:${versions.coroutines}"
+
+    // Dagger - Hilt
+    implementation "com.google.dagger:hilt-android:${versions.hilt}"
+    kapt "com.google.dagger:hilt-compiler:${versions.hilt}"
+
+    // Fragment
+    implementation "androidx.fragment:fragment-ktx:${versions.androidX.fragment_ktx}"
+
+    // Gson
+    implementation "com.google.code.gson:gson:${versions.gson}"
+
+    // Ktor
+    implementation 'io.ktor:ktor-client-android:1.6.7'
+    implementation 'io.ktor:ktor-client-serialization:1.5.0'
+    implementation 'io.ktor:ktor-client-logging-jvm:1.5.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.0.1'
+
+    // Lifecycle
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:${versions.androidX.lifecycle}"
+    implementation "androidx.lifecycle:lifecycle-service:${versions.androidX.lifecycle}"
+
+    // MPAndroidChart
+    implementation "com.github.PhilJay:MPAndroidChart:v${versions.mp_android_chart}"
+
+    // Navigation
+    implementation "androidx.navigation:navigation-fragment-ktx:${versions.androidX.navigation}"
+    implementation "androidx.navigation:navigation-ui-ktx:${versions.androidX.navigation}"
+    implementation "androidx.navigation:navigation-dynamic-features-fragment:${versions.androidX.navigation}"
+
+    // Preference
+    implementation "androidx.preference:preference-ktx:${versions.androidX.preference_ktx}"
+
+    // Room
+    implementation "androidx.room:room-runtime:${versions.androidX.room}"
+    implementation "androidx.room:room-ktx:${versions.androidX.room}"
+    kapt "androidx.room:room-compiler:${versions.androidX.room}"
+
+    // WorkManger
+    implementation "androidx.work:work-runtime-ktx:${versions.androidX.work}"
+    implementation "androidx.work:work-testing:${versions.androidX.work}"
+
+    // WorkManager Hilt
+    implementation "androidx.hilt:hilt-work:${versions.androidX.work_hilt}"
+    kapt "androidx.hilt:hilt-compiler:${versions.androidX.work_hilt}"
+
+    // Local unit tests
+    testImplementation "com.google.truth:truth:${versions.truth}"
+    testImplementation "junit:junit:${versions.junit}"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:${versions.coroutines}"
+
+    // Instrumented test
+    debugImplementation "androidx.fragment:fragment-testing:${versions.fragment}"
+    androidTestImplementation "androidx.test.ext:junit:${versions.androidX.test_ext_junit}"
+    androidTestImplementation "androidx.test.ext:truth:${versions.truth_ext}"
+    androidTestImplementation "com.google.dagger:hilt-android-testing:${versions.hilt}"
+    androidTestImplementation "com.google.truth:truth:${versions.truth}"
+    androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:${versions.coroutines}"
+    androidTestImplementation "androidx.test.espresso:espresso-core:${versions.espresso}"
+    androidTestImplementation "androidx.test:runner:${versions.androidX.test}"
+    kaptAndroidTest "com.google.dagger:hilt-android-compiler:${versions.hilt}"
+}
+

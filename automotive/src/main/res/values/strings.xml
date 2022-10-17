@@ -1,0 +1,93 @@
+<resources>
+    <string name="app_name">Sample Wearable Monitoring</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_uri" translatable="false">URL</string>
+    <string name="action_sign_in">Connect</string>
+    <string name="login_failed">"Login failed"</string>
+    <string name="api_not_enabled">The API is not enabled for this device</string>
+    <string name="url_not_valid_https">This URL is not valid, need to start with https</string>
+    <string name="url_field_blank">The URL field can\'t be blank</string>
+
+    <!-- Strings related to Diabetes Monitor Fragment -->
+    <string name="undefined_glucose_value" translatable="false">X.X</string>
+    <string name="n_a" translatable="false">N/A</string>
+    <string name="normal_glucose_direction" translatable="false">-</string>
+    <string name="glucoseDiffText" translatable="false">%1$s %2$s</string>
+    <string name="last_updated">Last Updated</string>
+    <string name="difference">Difference</string>
+    <string-array name="timeformat_entries">
+        <item>12-hour</item>
+        <item>24-hour</item>
+    </string-array>
+
+    <string-array name="timeformat_values">
+        <item>12</item>
+        <item>24</item>
+    </string-array>
+
+    <string-array name="unit_entries">
+        <item>mmol/L</item>
+        <item>mg/dL</item>
+    </string-array>
+
+    <string-array name="unit_values">
+        <item>mmol</item>
+        <item>mgdl</item>
+    </string-array>
+
+    <!-- Strings related to Settings Fragment/Preference Screen -->
+    <string name="pk_unit" translatable="false">unit</string>
+    <string name="unit">Unit</string>
+    <string name="thresholds_preferences">Thresholds</string>
+    <string name="thresholds_high">High</string>
+    <string name="pk_thresholds_high" translatable="false">thresholds_high</string>
+    <string name="thresholds_targetHigh">Target high</string>
+    <string name="pk_thresholds_targetHigh" translatable="false">thresholds_targetHigh</string>
+    <string name="thresholds_low">Low</string>
+    <string name="pk_thresholds_low" translatable="false">thresholds_low</string>
+    <string name="thresholds_targetLow">Target low</string>
+    <string name="pk_thresholds_targetLow" translatable="false">thresholds_targetLow</string>
+    <string name="settings_toolbar_title">Settings</string>
+    <string name="you_are_logged_in_with_instance">You are logged in with instance url \n %1$s</string>
+    <string name="pk_logout_preference" translatable="false">Sign Out</string>
+    <string name="alarm_preferences">Alarm Preferences</string>
+    <string name="pk_glucoseNotification_setting" translatable="false">glucose_notification_setting</string>
+    <string name="glucoseNotification_checkbox_preference">Enable to receive blood glucose value notification</string>
+    <string name="glucoseNotification_setting">Glucose notification</string>
+    <string name="pk_alarmLow_setting" translatable="false">glucose_alarm_low_notification</string>
+    <string name="alarmLow_setting">Alarm low</string>
+    <string name="alarmLow_checkbox_preference">Enable to receive low blood glucose alarms</string>
+    <string name="alarmLow_notification_interval">Minutes between critical alarms</string>
+    <string name="pk_alarmLow_notification_interval" translatable="false">alarmLow_notification_interval</string>
+    <string name="not_set">Not set</string>
+    <string name="general_preferences">General</string>
+    <string name="pk_instance_setting" translatable="false">@string/instance_setting</string>
+    <string name="instance_setting">Instance</string>
+    <string name="time_format">Time format</string>
+    <string name="pk_time_format" translatable="false">time_format</string>
+    <string name="other_preferences">Other</string>
+
+    <!--NotificationServiceModule -->
+    <string name="uri_find_parking" translatable="false">geo:0,0?q=parking</string>
+    <string name="uri_find_store" translatable="false">geo:0,0?q=convenience store</string>
+
+    <!--GlucoseNotificationService -->
+    <string name="configurationsRequired_title">Configurations required</string>
+    <string name="configurationsRequired_text">You need to configure your app before we can monitor glucose levels.</string>
+    <string name="missing_network_title">Missing network connectivity</string>
+    <string name="missing_network_text">Missing network access or internet connectivity, please establish and validate your network connection</string>
+
+    <!-- Notification info -->
+    <string name="notification_info_title">Glucose: %1$s %2$s</string>
+    <string name="notification_info_text" formatted="true">Difference: %1$s %2$s</string>
+
+    <!-- Notification low glucose messages -->
+    <string name="alarm_high_notification_title">High glucose value!</string>
+    <string name="alarm_high_notification_text" formatted="true">Your glucose value are high (%1$s %2$s)</string>
+    <string name="alarm_low_notification_title">Low glucose value!</string>
+    <string name="alarm_low_notification_text" formatted="true">Your glucose value are low (%1$s %2$s)</string>
+    <string name="alarm_critical_notification_buttonText_snack">Find me a snack</string>
+    <string name="alarm_critical_notification_buttonText_parking">Find parking</string>
+
+</resources>
