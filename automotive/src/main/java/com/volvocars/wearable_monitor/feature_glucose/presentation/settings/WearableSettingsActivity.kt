@@ -10,7 +10,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class WearableSettingsActivity : FragmentActivity() {
 
-    lateinit var toolbarController: ToolbarController
+    private lateinit var toolbarController: ToolbarController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

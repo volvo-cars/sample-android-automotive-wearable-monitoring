@@ -10,7 +10,6 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:name=".WearableMonitorApp"
@@ -22,10 +21,16 @@
         android:theme="@style/Theme.DiabetesMonitor">
 
         <activity
+            android:name="com.google.android.gms.oss.licenses.OssLicensesMenuActivity"
+            android:theme="@style/Theme.DiabetesMonitor" />
+        <activity
+            android:name="com.google.android.gms.oss.licenses.OssLicensesActivity"
+            android:theme="@style/Theme.DiabetesMonitor" />
+
+        <activity
             android:name=".feature_glucose.presentation.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.CarUi.WithToolbar">
-
             <meta-data
                 android:name="distractionOptimized"
                 android:value="true" />
@@ -34,7 +39,6 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
 
         <activity

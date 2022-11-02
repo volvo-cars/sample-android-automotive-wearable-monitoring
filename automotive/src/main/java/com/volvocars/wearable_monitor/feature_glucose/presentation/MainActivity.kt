@@ -2,13 +2,13 @@ package com.volvocars.wearable_monitor.feature_glucose.presentation
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.android.car.ui.core.CarUi
 import com.android.car.ui.toolbar.MenuItem
 import com.android.car.ui.toolbar.ToolbarController
+import com.mikepenz.aboutlibraries.LibsBuilder
 import com.volvocars.wearable_monitor.R
 import com.volvocars.wearable_monitor.databinding.ActivityMainBinding
 import com.volvocars.wearable_monitor.feature_glucose.domain.storage.Storage
@@ -34,8 +34,9 @@ class MainActivity : FragmentActivity() {
         setContentView(binding.root)
         initToolbar()
 
-        val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+
         navController = navHostFragment.navController
     }
 

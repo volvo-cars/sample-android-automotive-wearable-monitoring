@@ -11,6 +11,7 @@ import androidx.work.WorkManager
 import com.android.car.ui.preference.CarUiEditTextPreference
 import com.android.car.ui.preference.CarUiListPreference
 import com.android.car.ui.preference.PreferenceFragment
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.volvocars.wearable_monitor.R
 import com.volvocars.wearable_monitor.core.util.Constants
 import com.volvocars.wearable_monitor.core.util.Constants.ACTION_SHOW_GLUCOSE_VALUES
@@ -38,6 +39,7 @@ class WearableSettingsFragment : PreferenceFragment() {
     private lateinit var glucoseNotificationPreference: CheckBoxPreference
     private lateinit var alarmLowPreference: CheckBoxPreference
     private lateinit var logoutPreference: Preference
+    private lateinit var openSourceLicensesPreference: Preference
 
     @Inject
     lateinit var glucoseUtils: GlucoseUtils
@@ -67,6 +69,14 @@ class WearableSettingsFragment : PreferenceFragment() {
             activity?.finish()
 
             true
+        }
+
+        openSourceLicensesPreference = findPreference(getString(R.string.pk_oss_licenses))!!
+        openSourceLicensesPreference.apply {
+            setOnPreferenceClickListener {
+                startActivity(Intent(requireContext(), OssLicensesMenuActivity::class.java))
+                true
+            }
         }
 
         // SummaryProvider for unit/time format preference

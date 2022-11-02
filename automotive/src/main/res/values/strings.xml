@@ -67,6 +67,8 @@
     <string name="time_format">Time format</string>
     <string name="pk_time_format" translatable="false">time_format</string>
     <string name="other_preferences">Other</string>
+    <string name="pk_oss_licenses" translatable="false">open_source_licenses</string>
+    <string name="open_source_licenses_title" translatable="false">Open source licenses</string>
 
     <!--NotificationServiceModule -->
     <string name="uri_find_parking" translatable="false">geo:0,0?q=parking</string>

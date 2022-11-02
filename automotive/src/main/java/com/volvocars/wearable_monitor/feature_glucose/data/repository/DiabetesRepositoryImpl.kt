@@ -1,6 +1,5 @@
 package com.volvocars.wearable_monitor.feature_glucose.data.repository
 
-import android.util.Log
 import com.volvocars.wearable_monitor.core.util.Resource
 import com.volvocars.wearable_monitor.feature_glucose.data.local.GlucoseDao
 import com.volvocars.wearable_monitor.feature_glucose.data.remote.NightScoutApi

@@ -73,6 +73,9 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/other_preferences">
         <Preference
+            android:key="@string/pk_oss_licenses"
+            android:title="@string/open_source_licenses_title" />
+        <Preference
             android:key="@string/pk_logout_preference"
             android:summary="@string/you_are_logged_in_with_instance"
             android:title="Logout" />

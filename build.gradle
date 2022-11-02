@@ -51,6 +51,7 @@ buildscript {
         classpath "com.google.dagger:hilt-android-gradle-plugin:${versions.hilt}"
         classpath "org.jetbrains.kotlin:kotlin-serialization:${versions.kotlin}"
         classpath "com.mikepenz.aboutlibraries.plugin:aboutlibraries-plugin:10.5.1"
+        classpath "com.google.android.gms:oss-licenses-plugin:0.10.5"
     }
 }
 
