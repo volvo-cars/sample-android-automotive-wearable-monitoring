@@ -11,13 +11,13 @@ import androidx.work.WorkManager
 import com.android.car.ui.preference.CarUiEditTextPreference
 import com.android.car.ui.preference.CarUiListPreference
 import com.android.car.ui.preference.PreferenceFragment
-import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.volvocars.wearable_monitor.R
 import com.volvocars.wearable_monitor.core.util.Constants
 import com.volvocars.wearable_monitor.core.util.Constants.ACTION_SHOW_GLUCOSE_VALUES
 import com.volvocars.wearable_monitor.core.util.GlucoseUtils
 import com.volvocars.wearable_monitor.feature_glucose.domain.storage.Storage
 import com.volvocars.wearable_monitor.feature_glucose.domain.use_case.DeleteCachedGlucoseValues
+import com.volvocars.wearable_monitor.feature_glucose.presentation.OpenSourceLicensesDialog
 import com.volvocars.wearable_monitor.service.NotificationService
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -74,7 +74,7 @@ class WearableSettingsFragment : PreferenceFragment() {
         openSourceLicensesPreference = findPreference(getString(R.string.pk_oss_licenses))!!
         openSourceLicensesPreference.apply {
             setOnPreferenceClickListener {
-                startActivity(Intent(requireContext(), OssLicensesMenuActivity::class.java))
+                OpenSourceLicensesDialog().showLicenses(requireActivity())
                 true
             }
         }
