@@ -6,8 +6,8 @@ plugins {
     id 'dagger.hilt.android.plugin'
     id 'kotlinx-serialization'
     id 'com.mikepenz.aboutlibraries.plugin'
-    id 'com.google.android.gms.oss-licenses-plugin'
     id "org.sonarqube" version "3.4.0.2513"
+    id 'com.jaredsburrows.license'
 }
 
 android {
@@ -38,7 +38,7 @@ android {
             storePassword 'android'
             keyAlias 'platform'
             keyPassword 'android'
-       }
+        }
     }
     buildTypes {
         debug {
@@ -117,7 +117,7 @@ dependencies {
     implementation 'io.ktor:ktor-client-android:1.6.7'
     implementation 'io.ktor:ktor-client-serialization:1.5.0'
     implementation 'io.ktor:ktor-client-logging-jvm:1.5.0'
-    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.0.1'
+    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0'
 
     // Lifecycle
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:${versions.androidX.lifecycle}"
@@ -130,9 +130,6 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment-ktx:${versions.androidX.navigation}"
     implementation "androidx.navigation:navigation-ui-ktx:${versions.androidX.navigation}"
     implementation "androidx.navigation:navigation-dynamic-features-fragment:${versions.androidX.navigation}"
-
-    // OSS licenses
-    implementation 'com.google.android.gms:play-services-oss-licenses:17.0.0'
 
     // Preference
     implementation "androidx.preference:preference-ktx:${versions.androidX.preference_ktx}"
