@@ -11,6 +11,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
 
 @HiltViewModel
@@ -18,7 +19,7 @@ class WearableMonitorViewModel @Inject constructor(
     private val observeCachedGlucoseValues: ObserveCachedGlucoseValues,
     val fetchGlucoseValues: FetchGlucoseValues,
     val sharedPreferenceStorage: SharedPreferenceStorage,
-    val glucoseFetchWorker: PeriodicWorkRequest
+    val glucoseFetchWorker: PeriodicWorkRequest,
 ) : ViewModel() {
     private val _glucoseValues = MutableStateFlow(WearableMonitorState())
     val glucoseValues = _glucoseValues.asStateFlow()
@@ -27,9 +28,11 @@ class WearableMonitorViewModel @Inject constructor(
         Log.d(TAG, "fetchCachedValues: fetch new glucose values")
         viewModelScope.launch {
             observeCachedGlucoseValues.invoke(24).collect { result ->
-                _glucoseValues.value = glucoseValues.value.copy(
-                    glucoseValues = result,
-                )
+                if (result.isNotEmpty()) {
+                    _glucoseValues.value = glucoseValues.value.copy(
+                        glucoseValues = result,
+                    )
+                }
             }
         }
     }

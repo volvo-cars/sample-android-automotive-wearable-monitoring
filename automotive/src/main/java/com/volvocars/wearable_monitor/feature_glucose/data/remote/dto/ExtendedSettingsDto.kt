@@ -1,7 +1,6 @@
 package com.volvocars.wearable_monitor.feature_glucose.data.remote.dto
 
 import com.volvocars.wearable_monitor.feature_glucose.domain.model.ExtendedSettings
-import kotlinx.parcelize.RawValue
 import kotlinx.serialization.SerialName
 
 @kotlinx.serialization.Serializable

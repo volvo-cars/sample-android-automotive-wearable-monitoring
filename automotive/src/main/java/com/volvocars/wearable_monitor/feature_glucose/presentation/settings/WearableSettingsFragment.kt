@@ -17,6 +17,7 @@ import com.volvocars.wearable_monitor.core.util.Constants.ACTION_SHOW_GLUCOSE_VA
 import com.volvocars.wearable_monitor.core.util.GlucoseUtils
 import com.volvocars.wearable_monitor.feature_glucose.domain.storage.Storage
 import com.volvocars.wearable_monitor.feature_glucose.domain.use_case.DeleteCachedGlucoseValues
+import com.volvocars.wearable_monitor.feature_glucose.presentation.OpenSourceLicensesDialog
 import com.volvocars.wearable_monitor.service.NotificationService
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -38,6 +39,7 @@ class WearableSettingsFragment : PreferenceFragment() {
     private lateinit var glucoseNotificationPreference: CheckBoxPreference
     private lateinit var alarmLowPreference: CheckBoxPreference
     private lateinit var logoutPreference: Preference
+    private lateinit var openSourceLicensesPreference: Preference
 
     @Inject
     lateinit var glucoseUtils: GlucoseUtils
@@ -67,6 +69,14 @@ class WearableSettingsFragment : PreferenceFragment() {
             activity?.finish()
 
             true
+        }
+
+        openSourceLicensesPreference = findPreference(getString(R.string.pk_oss_licenses))!!
+        openSourceLicensesPreference.apply {
+            setOnPreferenceClickListener {
+                OpenSourceLicensesDialog().showLicenses(requireActivity())
+                true
+            }
         }
 
         // SummaryProvider for unit/time format preference

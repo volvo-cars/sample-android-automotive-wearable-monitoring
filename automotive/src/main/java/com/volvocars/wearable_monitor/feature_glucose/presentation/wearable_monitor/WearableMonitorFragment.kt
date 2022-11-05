@@ -68,6 +68,7 @@ class WearableMonitorFragment : Fragment() {
             val timeInMillis = TimeUnit.MINUTES.toMillis(
                 viewModel.sharedPreferenceStorage.getGlucoseFetchInterval().toLong()
             )
+
             glucoseFetchHandler.postDelayed(this, timeInMillis)
         }
     }
