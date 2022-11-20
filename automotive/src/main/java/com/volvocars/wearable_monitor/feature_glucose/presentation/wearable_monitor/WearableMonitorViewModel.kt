@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,6 +25,7 @@ class WearableMonitorViewModel @Inject constructor(
     private val _glucoseValues = MutableStateFlow(WearableMonitorState())
     val glucoseValues = _glucoseValues.asStateFlow()
 
+
     init {
         fetchCachedValues()
     }
@@ -34,6 +36,7 @@ class WearableMonitorViewModel @Inject constructor(
                 _glucoseValues.value = glucoseValues.value.copy(
                     glucoseValues = result,
                 )
+
             }
         }
     }
