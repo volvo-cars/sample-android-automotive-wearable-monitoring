@@ -1,6 +1,5 @@
 package com.volvocars.wearable_monitor.feature_glucose.data.repository
 
-import com.volvocars.wearable_monitor.core.util.Resource
 import com.volvocars.wearable_monitor.feature_glucose.domain.model.Glucose
 import com.volvocars.wearable_monitor.feature_glucose.domain.model.ServerStatus
 import com.volvocars.wearable_monitor.feature_glucose.domain.repository.DiabetesRepository
@@ -13,22 +12,20 @@ class FakeDiabetesRepository @Inject constructor() : DiabetesRepository {
     private val serverStatus: MutableSet<ServerStatus> = mutableSetOf()
     private val glucoseValues: MutableList<Glucose> = mutableListOf()
 
-    override fun fetchGlucoseValues(url: String, counts: Int): Flow<Resource<List<Glucose>>> =
+    override fun fetchGlucoseValues(url: String, counts: Int): Flow<Result<List<Glucose>>> =
         flow {
-            emit(Resource.Loading())
             val response = when (shouldReturnError) {
-                true -> Resource.Error("ERROR")
-                false -> Resource.Success(glucoseValues.toList().take(counts))
+                true -> Result.failure(Exception("ERROR"))
+                false -> Result.success(glucoseValues.toList().take(counts))
             }
             emit(response)
         }
 
 
-    override fun fetchServerStatus(url: String): Flow<Resource<ServerStatus>> = flow {
-        emit(Resource.Loading())
+    override fun fetchServerStatus(url: String): Flow<Result<ServerStatus>> = flow {
         val response = when (shouldReturnError) {
-            true -> Resource.Error("ERROR")
-            false -> Resource.Success(serverStatus.first())
+            true -> Result.failure(Exception("ERROR"))
+            false -> Result.success(serverStatus.first())
         }
         emit(response)
     }

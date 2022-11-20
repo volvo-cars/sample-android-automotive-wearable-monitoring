@@ -1,6 +1,6 @@
 package com.volvocars.wearable_monitor.feature_glucose.data.repository
 
-import com.volvocars.wearable_monitor.core.util.Resource
+import android.util.Log
 import com.volvocars.wearable_monitor.feature_glucose.data.local.GlucoseDao
 import com.volvocars.wearable_monitor.feature_glucose.data.remote.NightScoutApi
 import com.volvocars.wearable_monitor.feature_glucose.data.storage.SharedPreferenceStorage
@@ -31,53 +31,49 @@ class DiabetesRepositoryImpl @Inject constructor(
      *
      *  @param url Url to endpoint
      *  @param counts Number of entries to fetch
-     *  @return a [Flow] with a [List] of [Glucose] values wrapped in a [Resource] object
+     *  @return a [Flow] with a [List] of [Glucose] values wrapped in a [Result] object
      *
      *  @note Since we using dynamically urls we're using a url annotator,
      *   this seems to be the easiest solution for now.
      *   The url annotator can maybe be replaced with an interceptor later.
      */
-    override fun fetchGlucoseValues(url: String, counts: Int): Flow<Resource<List<Glucose>>> =
+    override fun fetchGlucoseValues(url: String, counts: Int): Flow<Result<List<Glucose>>> =
         networkBoundResource(
             query = {
                 dao.fetchGlucoseEntities(counts).map { glucoseList ->
-                    glucoseList.map { it.toGlucose() }.sorted()
+                    Result.success(glucoseList.map { it.toGlucose() }.sorted())
                 }
             },
             fetch = {
                 delay(1000)
-                api.getGlucose(url, counts).map { it.toGlucoseEntity() }
+                api.getGlucose(url, counts).mapCatching { list ->
+                    list.map {
+                        it.toGlucoseEntity()
+                    }
+                }
             },
             saveFetchResult = { glucoseValues ->
                 dao.deleteAllGlucoseEntities()
-                dao.insertGlucoseEntityList(glucoseValues)
+                dao.insertGlucoseEntityList(glucoseValues.getOrThrow())
             }
         )
 
     /**
      **
      *  @param url Url to the endpoint
-     *  @return A [Flow] with a [List] of [ServerStatus] wrapped in a [Resource] object
+     *  @return A [Flow] with a [List] of [ServerStatus] wrapped in a [Result] object
      *
      *  @note Since we using dynamically urls we're using a url annotator,
      *   this seems to be the easiest solution for now.
      *   The url annotator can maybe be replaced with an interceptor later.
      */
-    override fun fetchServerStatus(url: String): Flow<Resource<ServerStatus>> {
-        return fetchRemoteData { api.getStatus(url) }.map { response ->
-            when (response) {
-                is Resource.Success -> {
-                    Resource.Success(response.data?.toServerStatus())
-                }
-                is Resource.Error -> {
-                    Resource.Error(response.message!!)
-                }
-                is Resource.Loading -> {
-                    Resource.Loading()
-                }
+    override fun fetchServerStatus(url: String): Flow<Result<ServerStatus>> =
+        fetchRemoteData { api.getStatus(url) }.map { response ->
+            Log.d(TAG, "fetchServerStatus: $response")
+            response.mapCatching {
+                it.toServerStatus()
             }
         }
-    }
 
     /**
      * Fetch cached glucose values stored in the local room database

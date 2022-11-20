@@ -11,7 +11,9 @@ import android.widget.Toast
 import android.widget.Toast.LENGTH_LONG
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.volvocars.wearable_monitor.R
 import com.volvocars.wearable_monitor.core.util.Constants.ACTION_REQUIRE_CONFIGURATION
@@ -45,19 +47,22 @@ class LoginFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.serverStatus.collect { state ->
-                binding.login.visibility = if (state.isLoading) View.INVISIBLE else View.VISIBLE
-                binding.loading.visibility = if (state.isLoading) View.VISIBLE else View.INVISIBLE
+            repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                viewModel.serverStatus.collect { state ->
+                    binding.login.visibility = if (state.isLoading) View.INVISIBLE else View.VISIBLE
+                    binding.loading.visibility =
+                        if (state.isLoading) View.VISIBLE else View.INVISIBLE
 
-                if (state.isError) {
-                    Toast.makeText(requireContext(), state.errorMessage, LENGTH_LONG).show()
-                }
+                    if (state.isError) {
+                        Toast.makeText(requireContext(), state.errorMessage, LENGTH_LONG).show()
+                    }
 
-                if (state.isSignedIn) {
-                    viewModel.sharedPreferenceStorage.setBaseUrl(binding.url.text.toString())
-                    viewModel.sharedPreferenceStorage.setUserSignedIn(true)
-                    viewModel.sharedPreferenceStorage.setPreferenceFromServerStatus(state.serverStatus.first()!!)
-                    loginSuccess()
+                    if (state.isSignedIn) {
+                        viewModel.sharedPreferenceStorage.setBaseUrl(binding.url.text.toString())
+                        viewModel.sharedPreferenceStorage.setUserSignedIn(true)
+                        viewModel.sharedPreferenceStorage.setPreferenceFromServerStatus(state.serverStatus.first()!!)
+                        loginSuccess()
+                    }
                 }
             }
         }

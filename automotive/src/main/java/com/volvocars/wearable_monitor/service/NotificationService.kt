@@ -101,6 +101,7 @@ class NotificationService : LifecycleService() {
                 ACTION_SHOW_GLUCOSE_VALUES -> {
                     observeGlucose()
                 }
+                else -> {}
             }
         }
         return super.onStartCommand(intent, flags, startId)
@@ -177,87 +178,86 @@ class NotificationService : LifecycleService() {
         })
     }
 
-    private fun observeGlucose() {
-        lifecycleScope.launch {
-            glucoseValues.collectLatest { glucoseList ->
+    private fun observeGlucose() = lifecycleScope.launch {
+        glucoseValues.collectLatest { glucoseList ->
 
-                if (glucoseList.isEmpty()) {
-                    return@collectLatest
-                }
+            if (glucoseList.isEmpty()) {
+                return@collectLatest
+            }
 
-                val (latestGlucoseValue, currentGlucoseValue) = glucoseList.take(2)
+            val (latestGlucoseValue, currentGlucoseValue) = glucoseList.take(2)
 
-                val diff = glucoseUtils.calculateDifference(
-                    currentGlucoseValue.sgv,
-                    latestGlucoseValue.sgv
-                )
+            val diff = glucoseUtils.calculateDifference(
+                currentGlucoseValue.sgv,
+                latestGlucoseValue.sgv
+            )
 
-                val unitEntries = resources.getStringArray(R.array.unit_entries)
-                val unit = if (glucoseUtils.checkIsMmol()) unitEntries[0] else unitEntries[1]
-                val glucoseValueText =
-                    if (glucoseUtils.checkIsMmol()) currentGlucoseValue.sgvMmol.toString() else currentGlucoseValue.sgvUnit.toString()
+            val unitEntries = resources.getStringArray(R.array.unit_entries)
+            val unit = if (glucoseUtils.checkIsMmol()) unitEntries[0] else unitEntries[1]
+            val glucoseValueText =
+                if (glucoseUtils.checkIsMmol()) currentGlucoseValue.sgvMmol.toString() else currentGlucoseValue.sgvUnit.toString()
 
-                val contentTitle = getString(
-                    R.string.notification_info_title,
-                    glucoseValueText,
-                    currentGlucoseValue.direction
-                )
-                val contentText = getString(
-                    R.string.notification_info_text, diff, unit
-                )
+            val contentTitle = getString(
+                R.string.notification_info_title,
+                glucoseValueText,
+                currentGlucoseValue.direction
+            )
+            val contentText = getString(
+                R.string.notification_info_text, diff, unit
+            )
 
-                showInfoNotification(contentTitle, contentText)
+            showInfoNotification(contentTitle, contentText)
 
-                val criticalUpdater = preferenceStorage.getCriticalNotificationIntervalMillis()
+            val criticalUpdater = preferenceStorage.getCriticalNotificationIntervalMillis()
 
-                if (glucoseValueBecomingOutOfRange(currentGlucoseValue)) {
-                    if ((System.currentTimeMillis() - lastCriticalUpdate) > criticalUpdater) {
+            if (glucoseValueBecomingOutOfRange(currentGlucoseValue)) {
+                if ((System.currentTimeMillis() - lastCriticalUpdate) > criticalUpdater) {
 
-                        val criticalContentTitle = when {
-                            currentGlucoseValue.sgv <= preferenceStorage.getThresholdLow() -> {
-                                getString(R.string.alarm_low_notification_title)
-                            }
-                            currentGlucoseValue.sgv >= preferenceStorage.getThresholdHigh() -> {
-                                getString(R.string.alarm_high_notification_title)
-                            }
-                            else -> {
-                                ""
-                            }
+                    val criticalContentTitle = when {
+                        currentGlucoseValue.sgv <= preferenceStorage.getThresholdLow() -> {
+                            getString(R.string.alarm_low_notification_title)
                         }
-
-                        val criticalContentText = when {
-                            currentGlucoseValue.sgv <= preferenceStorage.getThresholdLow() -> {
-                                getString(
-                                    R.string.alarm_low_notification_text,
-                                    glucoseValueText,
-                                    unit
-                                )
-                            }
-                            currentGlucoseValue.sgv >= preferenceStorage.getThresholdLow() -> {
-                                getString(
-                                    R.string.alarm_high_notification_text,
-                                    glucoseValueText, unit
-                                )
-                            }
-                            else -> {
-                                ""
-                            }
+                        currentGlucoseValue.sgv >= preferenceStorage.getThresholdHigh() -> {
+                            getString(R.string.alarm_high_notification_title)
                         }
-
-                        showCriticalNotification(criticalContentTitle, criticalContentText)
-                        lastCriticalUpdate = System.currentTimeMillis()
-
+                        else -> {
+                            ""
+                        }
                     }
-                } else {
-                    // If the glucose values isn't outside the thresholds,
-                    // cancel the potentially current notification
-                    criticalGlucoseTimer?.cancel()
-                    criticalGlucoseTimer = null
-                    notificationManager.cancel(SHOW_CRITICAL_NOTIFICATION_ID)
+
+                    val criticalContentText = when {
+                        currentGlucoseValue.sgv <= preferenceStorage.getThresholdLow() -> {
+                            getString(
+                                R.string.alarm_low_notification_text,
+                                glucoseValueText,
+                                unit
+                            )
+                        }
+                        currentGlucoseValue.sgv >= preferenceStorage.getThresholdLow() -> {
+                            getString(
+                                R.string.alarm_high_notification_text,
+                                glucoseValueText, unit
+                            )
+                        }
+                        else -> {
+                            ""
+                        }
+                    }
+
+                    showCriticalNotification(criticalContentTitle, criticalContentText)
+                    lastCriticalUpdate = System.currentTimeMillis()
+
                 }
+            } else {
+                // If the glucose values isn't outside the thresholds,
+                // cancel the potentially current notification
+                criticalGlucoseTimer?.cancel()
+                criticalGlucoseTimer = null
+                notificationManager.cancel(SHOW_CRITICAL_NOTIFICATION_ID)
             }
         }
     }
+
 
     /**
      * Check if the provided glucose is out of range

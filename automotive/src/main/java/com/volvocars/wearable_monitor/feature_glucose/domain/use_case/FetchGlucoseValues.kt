@@ -1,6 +1,5 @@
 package com.volvocars.wearable_monitor.feature_glucose.domain.use_case
 
-import com.volvocars.wearable_monitor.core.util.Resource
 import com.volvocars.wearable_monitor.feature_glucose.domain.model.Glucose
 import com.volvocars.wearable_monitor.feature_glucose.domain.repository.DiabetesRepository
 import kotlinx.coroutines.flow.Flow
@@ -16,7 +15,7 @@ class FetchGlucoseValues(private val diabetesRepository: DiabetesRepository) {
      * @param url URL address for the device.
      * @param count Number of entries to fetch.
      */
-    operator fun invoke(url: String, count: Int): Flow<Resource<List<Glucose>>> {
+    operator fun invoke(url: String, count: Int): Flow<Result<List<Glucose>>> {
 
         // Don't proceed if url is empty or the url doesn't contains https
         if (url.isEmpty() || url.isBlank() || !url.contains("https") || count <= 0) {

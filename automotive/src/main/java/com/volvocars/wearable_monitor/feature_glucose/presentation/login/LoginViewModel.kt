@@ -3,11 +3,13 @@ package com.volvocars.wearable_monitor.feature_glucose.presentation.login
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.volvocars.wearable_monitor.core.util.Resource
 import com.volvocars.wearable_monitor.feature_glucose.domain.storage.Storage
 import com.volvocars.wearable_monitor.feature_glucose.domain.use_case.FetchServerStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -29,38 +31,25 @@ class LoginViewModel @Inject constructor(
      */
     fun login(
         url: String
-    ) {
-        viewModelScope.launch {
-            getServerStatus(url).collect { result ->
-                Log.d(TAG, "login: $result ${result.message}")
-                when (result) {
-                    is Resource.Success -> {
-                        _serverStatus.value = serverStatus.value.copy(
-                            serverStatus = listOf(result.data),
-                            isLoading = false,
-                            isSignedIn = true,
-                            isError = false,
-                        )
-                    }
-                    is Resource.Error -> {
-                        Log.d(TAG, "login: ${result.message}")
-                        _serverStatus.value = serverStatus.value.copy(
-                            serverStatus = listOf(result.data),
-                            isLoading = false,
-                            isSignedIn = false,
-                            isError = true,
-                            errorMessage = result.message
-                        )
-                    }
-                    is Resource.Loading -> {
-                        _serverStatus.value = serverStatus.value.copy(
-                            serverStatus = listOf(result.data),
-                            isLoading = true,
-                            isSignedIn = false,
-                            isError = false,
-                        )
-                    }
-                }
+    ) = viewModelScope.launch {
+        _serverStatus.value = serverStatus.value.copy(isLoading = true)
+        getServerStatus(url).collect { result ->
+            Log.d(TAG, "login: $result")
+            result.onSuccess {
+                _serverStatus.value = serverStatus.value.copy(
+                    serverStatus = listOf(it),
+                    isLoading = false,
+                    isSignedIn = true,
+                    isError = false,
+                )
+            }.onFailure {
+                _serverStatus.value = serverStatus.value.copy(
+                    serverStatus = listOf(),
+                    isLoading = false,
+                    isSignedIn = false,
+                    isError = true,
+                    errorMessage = it.message
+                )
             }
         }
     }

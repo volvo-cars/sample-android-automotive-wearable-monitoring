@@ -10,9 +10,18 @@ class NightScoutApi @Inject constructor(private val client: HttpClient) {
     suspend fun getGlucose(
         url: String,
         count: Int,
-    ): List<GlucoseDto> = client.get("$url/api/v1/entries.json") {
-        parameter("count", count)
+    ): Result<List<GlucoseDto>> = kotlin.runCatching {
+        client.get("$url/api/v1/entries.json") {
+            parameter("count", count)
+        }
     }
 
-    suspend fun getStatus(url: String): ServerStatusDto = client.get("$url/api/v1/status.json")
+    suspend fun getStatus(url: String): Result<ServerStatusDto> = runCatching {
+        client.get("$url/api/v1/status.json")
+    }
+
+
+    companion object {
+        val TAG = NightScoutApi::class.simpleName
+    }
 }
