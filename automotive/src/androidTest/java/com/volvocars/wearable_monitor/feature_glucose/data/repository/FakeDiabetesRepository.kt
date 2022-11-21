@@ -1,6 +1,5 @@
 package com.volvocars.wearable_monitor.feature_glucose.data.repository
 
-import com.volvocars.wearable_monitor.core.util.Resource
 import com.volvocars.wearable_monitor.feature_glucose.domain.model.Glucose
 import com.volvocars.wearable_monitor.feature_glucose.domain.model.ServerStatus
 import com.volvocars.wearable_monitor.feature_glucose.domain.repository.DiabetesRepository

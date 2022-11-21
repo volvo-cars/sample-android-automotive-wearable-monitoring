@@ -43,13 +43,17 @@ object NetworkModule {
                 }
             }
 
+            install(HttpTimeout) {
+                requestTimeoutMillis = 1000
+            }
+
             install(Logging) {
                 logger = object : Logger {
                     override fun log(message: String) {
                         Log.v("Logger Ktor => ", message)
                     }
                 }
-                level = LogLevel.ALL
+                level = LogLevel.NONE
             }
 
             install(ResponseObserver) {

@@ -1,6 +1,5 @@
 package com.volvocars.wearable_monitor.feature_glucose.data.util
 
-import com.volvocars.wearable_monitor.core.util.Resource
 import kotlinx.coroutines.flow.*
 
 /**
@@ -13,7 +12,7 @@ import kotlinx.coroutines.flow.*
  * @param fetch The web service api call that should be called
  * @param saveFetchResult A lambda that saves the data from the api call to the database
  * @param shouldFetch Weather this request should fetch or not, default set to true
- * @return A flow of the [ResultType] wrapped in [Resource]
+ * @return A flow of the [ResultType] wrapped in [Result]
  */
 inline fun <ResultType, RequestType> networkBoundResource(
     crossinline query: () -> Flow<ResultType>,
@@ -21,21 +20,16 @@ inline fun <ResultType, RequestType> networkBoundResource(
     crossinline saveFetchResult: suspend (RequestType) -> Unit,
     crossinline shouldFetch: (ResultType) -> Boolean = { true },
 ) = flow {
-    val data = query().first()
-
-    val flow = if (shouldFetch(data)) {
-        emit(Resource.Loading(data))
-
-        try {
+    runCatching {
+        val data = query().first()
+        val flow = if (shouldFetch(data)) {
             saveFetchResult(fetch())
-            query().map { Resource.Success(it) }
-        } catch (throwable: Throwable) {
-            query().map { Resource.Error(throwable.toString(), it) }
+            query().map { it }
+        } else {
+            query().map { it }
         }
-    } else {
-        query().map { Resource.Success(it) }
-    }
 
-    emitAll(flow)
+        emitAll(flow)
+    }
 }
 

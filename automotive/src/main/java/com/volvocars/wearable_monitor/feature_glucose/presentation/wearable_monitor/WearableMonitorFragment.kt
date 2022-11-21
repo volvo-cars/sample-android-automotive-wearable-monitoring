@@ -16,7 +16,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.WorkManager
 import com.android.car.ui.core.CarUi
@@ -60,10 +62,7 @@ class WearableMonitorFragment : Fragment() {
     lateinit var glucoseFetchHandler: Handler
     private val glucoseFetcher = object : Runnable {
         override fun run() {
-            val url = viewModel.sharedPreferenceStorage.getBaseUrl()
-            lifecycleScope.launch(Dispatchers.IO) {
-                viewModel.fetchGlucoseValues.invoke(url, 24).collect()
-            }
+            viewModel.fetchGlucoseValues()
 
             val timeInMillis = TimeUnit.MINUTES.toMillis(
                 viewModel.sharedPreferenceStorage.getGlucoseFetchInterval().toLong()
@@ -99,10 +98,11 @@ class WearableMonitorFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.fetchCachedValues()
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.glucoseValues.collect { state ->
-                setData(state.glucoseValues)
+            repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                viewModel.glucoseValues.collect { state ->
+                    setData(state.glucoseValues)
+                }
             }
         }
     }
@@ -199,8 +199,11 @@ class WearableMonitorFragment : Fragment() {
          also set the text color to depending on what the value is
         */
         binding.glucoseValueTxt.apply {
-            text =
-                if (isMmol) points.last().sgvMmol.toString() else points.last().sgvUnit.toString()
+            text = if (isMmol) {
+                points.last().sgvMmol.toString()
+            } else {
+                points.last().sgvUnit.toString()
+            }
             setTextColor(glucoseUtil.sgvColor(points.last().sgv))
         }
 
@@ -273,7 +276,6 @@ class WearableMonitorFragment : Fragment() {
 
             // set an alternative background color
             setBackgroundColor(Color.TRANSPARENT)
-//            setViewPortOffsets(0f, 0f, 0f, 0f)
         }
     }
 
@@ -392,13 +394,14 @@ class WearableMonitorFragment : Fragment() {
      * @return threshold low, threshold high, threshold target high, threshold target low
      */
     private fun getThresholdValues(): List<Long> {
-        val thresholdLow: Long = viewModel.sharedPreferenceStorage.getThresholdLow()
-        val thresholdHigh: Long = viewModel.sharedPreferenceStorage.getThresholdHigh()
-        val thresholdTargetLow: Long = viewModel.sharedPreferenceStorage.getThresholdTargetLow()
-        val thresholdTargetHigh: Long = viewModel.sharedPreferenceStorage.getThresholdTargetHigh()
+        val thresholdLow = viewModel.sharedPreferenceStorage.getThresholdLow()
+        val thresholdHigh = viewModel.sharedPreferenceStorage.getThresholdHigh()
+        val thresholdTargetLow = viewModel.sharedPreferenceStorage.getThresholdTargetLow()
+        val thresholdTargetHigh = viewModel.sharedPreferenceStorage.getThresholdTargetHigh()
 
         return listOf(thresholdLow, thresholdHigh, thresholdTargetLow, thresholdTargetHigh)
     }
+
 
     companion object {
         val TAG = WearableMonitorFragment::class.simpleName
