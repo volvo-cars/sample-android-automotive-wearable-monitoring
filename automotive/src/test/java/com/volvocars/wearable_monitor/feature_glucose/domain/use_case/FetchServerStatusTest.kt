@@ -5,14 +5,13 @@ import com.volvocars.wearable_monitor.feature_glucose.data.repository.FakeDiabet
 import com.volvocars.wearable_monitor.feature_glucose.domain.model.ServerStatus
 import com.volvocars.wearable_monitor.feature_glucose.domain.model.Settings
 import com.volvocars.wearable_monitor.feature_glucose.domain.model.Thresholds
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.lastOrNull
 import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
 
-@ExperimentalCoroutinesApi
 class FetchServerStatusTest {
     private lateinit var fetchServerStatus: FetchServerStatus
     private lateinit var fakeDiabetesRepository: FakeDiabetesRepository
@@ -63,36 +62,31 @@ class FetchServerStatusTest {
     }
 
     @Test
-    fun `URL input is empty, return empty flow`() = runTest {
+    fun `URL input is empty, return empty flow`() = runBlocking {
         val serverStatus = fetchServerStatus("").lastOrNull()
         assertThat(serverStatus).isNull()
     }
 
     @Test
-    fun `URL does not contain https, return empty flow`() = runTest {
+    fun `URL does not contain https, return empty flow`() = runBlocking {
         val serverStatus = fetchServerStatus("http://volovars.com").lastOrNull()
         assertThat(serverStatus).isNull()
     }
 
     @Test
-    fun `URL valid, return a flow of ServerStatus`() = runTest {
+    fun `URL valid, return a flow of ServerStatus`() = runBlocking {
         val response = fetchServerStatus("https://volvocars.com").toList()
-        // The first object should be of Resource.Loading and does not contain any objects
-        assertThat(response[0].data).isNull()
 
         // The second object should be of Resource.Success and does contain data
-        val serverStatus = response[1].data
-        assertThat(serverStatus?.version).isEqualTo("13.0.0")
+        val serverStatus = response[0].getOrThrow()
+        assertThat(serverStatus.version).isEqualTo("13.0.0")
     }
 
     @Test
-    fun `Could not fetch data, return Resource Error`() = runTest {
+    fun `Could not fetch data, return Resource Error`() = runBlocking {
         fakeDiabetesRepository.shouldReturnError(true)
 
-        val response = fetchServerStatus("https://volvocars.com").toList()
-        assertThat(response[0].data).isNull()
-        assertThat(response[1].message).isEqualTo("ERROR")
-
-        fakeDiabetesRepository.shouldReturnError(false)
+        val response = fetchServerStatus("https://volvocars.com").first()
+        assert(response.isFailure)
     }
 }
