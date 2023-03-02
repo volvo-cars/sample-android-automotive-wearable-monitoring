@@ -69,18 +69,6 @@ This layer handles three things for now;
 
 ![MAD Scores summary](assets/mad_scorecard/summary.png "MAD scoreboard summary")
 
-## Components Used
-
-- [Work Manager](https://developer.android.com/topic/libraries/architecture/workmanager)
-- [Hilt DI](https://developer.android.com/training/dependency-injection/hilt-android)
-- [View Model](https://developer.android.com/topic/libraries/architecture/viewmodel)
-- [Room DB](https://developer.android.com/training/data-storage/room)
-- [Retrofit](https://square.github.io/retrofit/)
-- [Kotlin Flow](https://developer.android.com/kotlin/flow)
-- [Kotlin Coroutines](https://developer.android.com/kotlin/coroutines)
-
-[How to integrate hilt with jetpack components](https://developer.android.com/training/dependency-injection/hilt-jetpack)
-
 ## License
 
 Apache License 2.0
