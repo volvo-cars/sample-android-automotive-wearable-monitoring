@@ -7,4 +7,8 @@ interface PreferenceRepository {
     fun getGlucoseFetchInterval(): Int
     fun getBaseUrl(): String
     fun getTimeFormat(): Long
+    fun getUnit(): String
+    fun getCriticalNotificationInterval(): Long
+    fun isGlucoseNotificationEnabled(): Boolean
+    fun isGlucoseAlarmLowEnabled(): Boolean
 }

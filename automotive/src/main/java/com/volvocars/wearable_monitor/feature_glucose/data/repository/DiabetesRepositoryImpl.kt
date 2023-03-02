@@ -3,7 +3,6 @@ package com.volvocars.wearable_monitor.feature_glucose.data.repository
 import android.util.Log
 import com.volvocars.wearable_monitor.feature_glucose.data.local.GlucoseDao
 import com.volvocars.wearable_monitor.feature_glucose.data.remote.NightScoutApi
-import com.volvocars.wearable_monitor.feature_glucose.data.storage.SharedPreferenceStorage
 import com.volvocars.wearable_monitor.feature_glucose.data.util.fetchRemoteData
 import com.volvocars.wearable_monitor.feature_glucose.data.util.networkBoundResource
 import com.volvocars.wearable_monitor.feature_glucose.domain.model.Glucose
@@ -21,7 +20,6 @@ import javax.inject.Inject
 class DiabetesRepositoryImpl @Inject constructor(
     private val api: NightScoutApi,
     private val dao: GlucoseDao,
-    private val sharedPreferenceStorage: SharedPreferenceStorage,
 ) : DiabetesRepository {
 
     /**

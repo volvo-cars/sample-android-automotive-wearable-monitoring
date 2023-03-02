@@ -28,4 +28,20 @@ class PreferenceRepositoryImpl @Inject constructor(
     override fun getTimeFormat(): Long {
         return sharedPreferenceStorage.getTimeFormat()
     }
+
+    override fun getUnit(): String {
+        return sharedPreferenceStorage.getUnit()
+    }
+
+    override fun getCriticalNotificationInterval(): Long {
+        return sharedPreferenceStorage.getCriticalNotificationInterval()
+    }
+
+    override fun isGlucoseNotificationEnabled(): Boolean {
+        return sharedPreferenceStorage.getGlucoseNotificationEnabled()
+    }
+
+    override fun isGlucoseAlarmLowEnabled(): Boolean {
+        return sharedPreferenceStorage.getGlucoseAlarmLowEnabled()
+    }
 }

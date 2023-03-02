@@ -2,14 +2,16 @@ package com.volvocars.wearable_monitor.core.util
 
 import android.content.Context
 import com.volvocars.wearable_monitor.R
-import com.volvocars.wearable_monitor.feature_glucose.data.storage.SharedPreferenceStorage
+import com.volvocars.wearable_monitor.feature_glucose.domain.use_case.GetThresholds
+import com.volvocars.wearable_monitor.feature_glucose.domain.use_case.GetUnit
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import kotlin.math.pow
 import kotlin.math.roundToInt
 
 class GlucoseUtils @Inject constructor(
-    private val sharedPreferenceStorage: SharedPreferenceStorage,
+    private val getThresholds: GetThresholds,
+    private val getUnit: GetUnit,
     @ApplicationContext context: Context,
 ) {
     private val colorValueOutOfRange = context.getColor(R.color.value_out_of_range)
@@ -22,9 +24,10 @@ class GlucoseUtils @Inject constructor(
      * @return color value
      */
     fun sgvColor(sgv: Int): Int {
+        val threshold = getThresholds()
         return when {
-            sgv >= sharedPreferenceStorage.getThresholdHigh() || sgv <= sharedPreferenceStorage.getThresholdLow() -> colorValueOutOfRange
-            sgv in sharedPreferenceStorage.getThresholdTargetLow()..sharedPreferenceStorage.getThresholdTargetHigh() -> colorValueInRangeAndOk
+            sgv >= threshold.bgHigh || sgv <= threshold.bgLow -> colorValueOutOfRange
+            sgv in threshold.bgTargetBottom..threshold.bgTargetTop -> colorValueInRangeAndOk
             else -> colorValueInRangeAndNok
         }
     }
@@ -76,7 +79,7 @@ class GlucoseUtils @Inject constructor(
      * @return true if unit value is mmol else false
      */
     fun checkIsMmol(): Boolean {
-        return when (sharedPreferenceStorage.getUnit() == Constants.KEY_MMOL) {
+        return when (getUnit() == Constants.KEY_MMOL) {
             false -> false
             true -> true
         }

@@ -46,26 +46,7 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                viewModel.serverStatus.collect { state ->
-                    binding.login.visibility = if (state.isLoading) View.INVISIBLE else View.VISIBLE
-                    binding.loading.visibility =
-                        if (state.isLoading) View.VISIBLE else View.INVISIBLE
-
-                    if (state.isError) {
-                        Toast.makeText(requireContext(), state.errorMessage, LENGTH_LONG).show()
-                    }
-
-                    if (state.isSignedIn) {
-                        viewModel.sharedPreferenceStorage.setBaseUrl(binding.url.text.toString())
-                        viewModel.sharedPreferenceStorage.setUserSignedIn(true)
-                        viewModel.sharedPreferenceStorage.setPreferenceFromServerStatus(state.serverStatus.first()!!)
-                        loginSuccess()
-                    }
-                }
-            }
-        }
+        listenToServerState()
 
         // Check if a user already is signed in.. If yes, move to monitoring fragment instead
         val isUserSignedIn = viewModel.sharedPreferenceStorage.userSignedIn()
@@ -76,6 +57,7 @@ class LoginFragment : Fragment() {
         if (isUserSignedIn) {
             loginSuccess()
         }
+
         // If a user isn't signed in, start notification configurations is required
         sendCommandToService(ACTION_REQUIRE_CONFIGURATION, true)
 
@@ -94,6 +76,26 @@ class LoginFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun listenToServerState() = viewLifecycleOwner.lifecycleScope.launch {
+        repeatOnLifecycle(Lifecycle.State.RESUMED) {
+            viewModel.serverStatus.collect { state ->
+                binding.login.visibility = state.loginButtonVisibility()
+                binding.loading.visibility = state.loadingVisibility()
+
+                if (state.isError) {
+                    Toast.makeText(requireContext(), state.errorMessage, LENGTH_LONG).show()
+                }
+
+                if (state.isSignedIn) {
+                    viewModel.sharedPreferenceStorage.setBaseUrl(binding.url.text.toString())
+                    viewModel.sharedPreferenceStorage.setUserSignedIn(true)
+                    viewModel.sharedPreferenceStorage.setPreferenceFromServerStatus(state.serverStatus.first()!!)
+                    loginSuccess()
+                }
+            }
+        }
     }
 
     /**
@@ -127,6 +129,14 @@ class LoginFragment : Fragment() {
             it.action = action
             if (state) requireContext().startService(it) else requireContext().stopService(it)
         }
+    }
+
+    private fun LoginState.loginButtonVisibility(): Int {
+        return if (isLoading) View.INVISIBLE else View.VISIBLE
+    }
+
+    private fun LoginState.loadingVisibility(): Int {
+        return if (isLoading) View.VISIBLE else View.INVISIBLE
     }
 
     companion object {

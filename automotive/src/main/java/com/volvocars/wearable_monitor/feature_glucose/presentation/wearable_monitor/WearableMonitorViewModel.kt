@@ -1,6 +1,5 @@
 package com.volvocars.wearable_monitor.feature_glucose.presentation.wearable_monitor
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.PeriodicWorkRequest
