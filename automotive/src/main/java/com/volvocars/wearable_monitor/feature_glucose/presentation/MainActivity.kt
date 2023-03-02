@@ -8,7 +8,6 @@ import androidx.navigation.fragment.NavHostFragment
 import com.android.car.ui.core.CarUi
 import com.android.car.ui.toolbar.MenuItem
 import com.android.car.ui.toolbar.ToolbarController
-import com.mikepenz.aboutlibraries.LibsBuilder
 import com.volvocars.wearable_monitor.R
 import com.volvocars.wearable_monitor.databinding.ActivityMainBinding
 import com.volvocars.wearable_monitor.feature_glucose.domain.storage.Storage
