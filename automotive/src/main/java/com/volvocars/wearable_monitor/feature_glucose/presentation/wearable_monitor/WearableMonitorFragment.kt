@@ -38,8 +38,6 @@ import com.volvocars.wearable_monitor.databinding.FragmentWearableMonitorBinding
 import com.volvocars.wearable_monitor.feature_glucose.domain.model.Glucose
 import com.volvocars.wearable_monitor.feature_glucose.presentation.settings.WearableSettingsActivity
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -147,7 +145,6 @@ class WearableMonitorFragment : Fragment() {
         if (points.isEmpty()) {
             return
         }
-
         val isMmol = glucoseUtil.checkIsMmol()
 
         val entries = points.map { point ->
@@ -230,18 +227,18 @@ class WearableMonitorFragment : Fragment() {
      * Get notified when system minute changes
      */
     private fun startMinuteUpdater() {
-        val intentFilter = IntentFilter().apply {
+        IntentFilter().apply {
             addAction(Intent.ACTION_TIME_TICK)
-        }
-
-        minuteUpdateReceiver = object : BroadcastReceiver() {
-            override fun onReceive(context: Context?, intent: Intent?) {
-                val lastFetchedGlucose = viewModel.glucoseValues.value.glucoseValues.last()
-                binding.lastUpdated.text = getLastUpdated(lastFetchedGlucose)
+        }.also {
+            minuteUpdateReceiver = object : BroadcastReceiver() {
+                override fun onReceive(context: Context?, intent: Intent?) {
+                    val lastFetchedGlucose = viewModel.glucoseValues.value.glucoseValues.last()
+                    binding.lastUpdated.text = getLastUpdated(lastFetchedGlucose)
+                }
             }
-        }
 
-        requireActivity().registerReceiver(minuteUpdateReceiver, intentFilter)
+            requireActivity().registerReceiver(minuteUpdateReceiver, it)
+        }
     }
 
     /**
