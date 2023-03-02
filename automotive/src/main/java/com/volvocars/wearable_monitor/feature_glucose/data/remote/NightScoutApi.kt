@@ -6,11 +6,13 @@ import io.ktor.client.*
 import io.ktor.client.request.*
 import javax.inject.Inject
 
-class NightScoutApi @Inject constructor(private val client: HttpClient) {
+class NightScoutApi @Inject constructor(
+    private val client: HttpClient
+) {
     suspend fun getGlucose(
         url: String,
         count: Int,
-    ): Result<List<GlucoseDto>> = kotlin.runCatching {
+    ): Result<List<GlucoseDto>> = runCatching {
         client.get("$url/api/v1/entries.json") {
             parameter("count", count)
         }
