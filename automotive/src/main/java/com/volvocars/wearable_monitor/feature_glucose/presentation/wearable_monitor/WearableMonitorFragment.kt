@@ -36,11 +36,14 @@ import com.volvocars.wearable_monitor.core.util.Constants
 import com.volvocars.wearable_monitor.core.util.GlucoseUtils
 import com.volvocars.wearable_monitor.databinding.FragmentWearableMonitorBinding
 import com.volvocars.wearable_monitor.feature_glucose.domain.model.Glucose
+import com.volvocars.wearable_monitor.feature_glucose.domain.model.Thresholds
 import com.volvocars.wearable_monitor.feature_glucose.presentation.settings.WearableSettingsActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Locale
+import java.util.TimeZone
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -63,7 +66,7 @@ class WearableMonitorFragment : Fragment() {
             viewModel.fetchGlucoseValues()
 
             val timeInMillis = TimeUnit.MINUTES.toMillis(
-                viewModel.sharedPreferenceStorage.getGlucoseFetchInterval().toLong()
+                viewModel.getGlucoseFetchInterval().toLong()
             )
 
             glucoseFetchHandler.postDelayed(this, timeInMillis)
@@ -111,7 +114,7 @@ class WearableMonitorFragment : Fragment() {
         WorkManager.getInstance(requireContext()).enqueueUniquePeriodicWork(
             Constants.GLUCOSE_FETCH_WORK_ID,
             ExistingPeriodicWorkPolicy.REPLACE,
-            viewModel.glucoseFetchWorker
+            viewModel.getGlucoseFetchWorker()
         )
         renderChart()
         startMinuteUpdater()
@@ -201,6 +204,7 @@ class WearableMonitorFragment : Fragment() {
             } else {
                 points.last().sgvUnit.toString()
             }
+
             setTextColor(glucoseUtil.sgvColor(points.last().sgv))
         }
 
@@ -215,12 +219,14 @@ class WearableMonitorFragment : Fragment() {
 
         // Get string array from resource
         val units = resources.getStringArray(R.array.unit_entries)
+
         // Write the right unit entry depending on settings
-        binding.glucoseDiff.text =
-            getString(R.string.glucoseDiffText, valueDiff, (if (isMmol) units[0] else units[1]))
+        binding.glucoseDiff.text = getString(
+            R.string.glucoseDiffText,
+            valueDiff, (if (isMmol) units[0] else units[1])
+        )
 
-
-        binding.lastUpdated.text = getLastUpdated(points.last())
+        binding.lastUpdated.text = points.last().getRelativeTimeSpan()
     }
 
     /**
@@ -232,21 +238,20 @@ class WearableMonitorFragment : Fragment() {
         }.also {
             minuteUpdateReceiver = object : BroadcastReceiver() {
                 override fun onReceive(context: Context?, intent: Intent?) {
-                    val lastFetchedGlucose = viewModel.glucoseValues.value.glucoseValues.last()
-                    binding.lastUpdated.text = getLastUpdated(lastFetchedGlucose)
+                    viewModel.glucoseValues.value.glucoseValues.lastOrNull()?.let { glucose ->
+                        binding.lastUpdated.text = glucose.getRelativeTimeSpan()
+                    }
                 }
             }
-
             requireActivity().registerReceiver(minuteUpdateReceiver, it)
         }
     }
 
-    /**
-     * Get time since last updated glucose value
-     * @param glucose Last fetched glucose value
-     */
-    private fun getLastUpdated(glucose: Glucose) =
-        DateUtils.getRelativeTimeSpanString(glucose.date, Calendar.getInstance().timeInMillis, 0)
+    private fun Glucose.getRelativeTimeSpan(): String {
+        return DateUtils.getRelativeTimeSpanString(
+            date, Calendar.getInstance().timeInMillis, 0
+        ).toString()
+    }
 
     /**
      * Render the chart in the monitoring view.
@@ -292,7 +297,6 @@ class WearableMonitorFragment : Fragment() {
             isGranularityEnabled = true
             valueFormatter = xAxisValueFormatter()
         }
-
     }
 
     /**
@@ -311,42 +315,10 @@ class WearableMonitorFragment : Fragment() {
     }
 
     /**
-     * Create a list of limit lines
-     */
-    private fun createLimitLines(): List<LimitLine> {
-        val (thresholdLow, thresholdHigh, thresholdTargetLow, thresholdTargetHigh) = getThresholdValues()
-
-        val limitLineAlertLow = createLimitLine(
-            thresholdLow, requireContext().resources.getString(R.color.value_out_of_range)
-        )
-
-        val limitLineWarningLow = createLimitLine(
-            thresholdTargetLow,
-            requireContext().resources.getString(R.color.value_is_in_range_and_nok)
-        )
-
-        val limitLineAlertHigh = createLimitLine(
-            thresholdHigh, requireContext().resources.getString(R.color.value_out_of_range)
-        )
-
-        val limitLineWarningHigh = createLimitLine(
-            thresholdTargetHigh,
-            requireContext().resources.getString(R.color.value_is_in_range_and_nok)
-        )
-
-        return listOf(
-            limitLineAlertLow,
-            limitLineWarningLow,
-            limitLineAlertHigh,
-            limitLineWarningHigh
-        )
-    }
-
-    /**
      * Configure YAxis of glucose-chart
      */
     private fun configureYAxis() {
-        val (warningLow, alertLow, warningHigh, alertHigh) = createLimitLines()
+        val (warningLow, alertLow, warningHigh, alertHigh) = viewModel.getThresholds().toLimitLines()
         binding.glucoseChart.axisLeft.apply {
             removeAllLimitLines()
             addLimitLine(warningLow)
@@ -371,10 +343,11 @@ class WearableMonitorFragment : Fragment() {
      */
     private fun xAxisValueFormatter() = object : ValueFormatter() {
         override fun getFormattedValue(value: Float): String {
-            return when (viewModel.sharedPreferenceStorage.getTimeFormat()) {
+            return when (viewModel.getTimeFormat()) {
                 Constants.TIME_FORMAT_DEFAULT_VALUE -> {
                     SimpleDateFormat("H:mm", _locale)
                 }
+
                 else -> {
                     SimpleDateFormat("hh.mm aa", _locale)
                 }
@@ -384,21 +357,18 @@ class WearableMonitorFragment : Fragment() {
         }
     }
 
-
-    /**
-     * Read the threshold values from shared preferences and return it as a list
-     *
-     * @return threshold low, threshold high, threshold target high, threshold target low
-     */
-    private fun getThresholdValues(): List<Long> {
-        val thresholdLow = viewModel.sharedPreferenceStorage.getThresholdLow()
-        val thresholdHigh = viewModel.sharedPreferenceStorage.getThresholdHigh()
-        val thresholdTargetLow = viewModel.sharedPreferenceStorage.getThresholdTargetLow()
-        val thresholdTargetHigh = viewModel.sharedPreferenceStorage.getThresholdTargetHigh()
-
-        return listOf(thresholdLow, thresholdHigh, thresholdTargetLow, thresholdTargetHigh)
+    private fun Thresholds.toLimitLines(): List<LimitLine> {
+        return listOf(
+            bgLow.toLimitLine(requireContext().resources.getString(R.color.value_out_of_range)),
+            bgTargetBottom.toLimitLine(requireContext().resources.getString(R.color.value_is_in_range_and_nok)),
+            bgHigh.toLimitLine(requireContext().resources.getString(R.color.value_out_of_range)),
+            bgTargetTop.toLimitLine(requireContext().resources.getString(R.color.value_is_in_range_and_nok))
+        )
     }
 
+    private fun Long.toLimitLine(color: String): LimitLine {
+        return createLimitLine(this, color)
+    }
 
     companion object {
         val TAG = WearableMonitorFragment::class.simpleName

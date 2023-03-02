@@ -8,12 +8,10 @@ import com.volvocars.wearable_monitor.feature_glucose.domain.storage.Storage
 import com.volvocars.wearable_monitor.feature_glucose.data.local.GlucoseDatabase
 import com.volvocars.wearable_monitor.feature_glucose.data.remote.NightScoutApi
 import com.volvocars.wearable_monitor.feature_glucose.data.repository.DiabetesRepositoryImpl
+import com.volvocars.wearable_monitor.feature_glucose.data.repository.PreferenceRepositoryImpl
 import com.volvocars.wearable_monitor.feature_glucose.domain.repository.DiabetesRepository
-import com.volvocars.wearable_monitor.feature_glucose.domain.use_case.DeleteCachedGlucoseValues
-import com.volvocars.wearable_monitor.feature_glucose.domain.use_case.FetchGlucoseValues
-import com.volvocars.wearable_monitor.feature_glucose.domain.use_case.FetchServerStatus
-import com.volvocars.wearable_monitor.feature_glucose.domain.use_case.ObserveCachedGlucoseValues
 import com.volvocars.wearable_monitor.feature_glucose.data.storage.SharedPreferenceStorage
+import com.volvocars.wearable_monitor.feature_glucose.domain.repository.PreferenceRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,7 +31,11 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideDispatcher(): CoroutineDispatcher = Dispatchers.IO
+    fun provideDispatcherIO(): CoroutineDispatcher = Dispatchers.IO
+
+    @Singleton
+    @Provides
+    fun provideDispatcherDefault(): CoroutineDispatcher = Dispatchers.Default
 
     @Singleton
     @Provides
@@ -48,39 +50,30 @@ object AppModule {
         api: NightScoutApi,
         database: GlucoseDatabase,
         sharedPreferenceStorage: SharedPreferenceStorage
-    ): DiabetesRepository =
-        DiabetesRepositoryImpl(api, database.glucoseDao(), sharedPreferenceStorage)
+    ): DiabetesRepository = DiabetesRepositoryImpl(
+        api,
+        database.glucoseDao(),
+        sharedPreferenceStorage
+    )
 
     @Provides
     @Singleton
-    fun provideDeletedCachedGlucoseValues(repository: DiabetesRepository): DeleteCachedGlucoseValues =
-        DeleteCachedGlucoseValues(repository)
-
-    @Provides
-    @Singleton
-    fun provideGetGlucoseValues(repository: DiabetesRepository): FetchGlucoseValues =
-        FetchGlucoseValues(repository)
-
-    @Provides
-    @Singleton
-    fun provideGetServerStatus(repository: DiabetesRepository): FetchServerStatus =
-        FetchServerStatus(repository)
+    fun providePreferenceRepository(
+        sharedPreferenceStorage: SharedPreferenceStorage
+    ): PreferenceRepository = PreferenceRepositoryImpl(sharedPreferenceStorage)
 
     @Singleton
     @Provides
-    fun provideObserveCachedGlucoseValues(repository: DiabetesRepository): ObserveCachedGlucoseValues =
-        ObserveCachedGlucoseValues(repository)
-
-    @Singleton
-    @Provides
-    fun provideSharedPreference(@ApplicationContext context: Context): SharedPreferences =
-        context.getSharedPreferences(
-            R.string.pk_instance_setting.toString(),
-            Context.MODE_PRIVATE
-        )
+    fun provideSharedPreference(
+        @ApplicationContext context: Context
+    ): SharedPreferences = context.getSharedPreferences(
+        R.string.pk_instance_setting.toString(),
+        Context.MODE_PRIVATE
+    )
 
     @Provides
     @Singleton
-    fun provideSharedPreferenceStorage(sharedPreferences: SharedPreferences): Storage =
-        SharedPreferenceStorage(sharedPreferences)
+    fun provideSharedPreferenceStorage(
+        sharedPreferences: SharedPreferences
+    ): Storage = SharedPreferenceStorage(sharedPreferences)
 }

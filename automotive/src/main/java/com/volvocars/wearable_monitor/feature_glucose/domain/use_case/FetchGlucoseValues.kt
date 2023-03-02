@@ -2,13 +2,18 @@ package com.volvocars.wearable_monitor.feature_glucose.domain.use_case
 
 import com.volvocars.wearable_monitor.feature_glucose.domain.model.Glucose
 import com.volvocars.wearable_monitor.feature_glucose.domain.repository.DiabetesRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import javax.inject.Inject
 
 /**
  * Fetch glucose values from the server.
  */
-class FetchGlucoseValues(private val diabetesRepository: DiabetesRepository) {
+class FetchGlucoseValues @Inject constructor(
+    private val diabetesRepository: DiabetesRepository,
+) {
     /**
      * Call the getGlucose function from [DiabetesRepository]
      *
@@ -22,6 +27,6 @@ class FetchGlucoseValues(private val diabetesRepository: DiabetesRepository) {
             return flow {}
         }
 
-        return diabetesRepository.fetchGlucoseValues(url, count)
+        return diabetesRepository.fetchGlucoseValues(url, count).flowOn(Dispatchers.IO)
     }
 }
