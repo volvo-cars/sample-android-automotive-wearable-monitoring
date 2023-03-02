@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.hilt.work.HiltWorker
 import androidx.work.Worker
 import androidx.work.WorkerParameters
-import com.volvocars.wearable_monitor.core.util.Constants
 import com.volvocars.wearable_monitor.feature_glucose.domain.storage.Storage
 import com.volvocars.wearable_monitor.feature_glucose.domain.use_case.FetchGlucoseValues
 import dagger.assisted.Assisted
@@ -26,12 +25,10 @@ class GlucoseFetchWorker @AssistedInject constructor(
 
     override fun doWork(): Result {
         scope.launch {
-            val baseUrl = sharedPreferences.getBaseUrl()
-            if (sharedPreferences.userSignedIn() && baseUrl != Constants.BASE_URL) {
-                fetchGlucoseValues.invoke(baseUrl, 50).collect()
+            if (sharedPreferences.userSignedIn()) {
+                fetchGlucoseValues.invoke(sharedPreferences.getBaseUrl(), 50).collect()
             }
         }
-
         return Result.success()
     }
 
