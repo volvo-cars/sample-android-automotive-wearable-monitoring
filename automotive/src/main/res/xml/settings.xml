@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/fragment_settings"
+    android:title="@string/settings_toolbar_title">
+    <PreferenceCategory android:title="@string/general_preferences">
+        <com.android.car.ui.preference.CarUiListPreference
+            android:entries="@array/timeformat_entries"
+            android:entryValues="@array/timeformat_values"
+            android:key="@string/pk_time_format"
+            android:summary="@string/not_set"
+            android:title="@string/time_format"
+            app:useSimpleSummaryProvider="true" />
+        <com.android.car.ui.preference.CarUiListPreference
+            android:entries="@array/unit_entries"
+            android:entryValues="@array/unit_values"
+            android:key="@string/pk_unit"
+            android:summary="@string/not_set"
+            android:title="@string/unit" />
+        <com.android.car.ui.preference.CarUiEditTextPreference
+            android:dialogTitle="Glucose Fetch Interval"
+            android:inputType="numberDecimal"
+            android:key="pk_glucose_fetch_interval"
+            android:summary="5"
+            app:title="Glucose Fetch Interval" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/thresholds_preferences">
+        <com.android.car.ui.preference.CarUiEditTextPreference
+            android:dialogTitle="@string/thresholds_high"
+            android:digits="0123456789"
+            android:inputType="numberDecimal"
+            android:key="@string/pk_thresholds_high"
+            android:summary="@string/not_set"
+            android:title="@string/thresholds_high" />
+        <com.android.car.ui.preference.CarUiEditTextPreference
+            android:dialogTitle="@string/thresholds_targetHigh"
+            android:digits="0123456789"
+            android:inputType="numberDecimal"
+            android:key="@string/pk_thresholds_targetHigh"
+            android:summary="@string/not_set"
+            android:title="@string/thresholds_targetHigh" />
+        <com.android.car.ui.preference.CarUiEditTextPreference
+            android:dialogTitle="@string/thresholds_targetLow"
+            android:digits="0123456789"
+            android:inputType="numberDecimal"
+            android:key="@string/pk_thresholds_targetLow"
+            android:summary="@string/not_set"
+            android:title="@string/thresholds_targetLow" />
+        <com.android.car.ui.preference.CarUiEditTextPreference
+            android:dialogTitle="@string/thresholds_low"
+            android:digits="0123456789"
+            android:inputType="numberDecimal"
+            android:key="@string/pk_thresholds_low"
+            android:summary="@string/not_set"
+            android:title="@string/thresholds_low" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/alarm_preferences">
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/pk_glucoseNotification_setting"
+            android:summary="@string/glucoseNotification_checkbox_preference"
+            android:title="@string/glucoseNotification_setting" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/pk_alarmLow_setting"
+            android:summary="@string/alarmLow_checkbox_preference"
+            android:title="@string/alarmLow_setting" />
+        <EditTextPreference
+            android:dialogTitle="@string/alarmLow_notification_interval"
+            android:key="@string/pk_alarmLow_notification_interval"
+            android:summary="@string/not_set"
+            android:title="@string/alarmLow_notification_interval" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/other_preferences">
+        <Preference
+            android:key="@string/pk_oss_licenses"
+            android:title="@string/open_source_licenses_title" />
+        <Preference
+            android:key="@string/pk_logout_preference"
+            android:summary="@string/you_are_logged_in_with_instance"
+            android:title="Logout" />
+    </PreferenceCategory>
+</PreferenceScreen>
