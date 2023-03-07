@@ -4,8 +4,10 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.volvocars.wearable_monitor.core.util.GlucoseUtils
 import com.volvocars.wearable_monitor.feature_glucose.data.repository.FakeDiabetesRepository
+import com.volvocars.wearable_monitor.feature_glucose.data.repository.FakePreferenceRepository
 import com.volvocars.wearable_monitor.feature_glucose.data.storage.SharedPreferenceStorage
 import com.volvocars.wearable_monitor.feature_glucose.domain.repository.DiabetesRepository
+import com.volvocars.wearable_monitor.feature_glucose.domain.repository.PreferenceRepository
 import com.volvocars.wearable_monitor.feature_glucose.domain.storage.Storage
 import com.volvocars.wearable_monitor.feature_glucose.domain.use_case.DeleteCachedGlucoseValues
 import com.volvocars.wearable_monitor.feature_glucose.domain.use_case.FetchGlucoseValues
@@ -32,6 +34,10 @@ object TestAppModule {
     @Singleton
     @Provides
     fun provideDiabetesRepository(): DiabetesRepository = FakeDiabetesRepository()
+
+    @Provides
+    @Singleton
+    fun providePreferenceRepository(): PreferenceRepository = FakePreferenceRepository()
 
     @Provides
     @Singleton

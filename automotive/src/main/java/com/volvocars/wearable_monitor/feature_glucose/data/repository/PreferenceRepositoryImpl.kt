@@ -1,5 +1,6 @@
 package com.volvocars.wearable_monitor.feature_glucose.data.repository
 
+import android.util.Log
 import com.volvocars.wearable_monitor.feature_glucose.data.storage.SharedPreferenceStorage
 import com.volvocars.wearable_monitor.feature_glucose.domain.repository.PreferenceRepository
 import com.volvocars.wearable_monitor.feature_glucose.domain.util.ThresholdUnit
@@ -18,6 +19,7 @@ class PreferenceRepositoryImpl @Inject constructor(
     }
 
     override fun setThresholdValue(thresholdName: String, thresholdValue: Long) {
+        Log.d(TAG, "setThresholdValue: $thresholdName $thresholdValue")
         sharedPreferenceStorage.setThresholdValue(thresholdName, thresholdValue)
     }
 
@@ -63,5 +65,9 @@ class PreferenceRepositoryImpl @Inject constructor(
 
     override fun setUnit(unit: String) {
         sharedPreferenceStorage.setUnit(unit)
+    }
+
+    companion object {
+        private val TAG = PreferenceRepositoryImpl::class.simpleName
     }
 }

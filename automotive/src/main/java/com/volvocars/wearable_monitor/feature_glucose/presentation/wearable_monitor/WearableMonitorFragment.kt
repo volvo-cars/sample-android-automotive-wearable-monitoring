@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.format.DateUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -212,6 +213,7 @@ class WearableMonitorFragment : Fragment() {
      */
     private fun renderChart() {
         configureGlucoseChart()
+        Log.d(TAG, "renderChart: ${viewModel.getThresholds()}")
         binding.glucoseChart.xAxis.configure()
         binding.glucoseChart.axisLeft.configureGlucoseValues(
             viewModel.getThresholds().toLimitLines(),
