@@ -4,7 +4,7 @@ buildscript {
         'application_id'  : "com.volvocars.wearable_monitor",
         'build_tools'     : "30.0.3",
         'build_gradle'    : '7.3.0',
-        'kotlin'          : "1.8.0",
+        'kotlin'          : "1.8.10",
         'hilt'            : '2.44',
         'minSdk'          : 29,
         'targetSdk'       : 30,
