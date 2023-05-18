@@ -21,7 +21,7 @@
         android:theme="@style/Theme.DiabetesMonitor">
 
         <activity
-            android:name=".feature_glucose.presentation.MainActivity"
+            android:name=".presentation.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.CarUi.WithToolbar">
             <meta-data
@@ -35,7 +35,7 @@
         </activity>
 
         <activity
-            android:name=".feature_glucose.presentation.settings.WearableSettingsActivity"
+            android:name=".presentation.settings.WearableSettingsActivity"
             android:exported="false"
             android:label="Settings"
             android:theme="@style/Theme.CarUi.WithToolbar">
@@ -45,7 +45,7 @@
         </activity>
 
         <receiver
-            android:name=".service.ServiceStarter"
+            android:name=".core.service.ServiceStarter"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
@@ -54,7 +54,7 @@
         </receiver>
 
         <service
-            android:name=".service.NotificationService"
+            android:name=".core.service.NotificationService"
             android:enabled="true" />
 
         <provider

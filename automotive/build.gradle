@@ -12,19 +12,17 @@ plugins {
 }
 
 android {
-    namespace 'com.volvocars.wearable_monitor'
-
-    compileSdkVersion rootProject.ext.versions.compileSdk
-    buildToolsVersion rootProject.ext.versions.build_tools
+    namespace 'com.volvocars.wearablemonitor'
 
     defaultConfig {
         applicationId rootProject.ext.versions.application_id
         minSdkVersion rootProject.ext.versions.minSdk
         targetSdkVersion rootProject.ext.versions.targetSdk
+        compileSdk rootProject.ext.versions.compileSdk
         versionCode rootProject.ext.versions.code
         versionName rootProject.ext.versions.name
 
-        testInstrumentationRunner "com.volvocars.wearable_monitor.HiltTestRunner"
+        testInstrumentationRunner "com.volvocars.wearablemonitor.HiltTestRunner"
     }
 
     signingConfigs {
@@ -66,12 +64,6 @@ android {
 
     buildFeatures {
         viewBinding true
-    }
-
-    testOptions {
-        unitTests {
-            includeAndroidResources = true
-        }
     }
 
     lint {
