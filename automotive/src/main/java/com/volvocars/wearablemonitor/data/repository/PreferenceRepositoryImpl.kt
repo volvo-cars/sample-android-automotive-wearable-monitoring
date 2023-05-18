@@ -63,6 +63,10 @@ class PreferenceRepositoryImpl @Inject constructor(
         return sharedPreferenceStorage.getGlucoseAlarmLowEnabled()
     }
 
+    override fun isUserSignedIn(): Boolean {
+        return sharedPreferenceStorage.userSignedIn()
+    }
+
     override fun clearData() {
         sharedPreferenceStorage.clear()
     }

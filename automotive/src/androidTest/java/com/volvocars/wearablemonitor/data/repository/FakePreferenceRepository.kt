@@ -56,6 +56,10 @@ class FakePreferenceRepository : PreferenceRepository {
         TODO("Not yet implemented")
     }
 
+    override fun isUserSignedIn(): Boolean {
+        TODO("Not yet implemented")
+    }
+
     override fun clearData() {
         TODO("Not yet implemented")
     }

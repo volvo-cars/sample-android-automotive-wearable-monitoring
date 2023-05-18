@@ -16,5 +16,6 @@ interface PreferenceRepository {
     fun setCriticalNotificationInterval(interval: Long)
     fun isGlucoseNotificationEnabled(): Boolean
     fun isGlucoseAlarmLowEnabled(): Boolean
+    fun isUserSignedIn(): Boolean
     fun clearData()
 }
