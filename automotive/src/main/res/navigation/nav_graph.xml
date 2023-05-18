@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.volvocars.wearable_monitor.feature_glucose.presentation.login.LoginFragment"
+        android:name="com.volvocars.wearablemonitor.presentation.login.LoginFragment"
         android:label="LoginFragment" >
         <action
             android:id="@+id/action_loginFragment_to_diabetesMonitorFragment"
@@ -14,6 +14,6 @@
     </fragment>
     <fragment
         android:id="@+id/diabetesMonitorFragment"
-        android:name="com.volvocars.wearable_monitor.feature_glucose.presentation.wearable_monitor.WearableMonitorFragment"
+        android:name="com.volvocars.wearablemonitor.presentation.wearablemonitor.WearableMonitorFragment"
         android:label="DiabetesMonitorFragment" />
 </navigation>
