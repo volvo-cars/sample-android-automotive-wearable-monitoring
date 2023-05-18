@@ -2,21 +2,20 @@ package com.volvocars.wearablemonitor.data.repository
 
 import android.util.Log
 import com.volvocars.wearablemonitor.data.local.dao.GlucoseDao
+import com.volvocars.wearablemonitor.data.mapper.toGlucose
+import com.volvocars.wearablemonitor.data.mapper.toGlucoseEntity
+import com.volvocars.wearablemonitor.data.mapper.toServerStatus
 import com.volvocars.wearablemonitor.data.remote.NightScoutApi
 import com.volvocars.wearablemonitor.data.util.fetchRemoteData
 import com.volvocars.wearablemonitor.data.util.networkBoundResource
 import com.volvocars.wearablemonitor.domain.model.Glucose
 import com.volvocars.wearablemonitor.domain.model.ServerStatus
 import com.volvocars.wearablemonitor.domain.repository.DiabetesRepository
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-@InternalCoroutinesApi
-@ExperimentalCoroutinesApi
 class DiabetesRepositoryImpl @Inject constructor(
     private val api: NightScoutApi,
     private val dao: GlucoseDao,

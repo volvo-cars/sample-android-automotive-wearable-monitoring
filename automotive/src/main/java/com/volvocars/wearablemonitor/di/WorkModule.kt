@@ -4,7 +4,7 @@ import androidx.work.Constraints
 import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequest
 import androidx.work.PeriodicWorkRequestBuilder
-import com.volvocars.wearablemonitor.core.service.GlucoseFetchWorker
+import com.volvocars.wearablemonitor.core.worker.GlucoseFetchWorker
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -1,6 +1,5 @@
 package com.volvocars.wearablemonitor.data.remote.dto
 
-import com.volvocars.wearablemonitor.data.local.entity.GlucoseEntity
 import kotlinx.serialization.SerialName
 
 @kotlinx.serialization.Serializable
@@ -19,14 +18,4 @@ data class GlucoseDto(
     val direction: String,
     @SerialName("type")
     val type: String,
-) {
-    fun toGlucoseEntity() = GlucoseEntity(
-        id = id,
-        sgv = sgv,
-        date = date,
-        dateString = dateString,
-        trend = trend,
-        direction = direction,
-        type = type
-    )
-}
+)

@@ -1,21 +1,22 @@
-package com.volvocars.wearablemonitor.core.service
+package com.volvocars.wearablemonitor.core.receiver
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequest
-import androidx.work.WorkManager
-import com.volvocars.wearablemonitor.core.util.Constants
+import com.volvocars.wearablemonitor.core.service.WearableMonitorService
+import com.volvocars.wearablemonitor.core.util.NotificationConstants.ACTION_REQUIRE_CONFIGURATION
+import com.volvocars.wearablemonitor.core.util.NotificationConstants.ACTION_SHOW_GLUCOSE_VALUES
+import com.volvocars.wearablemonitor.core.worker.GlucoseFetchWorker
 import com.volvocars.wearablemonitor.data.storage.SharedPreferenceStorage
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ServiceStarter : BroadcastReceiver() {
+class BootCompleteReceiver : BroadcastReceiver() {
 
     @Inject
-    lateinit var glucoseFetchWorker: PeriodicWorkRequest
+    lateinit var glucoseFetchRequest: PeriodicWorkRequest
 
     @Inject
     lateinit var sharedPreferenceStorage: SharedPreferenceStorage
@@ -26,17 +27,13 @@ class ServiceStarter : BroadcastReceiver() {
     ) {
         if (intent.action.equals(Intent.ACTION_BOOT_COMPLETED) || equals(Intent.ACTION_LOCKED_BOOT_COMPLETED)) {
             context?.let {
-                WorkManager.getInstance(it).enqueueUniquePeriodicWork(
-                    Constants.GLUCOSE_FETCH_WORK_ID,
-                    ExistingPeriodicWorkPolicy.REPLACE,
-                    glucoseFetchWorker
-                )
+                GlucoseFetchWorker.create(it, glucoseFetchRequest)
                 if (sharedPreferenceStorage.userSignedIn()) {
                     if (sharedPreferenceStorage.getGlucoseNotificationEnabled()) {
-                        sendCommandToService(it, Constants.ACTION_SHOW_GLUCOSE_VALUES)
+                        sendCommandToService(it, ACTION_SHOW_GLUCOSE_VALUES)
                     }
                 } else {
-                    sendCommandToService(it, Constants.ACTION_REQUIRE_CONFIGURATION)
+                    sendCommandToService(it, ACTION_REQUIRE_CONFIGURATION)
                 }
             }
         }
@@ -44,13 +41,13 @@ class ServiceStarter : BroadcastReceiver() {
 
     private fun sendCommandToService(context: Context, action: String) {
         Intent("com.volvocars.wearable_monitor.service.NotificationService").also {
-            it.setClass(context, NotificationService::class.java)
+            it.setClass(context, WearableMonitorService::class.java)
             it.action = action
             context.startForegroundService(it)
         }
     }
 
     companion object {
-        val TAG = ServiceStarter::class.simpleName
+        val TAG = BootCompleteReceiver::class.simpleName
     }
 }
