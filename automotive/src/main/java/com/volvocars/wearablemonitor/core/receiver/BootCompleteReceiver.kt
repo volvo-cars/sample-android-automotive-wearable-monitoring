@@ -8,7 +8,7 @@ import com.volvocars.wearablemonitor.core.service.WearableMonitorService
 import com.volvocars.wearablemonitor.core.util.NotificationConstants.ACTION_REQUIRE_CONFIGURATION
 import com.volvocars.wearablemonitor.core.util.NotificationConstants.ACTION_SHOW_GLUCOSE_VALUES
 import com.volvocars.wearablemonitor.core.worker.GlucoseFetchWorker
-import com.volvocars.wearablemonitor.data.storage.SharedPreferenceStorage
+import com.volvocars.wearablemonitor.domain.usecase.IsUserSignedIn
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -19,31 +19,21 @@ class BootCompleteReceiver : BroadcastReceiver() {
     lateinit var glucoseFetchRequest: PeriodicWorkRequest
 
     @Inject
-    lateinit var sharedPreferenceStorage: SharedPreferenceStorage
+    lateinit var isUserSignedIn: IsUserSignedIn
 
     override fun onReceive(
-        context: Context?,
+        context: Context,
         intent: Intent
     ) {
-        if (intent.action.equals(Intent.ACTION_BOOT_COMPLETED) || equals(Intent.ACTION_LOCKED_BOOT_COMPLETED)) {
-            context?.let {
-                GlucoseFetchWorker.create(it, glucoseFetchRequest)
-                if (sharedPreferenceStorage.userSignedIn()) {
-                    if (sharedPreferenceStorage.getGlucoseNotificationEnabled()) {
-                        sendCommandToService(it, ACTION_SHOW_GLUCOSE_VALUES)
-                    }
-                } else {
-                    sendCommandToService(it, ACTION_REQUIRE_CONFIGURATION)
-                }
+        if (intent.action.equals(Intent.ACTION_BOOT_COMPLETED)) {
+            GlucoseFetchWorker.create(context, glucoseFetchRequest)
+            if (isUserSignedIn()) {
+                WearableMonitorService.create(context, ACTION_SHOW_GLUCOSE_VALUES)
+            } else {
+                WearableMonitorService.create(context, ACTION_REQUIRE_CONFIGURATION)
+            }.also {
+                context.startForegroundService(it)
             }
-        }
-    }
-
-    private fun sendCommandToService(context: Context, action: String) {
-        Intent("com.volvocars.wearable_monitor.service.NotificationService").also {
-            it.setClass(context, WearableMonitorService::class.java)
-            it.action = action
-            context.startForegroundService(it)
         }
     }
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="background_color">#000000</color>
     <color name="value_out_of_range">#ea3a22</color>
     <color name="value_is_in_range_and_nok">#ffe403</color>
     <color name="value_is_in_range_and_ok">#63da29</color>

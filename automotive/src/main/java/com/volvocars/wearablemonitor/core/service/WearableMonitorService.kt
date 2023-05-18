@@ -1,5 +1,6 @@
 package com.volvocars.wearablemonitor.core.service
 
+import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.Network
@@ -211,5 +212,11 @@ class WearableMonitorService : LifecycleService() {
 
     companion object {
         val TAG = WearableMonitorService::class.simpleName
+
+        fun create(context: Context, action: String? = null): Intent {
+            return Intent(context, WearableMonitorService::class.java).apply {
+                setAction(action)
+            }
+        }
     }
 }

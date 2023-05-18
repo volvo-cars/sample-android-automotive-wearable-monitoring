@@ -1,6 +1,5 @@
 package com.volvocars.wearablemonitor.presentation.login
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,10 +15,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.volvocars.wearablemonitor.R
-import com.volvocars.wearablemonitor.databinding.FragmentLoginBinding
 import com.volvocars.wearablemonitor.core.service.WearableMonitorService
 import com.volvocars.wearablemonitor.core.util.NotificationConstants.ACTION_REQUIRE_CONFIGURATION
 import com.volvocars.wearablemonitor.core.util.NotificationConstants.ACTION_SHOW_GLUCOSE_VALUES
+import com.volvocars.wearablemonitor.databinding.FragmentLoginBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -59,7 +58,9 @@ class LoginFragment : Fragment() {
         }
 
         // If a user isn't signed in, start notification configurations is required
-        sendCommandToService(ACTION_REQUIRE_CONFIGURATION, true)
+        WearableMonitorService.create(requireContext(), ACTION_REQUIRE_CONFIGURATION).also {
+            requireContext().startForegroundService(it)
+        }
 
         binding.login.setOnClickListener {
             tryLoginIn()
@@ -110,25 +111,11 @@ class LoginFragment : Fragment() {
      * When we receive a successful api call and the api is enabled
      */
     private fun loginSuccess() {
-        // Remove the the notification that tells that configuration is required.
-        sendCommandToService(ACTION_REQUIRE_CONFIGURATION, false)
-
-        // If the glucose notification is enabled, start to show the glucose values as a notification.
-        if (viewModel.sharedPreferenceStorage.getGlucoseNotificationEnabled()) {
-            sendCommandToService(
-                ACTION_SHOW_GLUCOSE_VALUES,
-                viewModel.sharedPreferenceStorage.getGlucoseNotificationEnabled()
-            )
+        WearableMonitorService.create(requireContext(), ACTION_SHOW_GLUCOSE_VALUES).also {
+            requireContext().startForegroundService(it)
         }
 
         findNavController().navigate(R.id.diabetesMonitorFragment)
-    }
-
-    private fun sendCommandToService(action: String, state: Boolean) {
-        Intent(requireContext(), WearableMonitorService::class.java).also {
-            it.action = action
-            if (state) requireContext().startService(it) else requireContext().stopService(it)
-        }
     }
 
     private fun LoginState.loginButtonVisibility(): Int {
