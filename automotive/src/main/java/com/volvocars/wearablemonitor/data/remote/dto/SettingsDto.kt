@@ -1,6 +1,5 @@
 package com.volvocars.wearablemonitor.data.remote.dto
 
-import com.volvocars.wearablemonitor.domain.model.Settings
 import kotlinx.serialization.SerialName
 
 @kotlinx.serialization.Serializable
@@ -121,26 +120,4 @@ data class SettingsDto(
 
     @SerialName("units")
     val units: String,
-) {
-    fun toSettings() = Settings(
-        alarmHigh = alarmHigh,
-        alarmHighMins = alarmHighMins,
-        alarmLow = alarmLow,
-        alarmLowMins = alarmLowMins,
-        alarmPumpBatteryLow = alarmPumpBatteryLow,
-        alarmTimeagoUrgent = alarmTimeagoUrgent,
-        alarmTimeagoUrgentMins = alarmTimeagoUrgentMins,
-        alarmTimeagoWarn = alarmTimeagoWarn,
-        alarmTimeagoWarnMins = alarmTimeagoWarnMins,
-        alarmUrgentHigh = alarmUrgentHigh,
-        alarmUrgentHighMins = alarmUrgentHighMins,
-        alarmUrgentLow = alarmUrgentLow,
-        alarmUrgentLowMins = alarmUrgentLowMins,
-        alarmUrgentMins = alarmUrgentMins,
-        alarmWarnMins = alarmWarnMins,
-        baseURL = baseURL,
-        thresholds = thresholds.toThresholds(),
-        timeFormat = timeFormat,
-        units = units,
-    )
-}
+)

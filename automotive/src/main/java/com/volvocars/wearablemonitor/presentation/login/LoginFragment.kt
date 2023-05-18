@@ -16,10 +16,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.volvocars.wearablemonitor.R
-import com.volvocars.wearablemonitor.core.util.Constants.ACTION_REQUIRE_CONFIGURATION
-import com.volvocars.wearablemonitor.core.util.Constants.ACTION_SHOW_GLUCOSE_VALUES
 import com.volvocars.wearablemonitor.databinding.FragmentLoginBinding
-import com.volvocars.wearablemonitor.core.service.NotificationService
+import com.volvocars.wearablemonitor.core.service.WearableMonitorService
+import com.volvocars.wearablemonitor.core.util.NotificationConstants.ACTION_REQUIRE_CONFIGURATION
+import com.volvocars.wearablemonitor.core.util.NotificationConstants.ACTION_SHOW_GLUCOSE_VALUES
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -125,7 +125,7 @@ class LoginFragment : Fragment() {
     }
 
     private fun sendCommandToService(action: String, state: Boolean) {
-        Intent(requireContext(), NotificationService::class.java).also {
+        Intent(requireContext(), WearableMonitorService::class.java).also {
             it.action = action
             if (state) requireContext().startService(it) else requireContext().stopService(it)
         }

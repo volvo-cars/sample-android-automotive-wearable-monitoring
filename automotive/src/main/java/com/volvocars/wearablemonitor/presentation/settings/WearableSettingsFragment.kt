@@ -12,8 +12,6 @@ import com.android.car.ui.preference.CarUiEditTextPreference
 import com.android.car.ui.preference.CarUiListPreference
 import com.android.car.ui.preference.PreferenceFragment
 import com.volvocars.wearablemonitor.R
-import com.volvocars.wearablemonitor.core.util.Constants
-import com.volvocars.wearablemonitor.core.util.Constants.ACTION_SHOW_GLUCOSE_VALUES
 import com.volvocars.wearablemonitor.domain.usecase.ClearPreferenceStorage
 import com.volvocars.wearablemonitor.domain.usecase.DeleteCachedGlucoseValues
 import com.volvocars.wearablemonitor.domain.usecase.GetBaseUrl
@@ -33,7 +31,9 @@ import com.volvocars.wearablemonitor.presentation.OpenSourceLicensesDialogFragme
 import com.volvocars.wearablemonitor.presentation.util.oneDecimalPrecision
 import com.volvocars.wearablemonitor.presentation.util.sgvToUnit
 import com.volvocars.wearablemonitor.presentation.util.unitToSvg
-import com.volvocars.wearablemonitor.core.service.NotificationService
+import com.volvocars.wearablemonitor.core.service.WearableMonitorService
+import com.volvocars.wearablemonitor.core.util.Constants
+import com.volvocars.wearablemonitor.core.util.NotificationConstants.ACTION_SHOW_GLUCOSE_VALUES
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -281,7 +281,7 @@ class WearableSettingsFragment : PreferenceFragment() {
      * @param state If the provided action should be started or stopped
      */
     private fun sendCommandToService(action: String, state: Boolean) {
-        Intent(requireContext(), NotificationService::class.java).also {
+        Intent(requireContext(), WearableMonitorService::class.java).also {
             it.action = action
             if (state) requireContext().startService(it) else requireContext().stopService(it)
         }

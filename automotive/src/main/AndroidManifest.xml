@@ -45,7 +45,7 @@
         </activity>
 
         <receiver
-            android:name=".core.service.ServiceStarter"
+            android:name=".core.receiver.BootCompleteReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
@@ -54,7 +54,7 @@
         </receiver>
 
         <service
-            android:name=".core.service.NotificationService"
+            android:name=".core.service.WearableMonitorService"
             android:enabled="true" />
 
         <provider

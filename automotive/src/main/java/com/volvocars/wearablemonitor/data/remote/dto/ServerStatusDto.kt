@@ -28,15 +28,7 @@ data class ServerStatusDto(
     @SerialName("version")
     val version: String,
 ) {
-    fun toServerStatus() = ServerStatus(
-        apiEnabled = apiEnabled,
-        name = name,
-        serverTime = serverTime,
-        serverTimeEpoch = serverTimeEpoch,
-        settings = settings.toSettings(),
-        status = status,
-        version = version
-    )
+
 }
 
 
