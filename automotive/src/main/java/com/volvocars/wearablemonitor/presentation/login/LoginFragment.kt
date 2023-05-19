@@ -1,7 +1,6 @@
 package com.volvocars.wearablemonitor.presentation.login
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +16,6 @@ import androidx.navigation.fragment.findNavController
 import com.volvocars.wearablemonitor.R
 import com.volvocars.wearablemonitor.core.service.WearableMonitorService
 import com.volvocars.wearablemonitor.core.util.NotificationConstants.ACTION_REQUIRE_CONFIGURATION
-import com.volvocars.wearablemonitor.core.util.NotificationConstants.ACTION_SHOW_GLUCOSE_VALUES
 import com.volvocars.wearablemonitor.databinding.FragmentLoginBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -25,11 +23,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
     private var _binding: FragmentLoginBinding? = null
-
-    // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
-
-    // Init the view model
     private val viewModel: LoginViewModel by viewModels()
 
     override fun onCreateView(
@@ -44,33 +38,13 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         listenToServerState()
+        startForegroundService()
+        initLoginButton()
+        initUrlTextView()
 
-        // Check if a user already is signed in.. If yes, move to monitoring fragment instead
-        val isUserSignedIn = viewModel.sharedPreferenceStorage.userSignedIn()
-        val baseUrl = viewModel.sharedPreferenceStorage.getBaseUrl()
-        Log.d(TAG, "onViewCreated: UserSignedIn[$isUserSignedIn]->[$baseUrl]")
-
-        // If a user already signed in, continue to monitoring view
-        if (isUserSignedIn) {
+        if (viewModel.isUserSignedIn()) {
             loginSuccess()
-        }
-
-        // If a user isn't signed in, start notification configurations is required
-        WearableMonitorService.create(requireContext(), ACTION_REQUIRE_CONFIGURATION).also {
-            requireContext().startForegroundService(it)
-        }
-
-        binding.login.setOnClickListener {
-            tryLoginIn()
-        }
-
-        binding.url.setOnEditorActionListener { _, action, _ ->
-            if (action == EditorInfo.IME_ACTION_DONE || action == EditorInfo.IME_ACTION_GO) {
-                tryLoginIn()
-            }
-            false
         }
     }
 
@@ -90,9 +64,10 @@ class LoginFragment : Fragment() {
                 }
 
                 if (state.isSignedIn) {
-                    viewModel.sharedPreferenceStorage.setBaseUrl(binding.url.text.toString())
-                    viewModel.sharedPreferenceStorage.setUserSignedIn(true)
-                    viewModel.sharedPreferenceStorage.setPreferenceFromServerStatus(state.serverStatus.first()!!)
+                    viewModel.saveServerInformation(
+                        binding.url.text.toString(),
+                        state.serverStatus.first()
+                    )
                     loginSuccess()
                 }
             }
@@ -111,19 +86,24 @@ class LoginFragment : Fragment() {
      * When we receive a successful api call and the api is enabled
      */
     private fun loginSuccess() {
-        WearableMonitorService.create(requireContext(), ACTION_SHOW_GLUCOSE_VALUES).also {
-            requireContext().startForegroundService(it)
-        }
-
         findNavController().navigate(R.id.diabetesMonitorFragment)
     }
 
-    private fun LoginState.loginButtonVisibility(): Int {
-        return if (isLoading) View.INVISIBLE else View.VISIBLE
+    private fun startForegroundService() {
+        WearableMonitorService.startAsForeground(requireContext(), ACTION_REQUIRE_CONFIGURATION)
     }
 
-    private fun LoginState.loadingVisibility(): Int {
-        return if (isLoading) View.VISIBLE else View.INVISIBLE
+    private fun initLoginButton() {
+        binding.login.setOnClickListener { tryLoginIn() }
+    }
+
+    private fun initUrlTextView() {
+        binding.url.setOnEditorActionListener { _, action, _ ->
+            if (action == EditorInfo.IME_ACTION_DONE || action == EditorInfo.IME_ACTION_GO) {
+                tryLoginIn()
+            }
+            false
+        }
     }
 
     companion object {

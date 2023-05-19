@@ -6,11 +6,9 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.res.Configuration
 import android.graphics.Color
-import android.graphics.Typeface
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.text.format.DateUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -20,44 +18,39 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.WorkManager
 import com.android.car.ui.core.CarUi
 import com.android.car.ui.toolbar.MenuItem
 import com.android.car.ui.toolbar.ToolbarController
-import com.github.mikephil.charting.components.LimitLine
-import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
-import com.github.mikephil.charting.formatter.ValueFormatter
 import com.volvocars.wearablemonitor.R
-import com.volvocars.wearablemonitor.core.util.Constants
+import com.volvocars.wearablemonitor.core.service.WearableMonitorService
+import com.volvocars.wearablemonitor.core.util.NotificationConstants
+import com.volvocars.wearablemonitor.core.worker.GlucoseFetchWorker
 import com.volvocars.wearablemonitor.databinding.FragmentWearableMonitorBinding
 import com.volvocars.wearablemonitor.domain.model.Glucose
-import com.volvocars.wearablemonitor.domain.model.Thresholds
 import com.volvocars.wearablemonitor.presentation.model.GlucoseSummary
 import com.volvocars.wearablemonitor.presentation.settings.WearableSettingsActivity
 import com.volvocars.wearablemonitor.presentation.util.calculateDifference
+import com.volvocars.wearablemonitor.presentation.util.configure
+import com.volvocars.wearablemonitor.presentation.util.configureGlucoseValues
+import com.volvocars.wearablemonitor.presentation.util.getRelativeTimeSpan
 import com.volvocars.wearablemonitor.presentation.util.oneDecimalPrecision
-import com.volvocars.wearablemonitor.presentation.util.sgvToUnit
+import com.volvocars.wearablemonitor.presentation.util.toColor
+import com.volvocars.wearablemonitor.presentation.util.toLimitLines
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.Calendar
 import java.util.Locale
-import java.util.TimeZone
 import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
 class WearableMonitorFragment : Fragment() {
     private var _binding: FragmentWearableMonitorBinding? = null
     private val binding get() = _binding!!
-
     private val viewModel: WearableMonitorViewModel by viewModels()
     private lateinit var _locale: Locale
-
     private lateinit var minuteUpdateReceiver: BroadcastReceiver
     private lateinit var toolbarController: ToolbarController
     lateinit var glucoseFetchHandler: Handler
@@ -79,18 +72,18 @@ class WearableMonitorFragment : Fragment() {
         _binding = FragmentWearableMonitorBinding.inflate(inflater)
         glucoseFetchHandler = Handler(Looper.getMainLooper())
         _locale = Locale.getDefault()
+        startForegroundService()
 
-        toolbarController = CarUi.requireToolbar(requireActivity())
-        toolbarController.setMenuItems(initMenuItems())
+        toolbarController = CarUi.requireToolbar(requireActivity()).apply {
+            setMenuItems(initMenuItems())
+        }
 
         return binding.root
     }
 
     private fun initMenuItems() = listOf(
         MenuItem.builder(requireContext()).setToSettings().setOnClickListener {
-            Intent(requireContext(), WearableSettingsActivity::class.java).also {
-                startActivity(it)
-            }
+            WearableSettingsActivity.startActivity(requireContext())
         }.build()
     )
 
@@ -102,13 +95,7 @@ class WearableMonitorFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         glucoseFetchHandler.post(glucoseFetcher)
-
-        WorkManager.getInstance(requireContext()).enqueueUniquePeriodicWork(
-            Constants.GLUCOSE_FETCH_WORK_ID,
-            ExistingPeriodicWorkPolicy.REPLACE,
-            viewModel.getGlucoseFetchWorker()
-        )
-
+        GlucoseFetchWorker.create(requireContext(), viewModel.getGlucoseFetchWorker())
         renderChart()
         startMinuteUpdater()
     }
@@ -156,7 +143,7 @@ class WearableMonitorFragment : Fragment() {
         }
 
         val circleColors = points.map { point ->
-            point.sgv.toColor()
+            point.sgv.toColor(requireContext(), viewModel.getThresholds())
         }
 
         // create a dataset and give it a type
@@ -178,7 +165,7 @@ class WearableMonitorFragment : Fragment() {
         val lastFetchedGlucoseValue = lastFetchedValues.last()
 
         modifyChartData(glucoseDataSet)
-        modifyGlucoseValue(lastFetchedGlucoseValue, isUnitMmol)
+        modifyGlucoseValue(lastFetchedGlucoseValue)
         modifyGlucoseDirection(lastFetchedGlucoseValue)
         modifyGlucoseDiff(beforeLastFetchedValue, lastFetchedGlucoseValue, isUnitMmol)
         binding.lastUpdated.text = points.last().getRelativeTimeSpan()
@@ -202,21 +189,15 @@ class WearableMonitorFragment : Fragment() {
         }
     }
 
-    private fun GlucoseSummary.getRelativeTimeSpan(): String {
-        return DateUtils.getRelativeTimeSpanString(
-            date, Calendar.getInstance().timeInMillis, 0
-        ).toString()
-    }
-
     /**
      * Render the chart in the monitoring view.
      */
     private fun renderChart() {
         configureGlucoseChart()
         Log.d(TAG, "renderChart: ${viewModel.getThresholds()}")
-        binding.glucoseChart.xAxis.configure()
+        binding.glucoseChart.xAxis.configure(viewModel.getTimeFormat(), _locale)
         binding.glucoseChart.axisLeft.configureGlucoseValues(
-            viewModel.getThresholds().toLimitLines(),
+            viewModel.getThresholds().toLimitLines(requireContext(), viewModel.isUnitMmol()),
             viewModel.isUnitMmol()
         )
         binding.glucoseChart.axisRight.isEnabled = false
@@ -240,41 +221,6 @@ class WearableMonitorFragment : Fragment() {
         }
     }
 
-    /**
-     * Create a limit line
-     */
-    private fun createLimitLine(thresholdValue: Long, color: String): LimitLine {
-        val (dashedLineLength, dashedSpaceLength, dashedLinePhase) = Triple(10f, 12f, 15f)
-        val limit = sgvToUnit(thresholdValue.toInt(), viewModel.isUnitMmol())
-
-        return LimitLine(
-            limit, ""
-        ).apply {
-            lineColor = Color.parseColor(color)
-            textSize = 18f
-            enableDashedLine(dashedLineLength, dashedSpaceLength, dashedLinePhase)
-        }
-    }
-
-    /**
-     * Date formatter of XAxis values
-     */
-    private fun xAxisValueFormatter() = object : ValueFormatter() {
-        override fun getFormattedValue(value: Float): String {
-            return when (viewModel.getTimeFormat()) {
-                Constants.TIME_FORMAT_DEFAULT_VALUE -> {
-                    SimpleDateFormat("H:mm", _locale)
-                }
-
-                else -> {
-                    SimpleDateFormat("hh.mm aa", _locale)
-                }
-            }.apply {
-                timeZone = TimeZone.getDefault()
-            }.format(Calendar.getInstance().apply { timeInMillis = value.toLong() }.time)
-        }
-    }
-
     private fun modifyChartData(glucoseDataSet: LineDataSet) {
         val data = LineData(glucoseDataSet).apply {
             setValueTextColor(Color.WHITE)
@@ -292,21 +238,23 @@ class WearableMonitorFragment : Fragment() {
     private fun modifyGlucoseDirection(glucoseSummary: GlucoseSummary) {
         binding.glucoseDirection.apply {
             text = glucoseSummary.direction
-            setTextColor(glucoseSummary.sgv.toColor())
+            setTextColor(glucoseSummary.sgv.toColor(requireContext(), viewModel.getThresholds()))
         }
     }
 
-    private fun modifyGlucoseValue(
-        lastFetchedGlucoseValue: GlucoseSummary,
-        isUnitMmol: Boolean
-    ) {
+    private fun modifyGlucoseValue(lastFetchedGlucoseValue: GlucoseSummary) {
         binding.glucoseValueTxt.apply {
             text = if (viewModel.isUnitMmol()) {
                 lastFetchedGlucoseValue.sgvMmol.oneDecimalPrecision()
             } else {
                 lastFetchedGlucoseValue.sgvUnit.toString()
             }
-            setTextColor(lastFetchedGlucoseValue.sgv.toColor())
+            setTextColor(
+                lastFetchedGlucoseValue.sgv.toColor(
+                    requireContext(),
+                    viewModel.getThresholds()
+                )
+            )
         }
     }
 
@@ -328,64 +276,11 @@ class WearableMonitorFragment : Fragment() {
         )
     }
 
-    private fun com.volvocars.wearablemonitor.domain.model.Thresholds.toLimitLines(): List<LimitLine> {
-        return listOf(
-            bgLow.toLimitLine(requireContext().resources.getString(R.color.value_out_of_range)),
-            bgTargetBottom.toLimitLine(requireContext().resources.getString(R.color.value_is_in_range_and_nok)),
-            bgHigh.toLimitLine(requireContext().resources.getString(R.color.value_out_of_range)),
-            bgTargetTop.toLimitLine(requireContext().resources.getString(R.color.value_is_in_range_and_nok))
+    private fun startForegroundService() {
+        WearableMonitorService.startAsForeground(
+            requireContext(),
+            NotificationConstants.ACTION_SHOW_GLUCOSE_VALUES
         )
-    }
-
-    private fun Long.toLimitLine(color: String): LimitLine {
-        return createLimitLine(this, color)
-    }
-
-    private fun Int.toColor(): Int {
-        val colorValueOutOfRange = requireContext().getColor(R.color.value_out_of_range)
-        val colorValueInRangeAndOk = requireContext().getColor(R.color.value_is_in_range_and_ok)
-        val colorValueInRangeAndNok = requireContext().getColor(R.color.value_is_in_range_and_nok)
-        val threshold = viewModel.getThresholds()
-
-        return when {
-            this >= threshold.bgHigh || this <= threshold.bgLow -> colorValueOutOfRange
-            this in threshold.bgTargetBottom..threshold.bgTargetTop -> colorValueInRangeAndOk
-            else -> colorValueInRangeAndNok
-        }
-    }
-
-    private fun XAxis.configure() {
-        position = XAxis.XAxisPosition.BOTTOM_INSIDE
-        typeface = Typeface.DEFAULT_BOLD
-        textSize = 28f
-        textColor = Color.WHITE
-        setDrawAxisLine(false)
-        setDrawGridLines(false)
-        setCenterAxisLabels(false)
-        granularity = 6f // one hour
-        isGranularityEnabled = true
-        valueFormatter = xAxisValueFormatter()
-    }
-
-    private fun YAxis.configureGlucoseValues(
-        limitLines: List<LimitLine>,
-        isUnitMmol: Boolean
-    ) {
-        removeAllLimitLines()
-        addLimitLine(limitLines[0])
-        addLimitLine(limitLines[1])
-        addLimitLine(limitLines[2])
-        addLimitLine(limitLines[3])
-        setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART)
-        typeface = Typeface.DEFAULT
-        textColor = Color.WHITE
-        textSize = 28f
-        setDrawGridLines(false)
-        setDrawAxisLine(false)
-        isGranularityEnabled = false
-        axisMinimum = if (isUnitMmol) -1f else 18f
-        axisMaximum = if (isUnitMmol) 22f else 360f
-        textColor = Color.WHITE
     }
 
     companion object {

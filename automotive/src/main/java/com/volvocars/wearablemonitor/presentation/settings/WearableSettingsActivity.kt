@@ -1,5 +1,7 @@
 package com.volvocars.wearablemonitor.presentation.settings
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
 import com.android.car.ui.core.CarUi
@@ -28,5 +30,11 @@ class WearableSettingsActivity : FragmentActivity() {
 
     companion object {
         val TAG = WearableSettingsActivity::class.simpleName
+
+        fun startActivity(context: Context) {
+            Intent(context, WearableSettingsActivity::class.java).also {
+                context.startActivity(it)
+            }
+        }
     }
 }
