@@ -213,9 +213,11 @@ class WearableMonitorService : LifecycleService() {
     companion object {
         val TAG = WearableMonitorService::class.simpleName
 
-        fun create(context: Context, action: String? = null): Intent {
-            return Intent(context, WearableMonitorService::class.java).apply {
+        fun startAsForeground(context: Context, action: String? = null) {
+            Intent(context, WearableMonitorService::class.java).apply {
                 setAction(action)
+            }.also {
+                context.startForegroundService(it)
             }
         }
     }

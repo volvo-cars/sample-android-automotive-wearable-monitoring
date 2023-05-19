@@ -1,5 +1,8 @@
 package com.volvocars.wearablemonitor.presentation.util
 
+import android.content.Context
+import com.volvocars.wearablemonitor.R
+import com.volvocars.wearablemonitor.domain.model.Thresholds
 import kotlin.math.pow
 import kotlin.math.roundToInt
 
@@ -31,4 +34,16 @@ fun unitToSvg(unit: Float, isUnitMmol: Boolean): Float {
 
 fun Float.oneDecimalPrecision(): String {
     return "%.1f".format(this)
+}
+
+fun Int.toColor(context: Context, thresholds: Thresholds): Int {
+    val colorValueOutOfRange = context.getColor(R.color.value_out_of_range)
+    val colorValueInRangeAndOk = context.getColor(R.color.value_is_in_range_and_ok)
+    val colorValueInRangeAndNok = context.getColor(R.color.value_is_in_range_and_nok)
+
+    return when {
+        this >= thresholds.bgHigh || this <= thresholds.bgLow -> colorValueOutOfRange
+        this in thresholds.bgTargetBottom..thresholds.bgTargetTop -> colorValueInRangeAndOk
+        else -> colorValueInRangeAndNok
+    }
 }

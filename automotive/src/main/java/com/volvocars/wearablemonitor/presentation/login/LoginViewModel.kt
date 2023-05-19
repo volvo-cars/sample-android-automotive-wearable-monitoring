@@ -3,8 +3,13 @@ package com.volvocars.wearablemonitor.presentation.login
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.volvocars.wearablemonitor.domain.model.ServerStatus
 import com.volvocars.wearablemonitor.domain.storage.Storage
 import com.volvocars.wearablemonitor.domain.usecase.FetchServerStatus
+import com.volvocars.wearablemonitor.domain.usecase.IsUserSignedIn
+import com.volvocars.wearablemonitor.domain.usecase.SetBaseUrl
+import com.volvocars.wearablemonitor.domain.usecase.SetPreferenceFromServerStatus
+import com.volvocars.wearablemonitor.domain.usecase.SetUserSignedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +21,10 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val getServerStatus: FetchServerStatus,
-    val sharedPreferenceStorage: Storage,
+    private val isUserSignedIn: IsUserSignedIn,
+    private val setBaseUrl: SetBaseUrl,
+    private val setUserSignedIn: SetUserSignedIn,
+    private val setPreferenceFromServerStatus: SetPreferenceFromServerStatus
 ) : ViewModel() {
     private val _serverStatus = MutableStateFlow(LoginState())
     val serverStatus = _serverStatus.asStateFlow()
@@ -52,6 +60,14 @@ class LoginViewModel @Inject constructor(
                 )
             }
         }
+    }
+
+    fun isUserSignedIn() = isUserSignedIn.invoke()
+
+    fun saveServerInformation(url: String, serverStatus: ServerStatus) {
+        setBaseUrl(url)
+        setUserSignedIn(true)
+        setPreferenceFromServerStatus(serverStatus)
     }
 
     companion object {

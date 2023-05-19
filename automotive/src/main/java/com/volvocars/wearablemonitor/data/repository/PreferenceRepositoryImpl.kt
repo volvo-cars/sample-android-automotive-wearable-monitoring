@@ -2,6 +2,7 @@ package com.volvocars.wearablemonitor.data.repository
 
 import android.util.Log
 import com.volvocars.wearablemonitor.data.storage.SharedPreferenceStorage
+import com.volvocars.wearablemonitor.domain.model.ServerStatus
 import com.volvocars.wearablemonitor.domain.repository.PreferenceRepository
 import com.volvocars.wearablemonitor.domain.util.ThresholdUnit
 import javax.inject.Inject
@@ -9,6 +10,10 @@ import javax.inject.Inject
 class PreferenceRepositoryImpl @Inject constructor(
     private val sharedPreferenceStorage: SharedPreferenceStorage
 ) : PreferenceRepository {
+    override fun setPreferenceFromServerStatus(serverStatus: ServerStatus) {
+        sharedPreferenceStorage.setPreferenceFromServerStatus(serverStatus)
+    }
+
     override fun getThreshold(unit: ThresholdUnit): Long {
         return when (unit) {
             ThresholdUnit.LOW -> sharedPreferenceStorage.getThresholdLow()
@@ -33,6 +38,10 @@ class PreferenceRepositoryImpl @Inject constructor(
 
     override fun getBaseUrl(): String {
         return sharedPreferenceStorage.getBaseUrl()
+    }
+
+    override fun setBaseUrl(url: String) {
+        sharedPreferenceStorage.setBaseUrl(url)
     }
 
     override fun getTimeFormat(): Long {
@@ -65,6 +74,10 @@ class PreferenceRepositoryImpl @Inject constructor(
 
     override fun isUserSignedIn(): Boolean {
         return sharedPreferenceStorage.userSignedIn()
+    }
+
+    override fun setUserSignedIn(isUserSignedIn: Boolean) {
+        sharedPreferenceStorage.setUserSignedIn(isUserSignedIn)
     }
 
     override fun clearData() {

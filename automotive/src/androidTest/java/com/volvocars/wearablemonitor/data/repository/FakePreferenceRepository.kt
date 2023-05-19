@@ -1,9 +1,14 @@
 package com.volvocars.wearablemonitor.data.repository
 
+import com.volvocars.wearablemonitor.domain.model.ServerStatus
 import com.volvocars.wearablemonitor.domain.repository.PreferenceRepository
 import com.volvocars.wearablemonitor.domain.util.ThresholdUnit
 
 class FakePreferenceRepository : PreferenceRepository {
+    override fun setPreferenceFromServerStatus(serverStatus: ServerStatus) {
+        TODO("Not yet implemented")
+    }
+
     override fun getThreshold(unit: ThresholdUnit): Long {
         TODO("Not yet implemented")
     }
@@ -21,6 +26,10 @@ class FakePreferenceRepository : PreferenceRepository {
     }
 
     override fun getBaseUrl(): String {
+        TODO("Not yet implemented")
+    }
+
+    override fun setBaseUrl(url: String) {
         TODO("Not yet implemented")
     }
 
@@ -57,6 +66,10 @@ class FakePreferenceRepository : PreferenceRepository {
     }
 
     override fun isUserSignedIn(): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun setUserSignedIn(isUserSignedIn: Boolean) {
         TODO("Not yet implemented")
     }
 

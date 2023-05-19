@@ -36,7 +36,7 @@
 
         <activity
             android:name=".presentation.settings.WearableSettingsActivity"
-            android:exported="false"
+            android:exported="true"
             android:label="Settings"
             android:theme="@style/Theme.CarUi.WithToolbar">
             <intent-filter>

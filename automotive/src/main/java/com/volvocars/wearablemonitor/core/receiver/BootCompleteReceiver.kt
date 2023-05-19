@@ -28,11 +28,9 @@ class BootCompleteReceiver : BroadcastReceiver() {
         if (intent.action.equals(Intent.ACTION_BOOT_COMPLETED)) {
             GlucoseFetchWorker.create(context, glucoseFetchRequest)
             if (isUserSignedIn()) {
-                WearableMonitorService.create(context, ACTION_SHOW_GLUCOSE_VALUES)
+                WearableMonitorService.startAsForeground(context, ACTION_SHOW_GLUCOSE_VALUES)
             } else {
-                WearableMonitorService.create(context, ACTION_REQUIRE_CONFIGURATION)
-            }.also {
-                context.startForegroundService(it)
+                WearableMonitorService.startAsForeground(context, ACTION_REQUIRE_CONFIGURATION)
             }
         }
     }
