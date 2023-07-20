@@ -34,26 +34,27 @@ class DiabetesRepositoryImpl @Inject constructor(
      *   this seems to be the easiest solution for now.
      *   The url annotator can maybe be replaced with an interceptor later.
      */
-    override fun fetchGlucoseValues(url: String, counts: Int): Flow<Result<List<com.volvocars.wearablemonitor.domain.model.Glucose>>> =
-        networkBoundResource(
-            query = {
-                dao.fetchGlucoseEntities(counts).map { glucoseList ->
-                    Result.success(glucoseList.map { it.toGlucose() }.sorted())
-                }
-            },
-            fetch = {
-                delay(1000)
-                api.getGlucose(url, counts).mapCatching { list ->
-                    list.map {
-                        it.toGlucoseEntity()
-                    }
-                }
-            },
-            saveFetchResult = { glucoseValues ->
-                dao.deleteAllGlucoseEntities()
-                dao.insertGlucoseEntityList(glucoseValues.getOrThrow())
+    override fun fetchGlucoseValues(
+        url: String, counts: Int
+    ): Flow<Result<List<Glucose>>> = networkBoundResource(
+        query = {
+            dao.fetchGlucoseEntities(counts).map { glucoseList ->
+                Result.success(glucoseList.map { it.toGlucose() }.sorted())
             }
-        )
+        },
+        fetch = {
+            delay(1000)
+            api.getGlucose(url, counts).mapCatching { list ->
+                list.map {
+                    it.toGlucoseEntity()
+                }
+            }
+        },
+        saveFetchResult = { glucoseValues ->
+            dao.deleteAllGlucoseEntities()
+            dao.insertGlucoseEntityList(glucoseValues.getOrDefault(emptyList()))
+        }
+    )
 
     /**
      **
@@ -64,13 +65,14 @@ class DiabetesRepositoryImpl @Inject constructor(
      *   this seems to be the easiest solution for now.
      *   The url annotator can maybe be replaced with an interceptor later.
      */
-    override fun fetchServerStatus(url: String): Flow<Result<com.volvocars.wearablemonitor.domain.model.ServerStatus>> =
-        fetchRemoteData { api.getStatus(url) }.map { response ->
-            Log.d(TAG, "fetchServerStatus: $response")
-            response.mapCatching {
-                it.toServerStatus()
-            }
+    override fun fetchServerStatus(
+        url: String
+    ): Flow<Result<ServerStatus>> = fetchRemoteData { api.getStatus(url) }.map { response ->
+        Log.d(TAG, "fetchServerStatus: $response")
+        response.mapCatching {
+            it.toServerStatus()
         }
+    }
 
     /**
      * Fetch cached glucose values stored in the local room database
@@ -78,10 +80,11 @@ class DiabetesRepositoryImpl @Inject constructor(
      * @param counts How many entries to fetch
      * @return a list of [Glucose] in a [Flow]
      */
-    override fun fetchCachedGlucoseValues(counts: Int): Flow<List<com.volvocars.wearablemonitor.domain.model.Glucose>> =
-        dao.fetchGlucoseEntities(counts).map { entityList ->
-            entityList.map { it.toGlucose() }.sorted()
-        }
+    override fun fetchCachedGlucoseValues(
+        counts: Int
+    ): Flow<List<Glucose>> = dao.fetchGlucoseEntities(counts).map { entityList ->
+        entityList.map { it.toGlucose() }.sorted()
+    }
 
     /**
      * Delete all cached glucose values

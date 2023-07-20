@@ -2,6 +2,7 @@ package com.volvocars.wearablemonitor
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import io.mockk.MockKAnnotations
+import io.mockk.clearAllMocks
 import junit.framework.TestCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.After
@@ -30,5 +31,6 @@ abstract class BaseInstantTestCase : TestCase() {
     @After
     public override fun tearDown() {
         super.tearDown()
+        clearAllMocks()
     }
 }
