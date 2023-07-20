@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.hilt)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.navigation.safe.args)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.sonarqube)
     alias(libs.plugins.ksp)
