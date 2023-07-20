@@ -1,28 +1,32 @@
 plugins {
-    id 'com.android.application'
-    id 'kotlin-android'
-    id 'kotlin-parcelize'
-    id 'kotlin-kapt'
-    id 'dagger.hilt.android.plugin'
-    id 'kotlinx-serialization'
-    id 'com.mikepenz.aboutlibraries.plugin'
-    id "org.sonarqube" version "3.4.0.2513"
-    id 'com.jaredsburrows.license'
-    id 'org.jetbrains.kotlin.android'
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.hilt)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.sonarqube)
+    alias(libs.plugins.ksp)
+//    id 'com.mikepenz.aboutlibraries.plugin'
+//    id 'com.jaredsburrows.license'
 }
 
 android {
     namespace 'com.volvocars.wearablemonitor'
 
     defaultConfig {
-        applicationId rootProject.ext.versions.application_id
-        minSdkVersion rootProject.ext.versions.minSdk
-        targetSdkVersion rootProject.ext.versions.targetSdk
-        compileSdk rootProject.ext.versions.compileSdk
-        versionCode rootProject.ext.versions.code
-        versionName rootProject.ext.versions.name
+        applicationId "com.volvocars.wearablemonitor"
+        minSdkVersion 29
+        targetSdkVersion 31
+        compileSdk 33
+        versionCode 1
+        versionName "1.0"
 
         testInstrumentationRunner "com.volvocars.wearablemonitor.HiltTestRunner"
+
+        ksp {
+            arg('room.schemaLocation', "$projectDir/schemas")
+        }
     }
 
     signingConfigs {
@@ -50,12 +54,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
+        jvmTarget = JavaVersion.VERSION_17.toString()
     }
 
     kapt {
@@ -74,89 +78,54 @@ android {
     }
 
 }
+
 dependencies {
-
-    implementation "com.mikepenz:aboutlibraries:10.5.1"
-
-    // Kotlin app and core
-    implementation "androidx.appcompat:appcompat:${versions.androidX.app_compat}"
-    implementation "androidx.core:core-ktx:${versions.androidX.core_ktx}"
-
-    // AsyncLayoutInflater
-    implementation "androidx.asynclayoutinflater:asynclayoutinflater:${versions.androidX.async_layout_inflater}"
-
-    // CarUI
-    implementation "com.android.car.ui:car-ui-lib:${versions.car_ui_lib}"
-
-    // ConstraintsLayout
-    implementation "androidx.constraintlayout:constraintlayout:${versions.androidX.constraintlayout}"
-
-    // Dagger - Hilt
-    implementation "com.google.dagger:hilt-android:${versions.hilt}"
-    kapt "com.google.dagger:hilt-compiler:${versions.hilt}"
-
-    // Fragment
-    implementation "androidx.fragment:fragment-ktx:${versions.androidX.fragment_ktx}"
-
-    // Gson
-    implementation "com.google.code.gson:gson:${versions.gson}"
-
-    // Ktor
-    implementation 'io.ktor:ktor-client-android:1.6.7'
-    implementation 'io.ktor:ktor-client-serialization:1.5.0'
-    implementation 'io.ktor:ktor-client-logging-jvm:1.5.0'
-    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0'
-
-    // Lifecycle
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:${versions.androidX.lifecycle}"
-    implementation "androidx.lifecycle:lifecycle-service:${versions.androidX.lifecycle}"
-
-    // MPAndroidChart
-    implementation "com.github.PhilJay:MPAndroidChart:v${versions.mp_android_chart}"
-
-    // Navigation
-    implementation "androidx.navigation:navigation-fragment-ktx:${versions.androidX.navigation}"
-    implementation "androidx.navigation:navigation-ui-ktx:${versions.androidX.navigation}"
-    implementation "androidx.navigation:navigation-dynamic-features-fragment:${versions.androidX.navigation}"
-
-    // Preference
-    implementation "androidx.preference:preference-ktx:${versions.androidX.preference_ktx}"
-
-    // Room
-    implementation "androidx.room:room-runtime:${versions.androidX.room}"
-    implementation "androidx.room:room-ktx:${versions.androidX.room}"
-    kapt "androidx.room:room-compiler:${versions.androidX.room}"
-
-    // WorkManger
-    implementation "androidx.work:work-runtime-ktx:${versions.androidX.work}"
-    implementation "androidx.work:work-testing:${versions.androidX.work}"
-
-    // WorkManager Hilt
-    implementation "androidx.hilt:hilt-work:${versions.androidX.work_hilt}"
-    kapt "androidx.hilt:hilt-compiler:${versions.androidX.work_hilt}"
+    implementation libs.androidx.asynclayoutinflater
+    implementation libs.androidx.appcompat.ktx
+    implementation libs.androidx.core.ktx
+    implementation libs.androidx.constraintslayout
+    implementation libs.androidx.fragment.ktx
+    implementation libs.androidx.lifecycle.livedata.ktx
+    implementation libs.androidx.lifecycle.service
+    implementation libs.androidx.navigation.dynamic.feautres.fragment
+    implementation libs.androidx.navigation.fragment.ktx
+    implementation libs.androidx.navigation.ui.ktx
+    implementation libs.androidx.preference.ktx
+    implementation libs.androidx.room.runtime
+    implementation libs.androidx.room.ktx
+    implementation libs.androidx.work.ktx
+    implementation libs.androidx.work.testing
+    ksp libs.room.compiler
+    implementation libs.car.ui
+    implementation libs.com.mikepenz.aboutlibraries
+    implementation libs.gson
+    implementation libs.hilt.android
+    implementation libs.hilt.ext.work
+    kapt libs.hilt.compiler
+    implementation libs.ktor.client.android
+    implementation libs.ktor.client.serialization
+    implementation libs.ktor.client.logging.jvm
+    implementation libs.kotlinx.serialization.json
+    implementation "com.github.PhilJay:MPAndroidChart:v3.1.0"
 
     // Local unit tests
-    testImplementation 'org.jetbrains.kotlin:kotlin-test'
-    testImplementation "androidx.arch.core:core-testing:${versions.androidX.arch_core_testing}"
-    testImplementation "androidx.test:rules:${versions.androidX.test}"
-    testImplementation "com.tngtech.archunit:archunit-junit4:${versions.arch_unit}"
-    testImplementation "junit:junit:${versions.junit}"
-    testImplementation "io.mockk:mockk:${versions.mockk}"
-    testImplementation "io.mockk:mockk-agent-jvm:${versions.mockk}"
-    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:${versions.coroutines_test}"
-    testImplementation "org.robolectric:robolectric:${versions.robolectric}"
-    kaptTest "com.google.dagger:hilt-android-compiler:${versions.hilt}"
-    testImplementation "com.google.dagger:hilt-android-testing:${versions.hilt}"
+    testImplementation libs.androidx.test.arch.core
+    testImplementation libs.kotlin.test
+    testImplementation libs.archunit.junit4
+    testImplementation libs.junit4
+    testImplementation libs.mockk
+    testImplementation libs.mockk.agent.jvm
+    testImplementation libs.kotlinx.coroutines.test
+    testImplementation libs.robolectric
+    testImplementation libs.hilt.android.testing
 
     // Instrumented test
-    debugImplementation "androidx.fragment:fragment-testing:${versions.fragment}"
-    androidTestImplementation "androidx.test.ext:junit:${versions.androidX.test_ext_junit}"
-    androidTestImplementation "androidx.test.ext:truth:${versions.truth_ext}"
-    androidTestImplementation "com.google.dagger:hilt-android-testing:${versions.hilt}"
-    androidTestImplementation "com.google.truth:truth:${versions.truth}"
-    androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:${versions.coroutines_test}"
-    androidTestImplementation "androidx.test.espresso:espresso-core:${versions.espresso}"
-    androidTestImplementation "androidx.test:runner:${versions.androidX.test}"
-    kaptAndroidTest "com.google.dagger:hilt-android-compiler:${versions.hilt}"
+    debugImplementation libs.androidx.fragment.testing
+    androidTestImplementation libs.androidx.junit
+    androidTestImplementation libs.hilt.android.testing
+    androidTestImplementation libs.kotlinx.coroutines.test
+    androidTestImplementation libs.androidx.test.espresso.core
+    androidTestImplementation libs.androidx.test.runner
+    kaptAndroidTest libs.hilt.android.compiler
 }
 
