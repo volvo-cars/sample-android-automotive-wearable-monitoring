@@ -8,8 +8,6 @@ plugins {
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.sonarqube)
     alias(libs.plugins.ksp)
-//    id 'com.mikepenz.aboutlibraries.plugin'
-//    id 'com.jaredsburrows.license'
 }
 
 android {
@@ -18,8 +16,8 @@ android {
     defaultConfig {
         applicationId "com.volvocars.wearablemonitor"
         minSdkVersion 29
-        targetSdkVersion 33
-        compileSdk 33
+        targetSdkVersion 34
+        compileSdk 34
         versionCode 1
         versionName "1.0"
 
@@ -112,7 +110,6 @@ dependencies {
     // Local unit tests
     testImplementation libs.androidx.test.arch.core
     testImplementation libs.kotlin.test
-//    testImplementation libs.archunit.junit4
     testImplementation libs.junit4
     testImplementation libs.mockk
     testImplementation libs.mockk.agent.jvm
