@@ -48,6 +48,11 @@ class LoginFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.initToolbar(requireActivity())
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

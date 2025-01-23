@@ -15,9 +15,9 @@ android {
 
     defaultConfig {
         applicationId "com.volvocars.wearablemonitor"
-        minSdkVersion 29
+        minSdkVersion 31
         targetSdkVersion 34
-        compileSdk 34
+        compileSdk 35
         versionCode 1
         versionName "1.0"
 
@@ -52,19 +52,6 @@ android {
         }
     }
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
-    }
-
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
-    }
-
-    kapt {
-        correctErrorTypes true
-    }
-
     buildFeatures {
         viewBinding true
     }
@@ -76,6 +63,10 @@ android {
         disable "JvmStaticProvidesInObjectDetector", "FieldSiteTargetOnQualifierAnnotation", "ModuleCompanionObjects", "ModuleCompanionObjectsNotInModuleParent", "ResourceType"
     }
 
+}
+
+kotlin {
+    jvmToolchain(17)
 }
 
 dependencies {

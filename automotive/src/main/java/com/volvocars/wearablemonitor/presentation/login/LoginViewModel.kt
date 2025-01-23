@@ -1,10 +1,13 @@
 package com.volvocars.wearablemonitor.presentation.login
 
+import android.app.Activity
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.android.car.ui.core.CarUi
+import com.android.car.ui.toolbar.ToolbarController
+import com.volvocars.wearablemonitor.R
 import com.volvocars.wearablemonitor.domain.model.ServerStatus
-import com.volvocars.wearablemonitor.domain.storage.Storage
 import com.volvocars.wearablemonitor.domain.usecase.FetchServerStatus
 import com.volvocars.wearablemonitor.domain.usecase.IsUserSignedIn
 import com.volvocars.wearablemonitor.domain.usecase.SetBaseUrl
@@ -26,6 +29,8 @@ class LoginViewModel @Inject constructor(
     private val setUserSignedIn: SetUserSignedIn,
     private val setPreferenceFromServerStatus: SetPreferenceFromServerStatus
 ) : ViewModel() {
+    private lateinit var toolbarController: ToolbarController
+
     private val _serverStatus = MutableStateFlow(LoginState())
     val serverStatus = _serverStatus.asStateFlow()
 
@@ -68,6 +73,12 @@ class LoginViewModel @Inject constructor(
         setBaseUrl(url)
         setUserSignedIn(true)
         setPreferenceFromServerStatus(serverStatus)
+    }
+
+    fun initToolbar(activity: Activity) {
+        toolbarController = CarUi.requireToolbar(activity)
+        toolbarController.setLogo(R.mipmap.wearable_monitor_ic_launcher_round)
+        toolbarController.setTitle(R.string.app_name)
     }
 
     companion object {
