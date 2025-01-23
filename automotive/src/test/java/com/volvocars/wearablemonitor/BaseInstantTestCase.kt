@@ -13,7 +13,6 @@ import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 
 @RunWith(JUnit4::class)
-@OptIn(ExperimentalCoroutinesApi::class)
 abstract class BaseInstantTestCase : TestCase() {
 
     @get:Rule

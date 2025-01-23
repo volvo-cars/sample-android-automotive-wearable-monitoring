@@ -2,10 +2,7 @@ package com.volvocars.wearablemonitor.core.service
 
 import android.content.Context
 import android.content.Intent
-import android.net.ConnectivityManager
-import android.net.Network
 import android.util.Log
-import androidx.annotation.RequiresPermission
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
 import com.volvocars.wearablemonitor.R
@@ -65,7 +62,6 @@ class WearableMonitorService : LifecycleService() {
             startForeground(it.channelId.toInt(), it)
         }
         observeGlucoseValues()
-        checkConnectivity()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -94,27 +90,6 @@ class WearableMonitorService : LifecycleService() {
         }
     }
 
-    /**
-     *  Check if the device has an internet connection or not
-     */
-    @RequiresPermission(android.Manifest.permission.ACCESS_NETWORK_STATE)
-    private fun checkConnectivity() {
-        val connectivityManager = getSystemService(
-            CONNECTIVITY_SERVICE
-        ) as ConnectivityManager
-
-        connectivityManager.registerDefaultNetworkCallback(
-            object : ConnectivityManager.NetworkCallback() {
-                override fun onAvailable(network: Network) {
-                    super.onAvailable(network)
-                }
-
-                override fun onLost(network: Network) {
-                    super.onLost(network)
-                }
-            }
-        )
-    }
 
     private fun observeGlucose() = lifecycleScope.launch {
         glucoseValues.collectLatest { glucoseList ->

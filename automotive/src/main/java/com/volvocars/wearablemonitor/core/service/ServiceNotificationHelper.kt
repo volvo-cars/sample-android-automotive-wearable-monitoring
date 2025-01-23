@@ -3,7 +3,7 @@ package com.volvocars.wearablemonitor.core.service
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
+import androidx.core.net.toUri
 import com.volvocars.wearablemonitor.R
 import com.volvocars.wearablemonitor.core.util.NotificationActionButton
 import com.volvocars.wearablemonitor.core.util.NotificationConstants
@@ -112,7 +112,7 @@ class ServiceNotificationHelper @Inject constructor(
         0,
         Intent(
             Intent.ACTION_VIEW,
-            Uri.parse(NotificationConstants.GOOGLE_MAPS_FIND_NEAREST_CONVENIENCE_STORE_URI)
+            NotificationConstants.GOOGLE_MAPS_FIND_NEAREST_CONVENIENCE_STORE_URI.toUri()
         ).setPackage(NotificationConstants.GOOGLE_MAPS_PACKAGE_NAME), PendingIntent.FLAG_IMMUTABLE
     )
 
@@ -121,7 +121,7 @@ class ServiceNotificationHelper @Inject constructor(
         0,
         Intent(
             Intent.ACTION_VIEW,
-            Uri.parse(NotificationConstants.GOOGLE_MAPS_FIND_NEAREST_PARKING_URI)
+            NotificationConstants.GOOGLE_MAPS_FIND_NEAREST_PARKING_URI.toUri()
         ).setPackage(NotificationConstants.GOOGLE_MAPS_PACKAGE_NAME), PendingIntent.FLAG_IMMUTABLE
     )
 
