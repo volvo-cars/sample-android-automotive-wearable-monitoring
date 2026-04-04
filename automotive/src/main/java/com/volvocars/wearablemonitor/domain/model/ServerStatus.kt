@@ -8,7 +8,7 @@ data class ServerStatus(
     val name: String,
     val serverTime: String,
     val serverTimeEpoch: Long,
-    val settings: com.volvocars.wearablemonitor.domain.model.Settings,
+    val settings: Settings,
     val status: String,
     val version: String,
 )

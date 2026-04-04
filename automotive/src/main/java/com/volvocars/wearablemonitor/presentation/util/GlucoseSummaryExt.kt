@@ -5,10 +5,11 @@ import com.volvocars.wearablemonitor.domain.model.Thresholds
 import com.volvocars.wearablemonitor.presentation.model.GlucoseSummary
 import java.util.Calendar
 
-fun GlucoseSummary.isOutOfRange(threshold: Thresholds): Boolean {
-    return sgv >= threshold.bgHigh || sgv <= threshold.bgLow
-}
+fun GlucoseSummary.isOutOfRange(threshold: Thresholds): Boolean = sgv >= threshold.bgHigh || sgv <= threshold.bgLow
 
-fun GlucoseSummary.getRelativeTimeSpan() = DateUtils.getRelativeTimeSpanString(
-    date, Calendar.getInstance().timeInMillis, 0
-).toString()
+fun GlucoseSummary.getRelativeTimeSpan() = DateUtils
+    .getRelativeTimeSpanString(
+        date,
+        Calendar.getInstance().timeInMillis,
+        0,
+    ).toString()

@@ -2,7 +2,6 @@ package com.volvocars.wearablemonitor.domain.storage
 
 import com.volvocars.wearablemonitor.domain.model.ServerStatus
 
-
 /**
  * Simple API for add preferences to SharedPreferences
  */

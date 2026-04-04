@@ -4,7 +4,6 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import io.mockk.MockKAnnotations
 import io.mockk.clearAllMocks
 import junit.framework.TestCase
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule

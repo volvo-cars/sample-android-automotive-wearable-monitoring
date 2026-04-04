@@ -1,37 +1,38 @@
 [versions]
-aboutlibraries = "10.5.1"
+aboutlibraries = "10.6.3"
 androidxAppcompat = "1.7.0"
 androidxAsynclayoutinflater = '1.0.0'
 androidxCore = '1.15.0'
-androidxConstraintlayout = '2.2.0'
+androidxConstraintlayout = '2.2.1'
 androidxEspresso = '3.6.1'
 androidxLifecycle = '2.8.7'
-androidxNavigation = '2.8.5'
+androidxNavigation = '2.8.9'
 androidxPreference = '1.2.1'
-androidxWork = '2.10.0'
+androidxWork = '2.10.1'
 androidxTestArchCore = "2.2.0"
 androidxTestExt = '1.2.1'
 androidxTestRunner = '1.6.2'
 carUI = '2.6.0'
-fragmentKtx = "1.8.5"
-fragmentTesting = "1.8.5"
+fragmentKtx = "1.8.9"
+fragmentTesting = "1.8.9"
 gradle = "8.1.4"
-gsonVersion = "2.11.0"
-hilt = '2.55'
+gsonVersion = "2.12.1"
+hilt = '2.56.1'
 hiltExt = '1.2.0'
 junit4 = '4.13.2'
 kotlin = '2.1.0'
-kotlinxCoroutines = '1.10.1'
+kotlinxCoroutines = '1.10.2'
 ksp = "2.1.0-1.0.29"
-kotlinxSerializationJson = "1.8.0"
-ktorClientAndroid = "1.6.7"
-ktorClientLoggingJvm = "1.5.0"
-ktorClientSerialization = "1.5.0"
-mockk = '1.13.14'
-robolectricVersion = "4.9"
+kotlinxSerializationJson = "1.8.1"
+ktorClientAndroid = "1.6.8"
+ktorClientLoggingJvm = "1.6.8"
+ktorClientSerialization = "1.6.8"
+mockk = '1.13.17'
+robolectricVersion = "4.14.1"
 room = '2.6.1'
 sonarqube = '3.4.0.2513'
-workTesting = "2.10.0"
+ktlint = "12.1.2"
+workTesting = "2.10.1"
 
 [libraries]
 androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "fragmentKtx" }
@@ -86,3 +87,4 @@ kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref =
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 navigation-safe-args = { id = "androidx.navigation.safeargs.kotlin", version.ref = "androidxNavigation" }
 sonarqube = { id = "org.sonarqube", version.ref = "sonarqube" }
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }

@@ -19,14 +19,15 @@ object WorkModule {
     @Provides
     @Singleton
     fun provideConstraints(): Constraints = Constraints.Builder().setRequiredNetworkType(
-        NetworkType.CONNECTED
+        NetworkType.CONNECTED,
     ).build()
 
     @Provides
     @Singleton
     fun provideFetchDataWorker(
-        constraints: Constraints
+        constraints: Constraints,
     ): PeriodicWorkRequest = PeriodicWorkRequestBuilder<GlucoseFetchWorker>(
-        15, TimeUnit.MINUTES
+        15,
+        TimeUnit.MINUTES,
     ).setConstraints(constraints).build()
 }

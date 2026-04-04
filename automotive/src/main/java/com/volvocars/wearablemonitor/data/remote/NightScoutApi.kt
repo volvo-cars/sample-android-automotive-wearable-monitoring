@@ -2,12 +2,13 @@ package com.volvocars.wearablemonitor.data.remote
 
 import com.volvocars.wearablemonitor.data.remote.dto.GlucoseDto
 import com.volvocars.wearablemonitor.data.remote.dto.ServerStatusDto
-import io.ktor.client.*
-import io.ktor.client.request.*
+import io.ktor.client.HttpClient
+import io.ktor.client.request.get
+import io.ktor.client.request.parameter
 import javax.inject.Inject
 
 class NightScoutApi @Inject constructor(
-    private val client: HttpClient
+    private val client: HttpClient,
 ) {
     suspend fun getGlucose(
         url: String,

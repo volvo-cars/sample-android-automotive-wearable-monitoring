@@ -10,7 +10,6 @@ object Constants {
     const val DEFAULT_CRITICAL_ALARM_INTERVAL = 5L
     const val GLUCOSE_FETCH_INTERVAL_DEFAULT_VALUE = 5
 
-
     // PK for sharedPreferenceStorage
     const val KEY_INSTANCE = "instance_setting"
     const val KEY_TIME_FORMAT = "time_format"

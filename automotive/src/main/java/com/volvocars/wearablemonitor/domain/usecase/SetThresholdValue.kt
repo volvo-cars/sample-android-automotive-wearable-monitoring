@@ -4,7 +4,7 @@ import com.volvocars.wearablemonitor.domain.repository.PreferenceRepository
 import javax.inject.Inject
 
 class SetThresholdValue @Inject constructor(
-    private val repository: PreferenceRepository
+    private val repository: PreferenceRepository,
 ) {
     operator fun invoke(thresholdName: String, thresholdValue: Long) {
         repository.setThresholdValue(thresholdName, thresholdValue)

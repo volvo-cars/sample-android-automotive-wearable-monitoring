@@ -31,11 +31,12 @@ class MainActivity : FragmentActivity() {
 
     override fun onResume() {
         super.onResume()
-
-        if (storage.userSignedIn()) {
-            navController.navigate(R.id.diabetesMonitorFragment)
-        } else {
-            navController.navigate(R.id.loginFragment)
+        // Only navigate when we are still on the start destination to prevent
+        // duplicate back-stack entries on every resume.
+        val startDestId = navController.graph.startDestinationId
+        if (navController.currentDestination?.id == startDestId) {
+            val dest = if (storage.userSignedIn()) R.id.diabetesMonitorFragment else R.id.loginFragment
+            navController.navigate(dest)
         }
     }
 

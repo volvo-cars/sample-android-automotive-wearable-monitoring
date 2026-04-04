@@ -7,5 +7,5 @@ import androidx.annotation.StringRes
 data class NotificationActionButton(
     @DrawableRes val icon: Int,
     @StringRes val text: Int,
-    val pendingIntent: PendingIntent
+    val pendingIntent: PendingIntent,
 )

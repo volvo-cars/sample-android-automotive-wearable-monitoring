@@ -5,4 +5,5 @@ import com.volvocars.wearablemonitor.presentation.model.GlucoseSummary
 data class WearableMonitorState(
     val glucoseValues: List<GlucoseSummary> = emptyList(),
     val isLoading: Boolean = false,
+    val error: String? = null,
 )

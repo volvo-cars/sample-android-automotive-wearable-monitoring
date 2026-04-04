@@ -6,5 +6,5 @@ import com.volvocars.wearablemonitor.domain.model.ExtendedSettings
 fun ExtendedSettingsDto.toExtendedSettings() = ExtendedSettings(
     basal = basal.toBasal(),
     devicestatus = deviceStatus.toDeviceStatus(),
-    profile = profile.toProfile()
+    profile = profile.toProfile(),
 )

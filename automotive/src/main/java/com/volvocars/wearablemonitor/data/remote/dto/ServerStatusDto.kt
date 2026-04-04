@@ -1,6 +1,5 @@
 package com.volvocars.wearablemonitor.data.remote.dto
 
-import com.volvocars.wearablemonitor.domain.model.ServerStatus
 import kotlinx.serialization.SerialName
 
 @kotlinx.serialization.Serializable
@@ -27,9 +26,4 @@ data class ServerStatusDto(
     val status: String,
     @SerialName("version")
     val version: String,
-) {
-
-}
-
-
-
+)

@@ -11,6 +11,6 @@ data class GlucoseSummary(
     val direction: String,
 ) : Comparable<GlucoseSummary> {
     override fun compareTo(
-        other: GlucoseSummary
+        other: GlucoseSummary,
     ): Int = this.date.compareTo(other.date)
 }

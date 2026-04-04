@@ -1,17 +1,17 @@
 package com.volvocars.wearablemonitor.domain.usecase
 
 import com.volvocars.wearablemonitor.domain.repository.DiabetesRepository
+import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import javax.inject.Inject
 
 /**
  * Login to the server by receive the server status information
  */
 class FetchServerStatus @Inject constructor(
-    private val diabetesRepository: DiabetesRepository
+    private val diabetesRepository: DiabetesRepository,
 ) {
     /**
      * Call the getServerStatus function from [DiabetesRepository]

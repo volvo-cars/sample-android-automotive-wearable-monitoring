@@ -7,5 +7,7 @@ data class LoginState(
     val isSignedIn: Boolean = false,
     val isLoading: Boolean = false,
     val isError: Boolean = false,
-    val errorMessage: String? = null
+    val errorMessage: String? = null,
+    /** Non-null when the URL field itself has a validation problem. */
+    val urlError: String? = null,
 )

@@ -1,8 +1,8 @@
 package com.volvocars.wearablemonitor.presentation.util
 
 import com.volvocars.wearablemonitor.BaseInstantTestCase
-import org.junit.Test
 import kotlin.test.expect
+import org.junit.Test
 
 internal class GlucoseUtilKtTest : BaseInstantTestCase() {
 

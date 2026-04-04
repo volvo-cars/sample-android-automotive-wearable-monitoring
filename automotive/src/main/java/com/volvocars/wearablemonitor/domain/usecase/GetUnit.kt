@@ -4,9 +4,7 @@ import com.volvocars.wearablemonitor.domain.repository.PreferenceRepository
 import javax.inject.Inject
 
 class GetUnit @Inject constructor(
-    private val preferenceRepository: PreferenceRepository
+    private val preferenceRepository: PreferenceRepository,
 ) {
-    operator fun invoke(): String {
-        return preferenceRepository.getUnit()
-    }
+    operator fun invoke(): String = preferenceRepository.getUnit()
 }

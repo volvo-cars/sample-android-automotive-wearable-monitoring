@@ -11,10 +11,9 @@ import com.volvocars.wearablemonitor.data.util.networkBoundResource
 import com.volvocars.wearablemonitor.domain.model.Glucose
 import com.volvocars.wearablemonitor.domain.model.ServerStatus
 import com.volvocars.wearablemonitor.domain.repository.DiabetesRepository
-import kotlinx.coroutines.delay
+import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import javax.inject.Inject
 
 class DiabetesRepositoryImpl @Inject constructor(
     private val api: NightScoutApi,
@@ -35,7 +34,8 @@ class DiabetesRepositoryImpl @Inject constructor(
      *   The url annotator can maybe be replaced with an interceptor later.
      */
     override fun fetchGlucoseValues(
-        url: String, counts: Int
+        url: String,
+        counts: Int,
     ): Flow<Result<List<Glucose>>> = networkBoundResource(
         query = {
             dao.fetchGlucoseEntities(counts).map { glucoseList ->
@@ -43,17 +43,14 @@ class DiabetesRepositoryImpl @Inject constructor(
             }
         },
         fetch = {
-            delay(1000)
             api.getGlucose(url, counts).mapCatching { list ->
-                list.map {
-                    it.toGlucoseEntity()
-                }
+                list.map { it.toGlucoseEntity() }
             }
         },
-        saveFetchResult = { glucoseValues ->
+        saveFetchResult = { entities ->
             dao.deleteAllGlucoseEntities()
-            dao.insertGlucoseEntityList(glucoseValues.getOrDefault(emptyList()))
-        }
+            dao.insertGlucoseEntityList(entities)
+        },
     )
 
     /**
@@ -66,7 +63,7 @@ class DiabetesRepositoryImpl @Inject constructor(
      *   The url annotator can maybe be replaced with an interceptor later.
      */
     override fun fetchServerStatus(
-        url: String
+        url: String,
     ): Flow<Result<ServerStatus>> = fetchRemoteData { api.getStatus(url) }.map { response ->
         Log.d(TAG, "fetchServerStatus: $response")
         response.mapCatching {
@@ -81,7 +78,7 @@ class DiabetesRepositoryImpl @Inject constructor(
      * @return a list of [Glucose] in a [Flow]
      */
     override fun fetchCachedGlucoseValues(
-        counts: Int
+        counts: Int,
     ): Flow<List<Glucose>> = dao.fetchGlucoseEntities(counts).map { entityList ->
         entityList.map { it.toGlucose() }.sorted()
     }
@@ -95,4 +92,3 @@ class DiabetesRepositoryImpl @Inject constructor(
         val TAG = DiabetesRepositoryImpl::class.simpleName
     }
 }
-

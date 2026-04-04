@@ -16,12 +16,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import javax.inject.Singleton
 
-@ExperimentalCoroutinesApi
-@InternalCoroutinesApi
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
@@ -39,21 +35,21 @@ object AppModule {
     @Provides
     @Singleton
     fun providePreferenceRepository(
-        sharedPreferenceStorage: SharedPreferenceStorage
+        sharedPreferenceStorage: SharedPreferenceStorage,
     ): PreferenceRepository = PreferenceRepositoryImpl(sharedPreferenceStorage)
 
     @Singleton
     @Provides
     fun provideSharedPreference(
-        @ApplicationContext context: Context
+        @ApplicationContext context: Context,
     ): SharedPreferences = context.getSharedPreferences(
-        R.string.pk_instance_setting.toString(),
-        Context.MODE_PRIVATE
+        context.getString(R.string.pk_instance_setting),
+        Context.MODE_PRIVATE,
     )
 
     @Provides
     @Singleton
     fun provideSharedPreferenceStorage(
-        sharedPreferences: SharedPreferences
+        sharedPreferences: SharedPreferences,
     ): Storage = SharedPreferenceStorage(sharedPreferences)
 }

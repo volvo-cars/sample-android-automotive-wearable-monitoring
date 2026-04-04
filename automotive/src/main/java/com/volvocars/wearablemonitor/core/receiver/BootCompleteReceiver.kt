@@ -23,7 +23,7 @@ class BootCompleteReceiver : BroadcastReceiver() {
 
     override fun onReceive(
         context: Context,
-        intent: Intent
+        intent: Intent,
     ) {
         if (intent.action.equals(Intent.ACTION_BOOT_COMPLETED)) {
             GlucoseFetchWorker.create(context, glucoseFetchRequest)
