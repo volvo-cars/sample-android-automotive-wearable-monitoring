@@ -4,7 +4,6 @@
     <string name="action_sign_in">Anslut</string>
     <string name="login_failed">Inloggning misslyckades</string>
     <string name="api_not_enabled">API\'et är inte tillgänglig för den här enheten</string>
-    <string name="url_not_valid_https">URL\'en behöver börja med https</string>
     <string name="url_field_blank">URL\'en kan inte vara tom</string>
     <string name="unit">Enhet</string>
     <string name="thresholds_preferences">Tröskelvärden</string>

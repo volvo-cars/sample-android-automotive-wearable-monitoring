@@ -51,9 +51,7 @@ class SharedPreferenceStorage @Inject constructor(
      * Get unit value
      * @return value of the unit
      */
-    override fun getUnit(): String {
-        return sharedPreferences.get(KEY_UNIT, KEY_MMOL)
-    }
+    override fun getUnit(): String = sharedPreferences.get(KEY_UNIT, KEY_MMOL)
 
     /**
      * Set unit value
@@ -67,20 +65,16 @@ class SharedPreferenceStorage @Inject constructor(
      * Get time format value from shared preference
      * @return time format set value
      */
-    override fun getTimeFormat(): Long {
-        return sharedPreferences.get(KEY_TIME_FORMAT, TIME_FORMAT_DEFAULT_VALUE)
-    }
+    override fun getTimeFormat(): Long = sharedPreferences.get(KEY_TIME_FORMAT, TIME_FORMAT_DEFAULT_VALUE)
 
     override fun setGlucoseFetchInterval(value: Int) {
         sharedPreferences.put(KEY_GLUCOSE_FETCH_INTERVAL, value)
     }
 
-    override fun getGlucoseFetchInterval(): Int {
-        return sharedPreferences.get(
-            KEY_GLUCOSE_FETCH_INTERVAL,
-            GLUCOSE_FETCH_INTERVAL_DEFAULT_VALUE,
-        )
-    }
+    override fun getGlucoseFetchInterval(): Int = sharedPreferences.get(
+        KEY_GLUCOSE_FETCH_INTERVAL,
+        GLUCOSE_FETCH_INTERVAL_DEFAULT_VALUE,
+    )
 
     /**
      * Set time format in shared preference
@@ -102,9 +96,7 @@ class SharedPreferenceStorage @Inject constructor(
      * Return the base url from storage
      * @return url from shared preferences
      */
-    override fun getBaseUrl(): String {
-        return sharedPreferences.get(KEY_INSTANCE, "")
-    }
+    override fun getBaseUrl(): String = sharedPreferences.get(KEY_INSTANCE, "")
 
     /**
      * Set the threshold values
@@ -124,9 +116,7 @@ class SharedPreferenceStorage @Inject constructor(
      * Get the threshold low value from shared preferences
      * @return stored threshold low value - if no value is stored 55 is default value
      */
-    override fun getThresholdLow(): Long {
-        return sharedPreferences.get(KEY_THRESHOLD_LOW, THRESHOLD_LOW_DEFAULT_VALUE)
-    }
+    override fun getThresholdLow(): Long = sharedPreferences.get(KEY_THRESHOLD_LOW, THRESHOLD_LOW_DEFAULT_VALUE)
 
     /**
      * Set threshold low value in shared preference
@@ -140,9 +130,7 @@ class SharedPreferenceStorage @Inject constructor(
      * Get the threshold high value from shared preferences
      * @return stored threshold high value - if no value is stored 260 is default value
      */
-    override fun getThresholdHigh(): Long {
-        return sharedPreferences.get(KEY_THRESHOLD_HIGH, THRESHOLD_HIGH_DEFAULT_VALUE)
-    }
+    override fun getThresholdHigh(): Long = sharedPreferences.get(KEY_THRESHOLD_HIGH, THRESHOLD_HIGH_DEFAULT_VALUE)
 
     /**
      * Set threshold high value in shared preference
@@ -156,9 +144,7 @@ class SharedPreferenceStorage @Inject constructor(
      * Get the threshold target low value from shared preferences
      * @return stored threshold target low value - if note value is stored 80 is default value
      */
-    override fun getThresholdTargetLow(): Long {
-        return sharedPreferences.get(KEY_THRESHOLD_TARGET_LOW, THRESHOLD_TARGET_LOW_DEFAULT_VALUE)
-    }
+    override fun getThresholdTargetLow(): Long = sharedPreferences.get(KEY_THRESHOLD_TARGET_LOW, THRESHOLD_TARGET_LOW_DEFAULT_VALUE)
 
     /**
      * Set threshold target low value in shared preferences
@@ -172,9 +158,7 @@ class SharedPreferenceStorage @Inject constructor(
      * Get the threshold target high value from shared preferences
      * @return stored threshold target high value - if no value is stored 180 is default value
      */
-    override fun getThresholdTargetHigh(): Long {
-        return sharedPreferences.get(KEY_THRESHOLD_TARGET_HIGH, THRESHOLD_TARGET_HIGH_DEFAULT_VALUE)
-    }
+    override fun getThresholdTargetHigh(): Long = sharedPreferences.get(KEY_THRESHOLD_TARGET_HIGH, THRESHOLD_TARGET_HIGH_DEFAULT_VALUE)
 
     /**
      * Set the threshold target high value
@@ -188,8 +172,7 @@ class SharedPreferenceStorage @Inject constructor(
      * Find out if a user is already signed in or not
      * @return true if user is signed otherwise false
      */
-    override fun userSignedIn(): Boolean =
-        sharedPreferences.get(KEY_USER_EXISTS, false)
+    override fun userSignedIn(): Boolean = sharedPreferences.get(KEY_USER_EXISTS, false)
 
     /**
      * Save to shared preferences if user is signed in or not
@@ -203,9 +186,7 @@ class SharedPreferenceStorage @Inject constructor(
      * Get shared preference if user have notification enabled
      * @return true if notification is enabled otherwise false
      */
-    override fun getGlucoseNotificationEnabled(): Boolean {
-        return sharedPreferences.get(KEY_NOTIFICATION_ENABLED, true)
-    }
+    override fun getGlucoseNotificationEnabled(): Boolean = sharedPreferences.get(KEY_NOTIFICATION_ENABLED, true)
 
     /**
      * Enable/disable glucose notification
@@ -219,30 +200,24 @@ class SharedPreferenceStorage @Inject constructor(
      *  Get shared preference if user have enabled notification of alarm low
      *  @return true if alarm low notification is enabled otherwise false
      */
-    override fun getGlucoseAlarmLowEnabled(): Boolean {
-        return sharedPreferences.get(KEY_ALARM_LOW, true)
-    }
+    override fun getGlucoseAlarmLowEnabled(): Boolean = sharedPreferences.get(KEY_ALARM_LOW, true)
 
     /**
      * Enable/disable heads-up notification when glucose value is going outside the threshold
      * @param value set to true to enable notification, false to disable them
      */
-    override fun setGlucoseAlarmLowEnabled(value: Boolean) {
-        return sharedPreferences.put(KEY_ALARM_LOW, value)
-    }
+    override fun setGlucoseAlarmLowEnabled(value: Boolean) = sharedPreferences.put(KEY_ALARM_LOW, value)
 
     /**
      * Get the critical notification interval in millis stored in shared preference
      * @return interval as millis
      */
-    override fun getCriticalNotificationIntervalMillis(): Long {
-        return TimeUnit.MINUTES.toMillis(
-            sharedPreferences.get(
-                KEY_ALARM_NOTIFICATION_INTERVAL,
-                DEFAULT_CRITICAL_ALARM_INTERVAL,
-            ),
-        )
-    }
+    override fun getCriticalNotificationIntervalMillis(): Long = TimeUnit.MINUTES.toMillis(
+        sharedPreferences.get(
+            KEY_ALARM_NOTIFICATION_INTERVAL,
+            DEFAULT_CRITICAL_ALARM_INTERVAL,
+        ),
+    )
 
     /**
      * Set interval of how often the critical notification should show up
@@ -256,12 +231,10 @@ class SharedPreferenceStorage @Inject constructor(
      * Get the critical notification interval value stored in shared preference
      * @return interval
      */
-    override fun getCriticalNotificationInterval(): Long {
-        return sharedPreferences.get(
-            KEY_ALARM_NOTIFICATION_INTERVAL,
-            DEFAULT_CRITICAL_ALARM_INTERVAL,
-        )
-    }
+    override fun getCriticalNotificationInterval(): Long = sharedPreferences.get(
+        KEY_ALARM_NOTIFICATION_INTERVAL,
+        DEFAULT_CRITICAL_ALARM_INTERVAL,
+    )
 
     /**
      * Clear all data from shared preferences

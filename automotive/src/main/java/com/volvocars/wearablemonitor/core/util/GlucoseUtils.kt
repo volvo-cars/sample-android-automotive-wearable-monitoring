@@ -38,39 +38,31 @@ class GlucoseUtils @Inject constructor(
      *  @param sgv2 second sgv color
      *  @return the difference between the two values to string
      */
-    fun calculateDifference(sgv1: Int, sgv2: Int): String {
-        return round(sgvToUnit(sgv1) - sgvToUnit(sgv2), 1.0f).toString()
-    }
+    fun calculateDifference(sgv1: Int, sgv2: Int): String = round(sgvToUnit(sgv1) - sgvToUnit(sgv2), 1.0f).toString()
 
     private fun round(value: Float, precision: Float): Float {
         val scale = 10.0f.pow(precision)
         return ((value * scale).roundToInt() / scale)
     }
 
-    fun sgvToUnit(sgv: Int): Float {
-        return when (checkIsMmol()) {
-            false -> sgv.toFloat()
-            true -> ((sgv / 18.0f) * 10.0f) / 10.0f
+    fun sgvToUnit(sgv: Int): Float = when (checkIsMmol()) {
+        false -> sgv.toFloat()
+        true -> ((sgv / 18.0f) * 10.0f) / 10.0f
+    }
+
+    fun sgvToUnitText(sgv: String): String = when (checkIsMmol()) {
+        false -> sgv
+        true -> {
+            val unit = ((sgv.toFloat() / 18.0f) * 10.0f) / 10.0f
+            "%.1f".format(unit)
         }
     }
 
-    fun sgvToUnitText(sgv: String): String {
-        return when (checkIsMmol()) {
-            false -> sgv
-            true -> {
-                val unit = ((sgv.toFloat() / 18.0f) * 10.0f) / 10.0f
-                "%.1f".format(unit)
-            }
-        }
-    }
-
-    fun unitToSvg(unit: Float): Float {
-        return when (checkIsMmol()) {
-            false -> unit
-            true -> {
-                val converted = unit * 18.0182f
-                round(converted, 0f)
-            }
+    fun unitToSvg(unit: Float): Float = when (checkIsMmol()) {
+        false -> unit
+        true -> {
+            val converted = unit * 18.0182f
+            round(converted, 0f)
         }
     }
 
@@ -78,10 +70,8 @@ class GlucoseUtils @Inject constructor(
      * Check if the current value of key unit is mmol
      * @return true if unit value is mmol else false
      */
-    fun checkIsMmol(): Boolean {
-        return when (getUnit() == Constants.KEY_MMOL) {
-            false -> false
-            true -> true
-        }
+    fun checkIsMmol(): Boolean = when (getUnit() == Constants.KEY_MMOL) {
+        false -> false
+        true -> true
     }
 }

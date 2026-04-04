@@ -68,7 +68,7 @@ class LoginFragment : Fragment() {
                 binding.login.visibility = state.loginButtonVisibility()
                 binding.loading.visibility = state.loadingVisibility()
 
-                // Show inline field error (empty / missing https) on the text field.
+                // Show inline field error (empty or invalid URL format) on the text field.
                 binding.url.error = state.urlError
 
                 // Show network / server errors as a Toast.

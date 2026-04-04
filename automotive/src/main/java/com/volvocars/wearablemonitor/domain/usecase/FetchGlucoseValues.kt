@@ -20,8 +20,8 @@ class FetchGlucoseValues @Inject constructor(
      * @param count Number of entries to fetch.
      */
     operator fun invoke(url: String, count: Int): Flow<Result<List<com.volvocars.wearablemonitor.domain.model.Glucose>>> {
-        // Don't proceed if url is empty or the url doesn't contain https
-        if (url.isEmpty() || url.isBlank() || !url.contains("https") || count <= 0) {
+        // Don't proceed if url is empty or count is invalid
+        if (url.isEmpty() || url.isBlank() || count <= 0) {
             return flow {}
         }
 

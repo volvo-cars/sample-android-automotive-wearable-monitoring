@@ -1,0 +1,20 @@
+# Go
+mock-server
+mock-server-*
+*.exe
+
+# Logs
+*.log
+nohup.out
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+

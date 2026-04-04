@@ -19,8 +19,8 @@ class FetchServerStatus @Inject constructor(
      * @param url URL address for device
      */
     operator fun invoke(url: String): Flow<Result<com.volvocars.wearablemonitor.domain.model.ServerStatus>> {
-        // Don't proceed if url is empty or the url doesn't contains https
-        if (url.isEmpty() || url.isBlank() || !url.contains("https")) {
+        // Don't proceed if url is empty
+        if (url.isEmpty() || url.isBlank()) {
             return flow {}
         }
 
