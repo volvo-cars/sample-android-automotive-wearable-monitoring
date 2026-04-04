@@ -1,16 +1,22 @@
 package com.volvocars.wearablemonitor.data.remote
 
+import com.volvocars.wearablemonitor.data.remote.dto.BasalDto
+import com.volvocars.wearablemonitor.data.remote.dto.DeviceStatusDto
+import com.volvocars.wearablemonitor.data.remote.dto.ExtendedSettingsDto
 import com.volvocars.wearablemonitor.data.remote.dto.GlucoseDto
+import com.volvocars.wearablemonitor.data.remote.dto.ProfileDto
 import com.volvocars.wearablemonitor.data.remote.dto.ServerStatusDto
+import com.volvocars.wearablemonitor.data.remote.dto.SettingsDto
+import com.volvocars.wearablemonitor.data.remote.dto.ThresholdsDto
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
-import io.ktor.client.features.json.JsonFeature
-import io.ktor.client.features.json.serializer.KotlinxSerializer
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.headersOf
+import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -64,13 +70,14 @@ class NightScoutApiTest {
                         headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
                     )
                 }
+
                 else -> error("Unhandled ${request.url.encodedPath}")
             }
         }
 
         val client = HttpClient(mockEngine) {
-            install(JsonFeature) {
-                serializer = KotlinxSerializer(json)
+            install(ContentNegotiation) {
+                json(json)
             }
         }
 
@@ -103,8 +110,8 @@ class NightScoutApiTest {
         }
 
         val client = HttpClient(mockEngine) {
-            install(JsonFeature) {
-                serializer = KotlinxSerializer(json)
+            install(ContentNegotiation) {
+                json(json)
             }
         }
 
@@ -133,13 +140,14 @@ class NightScoutApiTest {
                         headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
                     )
                 }
+
                 else -> error("Unhandled ${request.url.encodedPath}")
             }
         }
 
         val client = HttpClient(mockEngine) {
-            install(JsonFeature) {
-                serializer = KotlinxSerializer(json)
+            install(ContentNegotiation) {
+                json(json)
             }
         }
 
@@ -193,8 +201,8 @@ class NightScoutApiTest {
         }
 
         val client = HttpClient(mockEngine) {
-            install(JsonFeature) {
-                serializer = KotlinxSerializer(json)
+            install(ContentNegotiation) {
+                json(json)
             }
         }
 
@@ -246,8 +254,8 @@ class NightScoutApiTest {
         }
 
         val client = HttpClient(mockEngine) {
-            install(JsonFeature) {
-                serializer = KotlinxSerializer(json)
+            install(ContentNegotiation) {
+                json(json)
             }
         }
 
@@ -272,15 +280,15 @@ class NightScoutApiTest {
         authorized = null,
         boluscalcEnabled = false,
         careportalEnabled = true,
-        extendedSettings = com.volvocars.wearablemonitor.data.remote.dto.ExtendedSettingsDto(
-            basal = com.volvocars.wearablemonitor.data.remote.dto.BasalDto(render = "default"),
-            deviceStatus = com.volvocars.wearablemonitor.data.remote.dto.DeviceStatusDto(advanced = true),
-            profile = com.volvocars.wearablemonitor.data.remote.dto.ProfileDto(multiple = true),
+        extendedSettings = ExtendedSettingsDto(
+            basal = BasalDto(render = "default"),
+            deviceStatus = DeviceStatusDto(advanced = true),
+            profile = ProfileDto(multiple = true),
         ),
         name = "Test NightScout",
         serverTime = "2026-04-04T10:00:00.000Z",
         serverTimeEpoch = System.currentTimeMillis(),
-        settings = com.volvocars.wearablemonitor.data.remote.dto.SettingsDto(
+        settings = SettingsDto(
             alarmHigh = true,
             alarmHighMins = listOf(30, 60, 90, 120),
             alarmLow = true,
@@ -317,7 +325,7 @@ class NightScoutApiTest {
             showPlugins = "bgnow delta direction timeago",
             showRawbg = "never",
             theme = "default",
-            thresholds = com.volvocars.wearablemonitor.data.remote.dto.ThresholdsDto(
+            thresholds = ThresholdsDto(
                 bgHigh = 180,
                 bgLow = 70,
                 bgTargetBottom = 80,
