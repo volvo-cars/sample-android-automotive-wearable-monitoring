@@ -14,13 +14,11 @@ class PreferenceRepositoryImpl @Inject constructor(
         sharedPreferenceStorage.setPreferenceFromServerStatus(serverStatus)
     }
 
-    override fun getThreshold(unit: ThresholdUnit): Long {
-        return when (unit) {
-            ThresholdUnit.LOW -> sharedPreferenceStorage.getThresholdLow()
-            ThresholdUnit.HIGH -> sharedPreferenceStorage.getThresholdHigh()
-            ThresholdUnit.TARGET_LOW -> sharedPreferenceStorage.getThresholdTargetLow()
-            ThresholdUnit.TARGET_HIGH -> sharedPreferenceStorage.getThresholdTargetHigh()
-        }
+    override fun getThreshold(unit: ThresholdUnit): Long = when (unit) {
+        ThresholdUnit.LOW -> sharedPreferenceStorage.getThresholdLow()
+        ThresholdUnit.HIGH -> sharedPreferenceStorage.getThresholdHigh()
+        ThresholdUnit.TARGET_LOW -> sharedPreferenceStorage.getThresholdTargetLow()
+        ThresholdUnit.TARGET_HIGH -> sharedPreferenceStorage.getThresholdTargetHigh()
     }
 
     override fun setThresholdValue(thresholdName: String, thresholdValue: Long) {
@@ -28,53 +26,37 @@ class PreferenceRepositoryImpl @Inject constructor(
         sharedPreferenceStorage.setThresholdValue(thresholdName, thresholdValue)
     }
 
-    override fun getGlucoseFetchInterval(): Int {
-        return sharedPreferenceStorage.getGlucoseFetchInterval()
-    }
+    override fun getGlucoseFetchInterval(): Int = sharedPreferenceStorage.getGlucoseFetchInterval()
 
     override fun setGlucoseFetchInterval(interval: Int) {
         sharedPreferenceStorage.setGlucoseFetchInterval(interval)
     }
 
-    override fun getBaseUrl(): String {
-        return sharedPreferenceStorage.getBaseUrl()
-    }
+    override fun getBaseUrl(): String = sharedPreferenceStorage.getBaseUrl()
 
     override fun setBaseUrl(url: String) {
         sharedPreferenceStorage.setBaseUrl(url)
     }
 
-    override fun getTimeFormat(): Long {
-        return sharedPreferenceStorage.getTimeFormat()
-    }
+    override fun getTimeFormat(): Long = sharedPreferenceStorage.getTimeFormat()
 
     override fun setTimeFormat(timeFormat: Long) {
         sharedPreferenceStorage.setTimeFormat(timeFormat)
     }
 
-    override fun getUnit(): String {
-        return sharedPreferenceStorage.getUnit()
-    }
+    override fun getUnit(): String = sharedPreferenceStorage.getUnit()
 
-    override fun getCriticalNotificationInterval(): Long {
-        return sharedPreferenceStorage.getCriticalNotificationInterval()
-    }
+    override fun getCriticalNotificationInterval(): Long = sharedPreferenceStorage.getCriticalNotificationInterval()
 
     override fun setCriticalNotificationInterval(interval: Long) {
         sharedPreferenceStorage.setCriticalNotificationInterval(interval)
     }
 
-    override fun isGlucoseNotificationEnabled(): Boolean {
-        return sharedPreferenceStorage.getGlucoseNotificationEnabled()
-    }
+    override fun isGlucoseNotificationEnabled(): Boolean = sharedPreferenceStorage.getGlucoseNotificationEnabled()
 
-    override fun isGlucoseAlarmLowEnabled(): Boolean {
-        return sharedPreferenceStorage.getGlucoseAlarmLowEnabled()
-    }
+    override fun isGlucoseAlarmLowEnabled(): Boolean = sharedPreferenceStorage.getGlucoseAlarmLowEnabled()
 
-    override fun isUserSignedIn(): Boolean {
-        return sharedPreferenceStorage.userSignedIn()
-    }
+    override fun isUserSignedIn(): Boolean = sharedPreferenceStorage.userSignedIn()
 
     override fun setUserSignedIn(isUserSignedIn: Boolean) {
         sharedPreferenceStorage.setUserSignedIn(isUserSignedIn)

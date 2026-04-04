@@ -9,25 +9,24 @@ import com.volvocars.wearablemonitor.domain.model.Thresholds
 fun Thresholds.toLimitLines(
     context: Context,
     isUnitMmol: Boolean,
-): List<LimitLine> =
-    listOf(
-        bgLow.toLimitLine(
-            context.resources.getString(R.color.value_out_of_range),
-            isUnitMmol,
-        ),
-        bgTargetBottom.toLimitLine(
-            context.resources.getString(R.color.value_is_in_range_and_nok),
-            isUnitMmol,
-        ),
-        bgHigh.toLimitLine(
-            context.resources.getString(R.color.value_out_of_range),
-            isUnitMmol,
-        ),
-        bgTargetTop.toLimitLine(
-            context.resources.getString(R.color.value_is_in_range_and_nok),
-            isUnitMmol,
-        ),
-    )
+): List<LimitLine> = listOf(
+    bgLow.toLimitLine(
+        context.resources.getString(R.color.value_out_of_range),
+        isUnitMmol,
+    ),
+    bgTargetBottom.toLimitLine(
+        context.resources.getString(R.color.value_is_in_range_and_nok),
+        isUnitMmol,
+    ),
+    bgHigh.toLimitLine(
+        context.resources.getString(R.color.value_out_of_range),
+        isUnitMmol,
+    ),
+    bgTargetTop.toLimitLine(
+        context.resources.getString(R.color.value_is_in_range_and_nok),
+        isUnitMmol,
+    ),
+)
 
 private fun Long.toLimitLine(
     color: String,

@@ -42,7 +42,7 @@ class NightScoutApiTest {
                 dateString = "2026-04-04T10:00:00.000Z",
                 trend = "4",
                 direction = "Flat",
-                type = "sgv"
+                type = "sgv",
             ),
             GlucoseDto(
                 id = "test2",
@@ -51,8 +51,8 @@ class NightScoutApiTest {
                 dateString = "2026-04-04T09:55:00.000Z",
                 trend = "3",
                 direction = "FortyFiveDown",
-                type = "sgv"
-            )
+                type = "sgv",
+            ),
         )
 
         val mockEngine = MockEngine { request ->
@@ -61,7 +61,7 @@ class NightScoutApiTest {
                     respond(
                         content = json.encodeToString(mockGlucoseData),
                         status = HttpStatusCode.OK,
-                        headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                        headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
                     )
                 }
                 else -> error("Unhandled ${request.url.encodedPath}")
@@ -98,7 +98,7 @@ class NightScoutApiTest {
             respond(
                 content = """{"error": "Internal Server Error"}""",
                 status = HttpStatusCode.InternalServerError,
-                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
             )
         }
 
@@ -130,7 +130,7 @@ class NightScoutApiTest {
                     respond(
                         content = json.encodeToString(mockStatus),
                         status = HttpStatusCode.OK,
-                        headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                        headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
                     )
                 }
                 else -> error("Unhandled ${request.url.encodedPath}")
@@ -171,7 +171,7 @@ class NightScoutApiTest {
                 dateString = "2026-04-04T10:00:00.000Z",
                 trend = "2",
                 direction = "SingleDown",
-                type = "sgv"
+                type = "sgv",
             ),
             GlucoseDto(
                 id = "hypo2",
@@ -180,15 +180,15 @@ class NightScoutApiTest {
                 dateString = "2026-04-04T09:55:00.000Z",
                 trend = "1",
                 direction = "DoubleDown",
-                type = "sgv"
-            )
+                type = "sgv",
+            ),
         )
 
         val mockEngine = MockEngine { request ->
             respond(
                 content = json.encodeToString(mockGlucoseData),
                 status = HttpStatusCode.OK,
-                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
             )
         }
 
@@ -224,7 +224,7 @@ class NightScoutApiTest {
                 dateString = "2026-04-04T10:00:00.000Z",
                 trend = "6",
                 direction = "SingleUp",
-                type = "sgv"
+                type = "sgv",
             ),
             GlucoseDto(
                 id = "hyper2",
@@ -233,15 +233,15 @@ class NightScoutApiTest {
                 dateString = "2026-04-04T09:55:00.000Z",
                 trend = "7",
                 direction = "DoubleUp",
-                type = "sgv"
-            )
+                type = "sgv",
+            ),
         )
 
         val mockEngine = MockEngine { request ->
             respond(
                 content = json.encodeToString(mockGlucoseData),
                 status = HttpStatusCode.OK,
-                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
             )
         }
 
@@ -275,7 +275,7 @@ class NightScoutApiTest {
         extendedSettings = com.volvocars.wearablemonitor.data.remote.dto.ExtendedSettingsDto(
             basal = com.volvocars.wearablemonitor.data.remote.dto.BasalDto(render = "default"),
             deviceStatus = com.volvocars.wearablemonitor.data.remote.dto.DeviceStatusDto(advanced = true),
-            profile = com.volvocars.wearablemonitor.data.remote.dto.ProfileDto(multiple = true)
+            profile = com.volvocars.wearablemonitor.data.remote.dto.ProfileDto(multiple = true),
         ),
         name = "Test NightScout",
         serverTime = "2026-04-04T10:00:00.000Z",
@@ -321,13 +321,12 @@ class NightScoutApiTest {
                 bgHigh = 180,
                 bgLow = 70,
                 bgTargetBottom = 80,
-                bgTargetTop = 160
+                bgTargetTop = 160,
             ),
             timeFormat = 24,
-            units = "mg/dl"
+            units = "mg/dl",
         ),
         status = "ok",
-        version = "14.2.6"
+        version = "14.2.6",
     )
 }
-
