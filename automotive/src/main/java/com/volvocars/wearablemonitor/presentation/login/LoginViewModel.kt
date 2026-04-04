@@ -10,7 +10,7 @@ import com.volvocars.wearablemonitor.domain.usecase.SetBaseUrl
 import com.volvocars.wearablemonitor.domain.usecase.SetPreferenceFromServerStatus
 import com.volvocars.wearablemonitor.domain.usecase.SetUserSignedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.ktor.client.features.HttpRequestTimeoutException
+import io.ktor.client.plugins.HttpRequestTimeoutException
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -36,7 +36,7 @@ class LoginViewModel @Inject constructor(
     /**
      * Validate and attempt to login to the server.
      *
-     * Emits [LoginState.urlError] for field-level problems (empty / missing https)
+     * Emits [LoginState.urlError] for field-level problems (empty or invalid URL format)
      * without hitting the network. Network timeouts are caught and surfaced
      * through [LoginState.errorMessage].
      *
@@ -55,9 +55,9 @@ class LoginViewModel @Inject constructor(
                 return@launch
             }
 
-            !trimmed.startsWith("https://") -> {
+            !trimmed.startsWith("http://") && !trimmed.startsWith("https://") -> {
                 _serverStatus.value = serverStatus.value.copy(
-                    urlError = ERROR_URL_HTTPS,
+                    urlError = ERROR_URL_INVALID,
                     isError = false,
                     isLoading = false,
                 )
@@ -120,7 +120,7 @@ class LoginViewModel @Inject constructor(
         val TAG = LoginViewModel::class.simpleName
 
         const val ERROR_URL_EMPTY = "URL field cannot be empty"
-        const val ERROR_URL_HTTPS = "URL must start with https://"
+        const val ERROR_URL_INVALID = "URL must start with http:// or https://"
         const val ERROR_TIMEOUT = "Server did not respond in time. Check the URL and your network connection."
         const val ERROR_GENERIC = "An unexpected error occurred"
     }

@@ -6,7 +6,7 @@
     <string name="action_sign_in">Connect</string>
     <string name="login_failed">"Login failed"</string>
     <string name="api_not_enabled">The API is not enabled for this device</string>
-    <string name="url_not_valid_https">This URL is not valid, need to start with https</string>
+    <string name="url_not_valid">This URL is not valid</string>
     <string name="url_field_blank">The URL field can\'t be blank</string>
 
     <!-- Strings related to Diabetes Monitor Fragment -->

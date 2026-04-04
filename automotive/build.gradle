@@ -1,7 +1,5 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.hilt)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.navigation.safe.args)
@@ -17,8 +15,8 @@ android {
     defaultConfig {
         applicationId "com.volvocars.wearablemonitor"
         minSdkVersion 31
-        targetSdkVersion 34
-        compileSdk 35
+        targetSdkVersion 36
+        compileSdk 36
         versionCode 1
         versionName "1.0"
 
@@ -101,9 +99,11 @@ dependencies {
     implementation libs.gson
     implementation libs.hilt.android
     implementation libs.hilt.ext.work
-    kapt libs.hilt.compiler
+    ksp libs.hilt.compiler
+    ksp libs.hilt.ext.compiler
     implementation libs.ktor.client.android
-    implementation libs.ktor.client.serialization
+    implementation libs.ktor.client.content.negotiation
+    implementation libs.ktor.serialization.kotlinx.json
     implementation libs.ktor.client.logging.jvm
     implementation libs.kotlinx.serialization.json
     implementation "com.github.PhilJay:MPAndroidChart:v3.1.0"
@@ -117,6 +117,7 @@ dependencies {
     testImplementation libs.kotlinx.coroutines.test
     testImplementation libs.robolectric
     testImplementation libs.hilt.android.testing
+    testImplementation libs.ktor.client.mock
 
     // Instrumented test
     debugImplementation libs.androidx.fragment.testing
@@ -125,6 +126,6 @@ dependencies {
     androidTestImplementation libs.kotlinx.coroutines.test
     androidTestImplementation libs.androidx.test.espresso.core
     androidTestImplementation libs.androidx.test.runner
-    kaptAndroidTest libs.hilt.android.compiler
+    kspAndroidTest libs.hilt.compiler
 }
 
