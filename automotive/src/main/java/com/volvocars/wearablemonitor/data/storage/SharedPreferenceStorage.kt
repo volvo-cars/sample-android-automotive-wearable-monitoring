@@ -78,7 +78,7 @@ class SharedPreferenceStorage @Inject constructor(
     override fun getGlucoseFetchInterval(): Int {
         return sharedPreferences.get(
             KEY_GLUCOSE_FETCH_INTERVAL,
-            GLUCOSE_FETCH_INTERVAL_DEFAULT_VALUE
+            GLUCOSE_FETCH_INTERVAL_DEFAULT_VALUE,
         )
     }
 
@@ -239,8 +239,8 @@ class SharedPreferenceStorage @Inject constructor(
         return TimeUnit.MINUTES.toMillis(
             sharedPreferences.get(
                 KEY_ALARM_NOTIFICATION_INTERVAL,
-                DEFAULT_CRITICAL_ALARM_INTERVAL
-            )
+                DEFAULT_CRITICAL_ALARM_INTERVAL,
+            ),
         )
     }
 
@@ -259,7 +259,7 @@ class SharedPreferenceStorage @Inject constructor(
     override fun getCriticalNotificationInterval(): Long {
         return sharedPreferences.get(
             KEY_ALARM_NOTIFICATION_INTERVAL,
-            DEFAULT_CRITICAL_ALARM_INTERVAL
+            DEFAULT_CRITICAL_ALARM_INTERVAL,
         )
     }
 

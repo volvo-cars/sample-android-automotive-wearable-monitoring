@@ -5,7 +5,7 @@ import com.volvocars.wearablemonitor.domain.repository.PreferenceRepository
 import javax.inject.Inject
 
 class SetPreferenceFromServerStatus @Inject constructor(
-    private val repository: PreferenceRepository
+    private val repository: PreferenceRepository,
 ) {
     operator fun invoke(serverStatus: ServerStatus) {
         repository.setPreferenceFromServerStatus(serverStatus)

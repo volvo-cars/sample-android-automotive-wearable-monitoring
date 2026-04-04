@@ -2,6 +2,8 @@ package com.volvocars.wearablemonitor.core.service
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ServiceInfo
+import android.os.Build
 import android.util.Log
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
@@ -11,8 +13,6 @@ import com.volvocars.wearablemonitor.core.util.NotificationConstants.ACTION_REQU
 import com.volvocars.wearablemonitor.core.util.NotificationConstants.ACTION_SHOW_GLUCOSE_VALUES
 import com.volvocars.wearablemonitor.domain.usecase.GetCriticalNotificationInterval
 import com.volvocars.wearablemonitor.domain.usecase.GetThresholds
-import com.volvocars.wearablemonitor.domain.usecase.IsGlucoseAlarmLowEnabled
-import com.volvocars.wearablemonitor.domain.usecase.IsGlucoseNotificationEnabled
 import com.volvocars.wearablemonitor.domain.usecase.IsUnitMmol
 import com.volvocars.wearablemonitor.domain.usecase.ObserveCachedGlucoseValues
 import com.volvocars.wearablemonitor.presentation.mapper.toPresentationModels
@@ -20,11 +20,12 @@ import com.volvocars.wearablemonitor.presentation.model.GlucoseSummary
 import com.volvocars.wearablemonitor.presentation.util.calculateDifference
 import com.volvocars.wearablemonitor.presentation.util.isOutOfRange
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
-import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class WearableMonitorService : LifecycleService() {
@@ -36,12 +37,6 @@ class WearableMonitorService : LifecycleService() {
     lateinit var observeGlucoseValues: ObserveCachedGlucoseValues
 
     @Inject
-    lateinit var isGlucoseNotificationEnabled: IsGlucoseNotificationEnabled
-
-    @Inject
-    lateinit var isGlucoseAlarmLowEnabled: IsGlucoseAlarmLowEnabled
-
-    @Inject
     lateinit var getCriticalNotificationInterval: GetCriticalNotificationInterval
 
     @Inject
@@ -51,149 +46,124 @@ class WearableMonitorService : LifecycleService() {
     lateinit var isUnitMmol: IsUnitMmol
 
     private var lastCriticalUpdate = 0L
-    private var criticalGlucoseTimer: TimerTask? = null
 
-    private val _glucoseValues = MutableSharedFlow<List<GlucoseSummary>>()
-    private val glucoseValues = _glucoseValues.asSharedFlow()
+    /**
+     * Holds the two most-recent readings so both the info and critical notification
+     * logic share the same snapshot without an extra coroutine hop.
+     */
+    private val _latestReadings = MutableStateFlow<List<GlucoseSummary>>(emptyList())
+    private val latestReadings = _latestReadings.asStateFlow()
 
     override fun onCreate() {
         super.onCreate()
-        notificationHelper.showForegroundServiceNotification().also {
-            startForeground(it.channelId.toInt(), it)
+        val notification = notificationHelper.showForegroundServiceNotification()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            startForeground(
+                notification.channelId.toInt(),
+                notification,
+                ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE,
+            )
+        } else {
+            startForeground(notification.channelId.toInt(), notification)
         }
-        observeGlucoseValues()
+        collectGlucoseReadings()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
         handleIntentAction(intent)
-
         return START_STICKY
     }
 
     private fun handleIntentAction(intent: Intent?) {
-        intent?.let {
-            when (it.action) {
-                ACTION_REQUIRE_CONFIGURATION -> notificationHelper.showRequireConfigurationNotification()
-                ACTION_REQUIRE_NETWORK -> notificationHelper.showMissingNetworkNotification()
-                ACTION_SHOW_GLUCOSE_VALUES -> observeGlucose()
-                else -> {
-                    /** no-op **/
-                }
-            }
+        when (intent?.action) {
+            ACTION_REQUIRE_CONFIGURATION -> notificationHelper.showRequireConfigurationNotification()
+            ACTION_REQUIRE_NETWORK -> notificationHelper.showMissingNetworkNotification()
+            ACTION_SHOW_GLUCOSE_VALUES -> startNotificationUpdates()
+            else -> { /* no-op */ }
         }
     }
 
-    private fun observeGlucoseValues() = lifecycleScope.launch {
+    /**
+     * Observes the DB flow and keeps [latestReadings] up to date.
+     * Started once in [onCreate] so readings are always fresh regardless of intent action.
+     */
+    private fun collectGlucoseReadings() = lifecycleScope.launch {
         observeGlucoseValues.invoke(2).collectLatest { glucoseList ->
-            _glucoseValues.emit(glucoseList.toPresentationModels())
+            _latestReadings.value = glucoseList.toPresentationModels()
         }
     }
 
-
-    private fun observeGlucose() = lifecycleScope.launch {
-        glucoseValues.collectLatest { glucoseList ->
-            if (glucoseList.isNotEmpty()) {
-                val (latestGlucoseValue, currentGlucoseValue) = glucoseList.take(2)
-                buildInfoNotification(latestGlucoseValue, currentGlucoseValue)
-                buildCriticalNotification(currentGlucoseValue)
-            }
+    /**
+     * Subscribes to [latestReadings] and rebuilds notifications on every new emission.
+     * Called when [ACTION_SHOW_GLUCOSE_VALUES] is received.
+     */
+    private fun startNotificationUpdates() = lifecycleScope.launch {
+        latestReadings.collectLatest { readings ->
+            if (readings.size < 2) return@collectLatest
+            val (previousReading, currentReading) = readings
+            val unitMmol = isUnitMmol()
+            buildInfoNotification(previousReading, currentReading, unitMmol)
+            buildCriticalNotification(currentReading)
         }
     }
 
     private fun buildInfoNotification(
-        latestGlucoseValue: GlucoseSummary,
-        currentGlucoseValue: GlucoseSummary,
+        previousReading: GlucoseSummary,
+        currentReading: GlucoseSummary,
+        isUnitMmol: Boolean,
     ) {
-        val diff = calculateDifference(
-            currentGlucoseValue.sgv,
-            latestGlucoseValue.sgv,
-            isUnitMmol()
-        )
+        val diff = calculateDifference(currentReading.sgv, previousReading.sgv, isUnitMmol)
+        val unit = getUnitLabel(isUnitMmol)
+        val glucoseText = formatGlucoseValue(currentReading, isUnitMmol)
 
-        val unit = getUnit()
-        val glucoseValueText = getGlucoseLevelText(currentGlucoseValue)
-
-        notificationHelper.showGlucoseInfoNotification(
-            glucoseValueText,
-            diff,
-            unit,
-            currentGlucoseValue.direction
-        )
+        notificationHelper.showGlucoseInfoNotification(glucoseText, diff, unit, currentReading.direction)
     }
 
-    private fun buildCriticalNotification(
-        currentGlucoseValue: GlucoseSummary
-    ) {
+    private fun buildCriticalNotification(currentReading: GlucoseSummary) {
         val threshold = getThresholds()
-
-        if (currentGlucoseValue.isOutOfRange(threshold)) {
-            val timeSince = lastCriticalUpdate.timeSince()
-            val criticalNotificationInterval = getCriticalNotificationInterval.invoke()
-            val interval = TimeUnit.MINUTES.toMillis(criticalNotificationInterval)
-
-            Log.d(TAG, "buildCriticalNotification: $timeSince $interval")
-            if (timeSince > interval) {
-                val glucoseValueText = getGlucoseLevelText(currentGlucoseValue)
-                val unit = getUnit()
-
-                when {
-                    currentGlucoseValue.sgv <= threshold.bgLow -> {
-                        notificationHelper.showGlucoseCriticalLowNotification(
-                            glucoseValueText,
-                            unit
-                        )
-                    }
-
-                    currentGlucoseValue.sgv >= threshold.bgHigh -> {
-                        notificationHelper.showGlucoseCriticalHighNotification(
-                            glucoseValueText,
-                            unit
-                        )
-                    }
-
-                    else -> {
-                        notificationHelper.hideGlucoseCriticalNotification()
-                    }
-                }
-
-                lastCriticalUpdate = System.currentTimeMillis()
-            }
-        } else {
-            // If the glucose values isn't outside the thresholds,
-            // cancel the potentially current notification
-            criticalGlucoseTimer?.cancel()
-            criticalGlucoseTimer = null
+        if (!currentReading.isOutOfRange(threshold)) {
             notificationHelper.hideGlucoseCriticalNotification()
+            return
         }
-    }
 
-    private fun Long.timeSince(): Long {
-        return System.currentTimeMillis() - this
-    }
+        val elapsed = System.currentTimeMillis() - lastCriticalUpdate
+        val intervalMillis = TimeUnit.MINUTES.toMillis(getCriticalNotificationInterval.invoke())
+        Log.d(TAG, "buildCriticalNotification: elapsed=$elapsed intervalMillis=$intervalMillis")
 
-    private fun getGlucoseLevelText(currentGlucoseValue: GlucoseSummary): String {
-        return if (isUnitMmol()) {
-            currentGlucoseValue.sgvMmol.toString()
-        } else {
-            currentGlucoseValue.sgvUnit.toString()
+        if (elapsed <= intervalMillis) return
+
+        val isUnitMmol = isUnitMmol()
+        val glucoseText = formatGlucoseValue(currentReading, isUnitMmol)
+        val unit = getUnitLabel(isUnitMmol)
+
+        when {
+            currentReading.sgv <= threshold.bgLow ->
+                notificationHelper.showGlucoseCriticalLowNotification(glucoseText, unit)
+
+            currentReading.sgv >= threshold.bgHigh ->
+                notificationHelper.showGlucoseCriticalHighNotification(glucoseText, unit)
+
+            else -> notificationHelper.hideGlucoseCriticalNotification()
         }
+
+        lastCriticalUpdate = System.currentTimeMillis()
     }
 
-    private fun getUnit(): String {
-        val unitEntries = resources.getStringArray(R.array.unit_entries)
-        return if (isUnitMmol()) unitEntries[0] else unitEntries[1]
+    private fun formatGlucoseValue(reading: GlucoseSummary, isUnitMmol: Boolean): String = if (isUnitMmol) reading.sgvMmol.toString() else reading.sgvUnit.toString()
+
+    private fun getUnitLabel(isUnitMmol: Boolean): String {
+        val entries = resources.getStringArray(R.array.unit_entries)
+        return if (isUnitMmol) entries[0] else entries[1]
     }
 
     companion object {
         val TAG = WearableMonitorService::class.simpleName
 
         fun startAsForeground(context: Context, action: String? = null) {
-            Intent(context, WearableMonitorService::class.java).apply {
-                setAction(action)
-            }.also {
-                context.startForegroundService(it)
-            }
+            Intent(context, WearableMonitorService::class.java)
+                .apply { setAction(action) }
+                .also { context.startForegroundService(it) }
         }
     }
 }

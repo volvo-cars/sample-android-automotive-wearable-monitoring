@@ -17,7 +17,7 @@ class NotificationChannelHelper @Inject constructor() {
     private fun createGlucoseCriticalNotificationChannel() = NotificationChannel(
         NotificationConstants.GLUCOSE_CRITICAL_NOTIFICATION_ID,
         NotificationConstants.GLUCOSE_CRITICAL_NOTIFICATION_NAME,
-        NotificationManager.IMPORTANCE_HIGH
+        NotificationManager.IMPORTANCE_HIGH,
     ).apply {
         setShowBadge(true)
         lockscreenVisibility = Notification.VISIBILITY_PUBLIC
@@ -26,6 +26,6 @@ class NotificationChannelHelper @Inject constructor() {
     private fun createGlucoseInfoNotificationChannel() = NotificationChannel(
         NotificationConstants.GLUCOSE_INFO_NOTIFICATION_CHANNEL_ID,
         NotificationConstants.GLUCOSE_INFO_NOTIFICATION_CHANNEL_NAME,
-        NotificationManager.IMPORTANCE_DEFAULT
+        NotificationManager.IMPORTANCE_DEFAULT,
     )
 }

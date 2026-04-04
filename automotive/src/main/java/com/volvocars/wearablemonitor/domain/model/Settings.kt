@@ -17,7 +17,7 @@ data class Settings(
     val alarmUrgentMins: List<Long>,
     val alarmWarnMins: List<Long>,
     val baseURL: String,
-    val thresholds: com.volvocars.wearablemonitor.domain.model.Thresholds,
+    val thresholds: Thresholds,
     val timeFormat: Long,
     val units: String,
 )

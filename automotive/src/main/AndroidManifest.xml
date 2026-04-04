@@ -7,14 +7,16 @@
         android:required="true" />
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission
+        android:name="android.permission.FOREGROUND_SERVICE"
+        tools:ignore="ForegroundServicesPolicy" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:name=".WearableMonitorApp"
-        android:allowBackup="true"
         android:icon="@mipmap/wearable_monitor_ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/wearable_monitor_ic_launcher_round"
@@ -56,7 +58,12 @@
 
         <service
             android:name=".core.service.WearableMonitorService"
-            android:enabled="true" />
+            android:enabled="true"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="This service monitors continuous glucose readings from a wearable sensor and displays them on the automotive HUD." />
+        </service>
 
         <provider
             android:name="androidx.startup.InitializationProvider"

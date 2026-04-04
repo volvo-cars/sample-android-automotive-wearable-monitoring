@@ -32,10 +32,10 @@ import com.volvocars.wearablemonitor.presentation.util.oneDecimalPrecision
 import com.volvocars.wearablemonitor.presentation.util.sgvToUnit
 import com.volvocars.wearablemonitor.presentation.util.unitToSvg
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class WearableSettingsFragment : PreferenceFragment() {
@@ -100,7 +100,7 @@ class WearableSettingsFragment : PreferenceFragment() {
 
     override fun onCreatePreferences(
         savedInstanceState: Bundle?,
-        rootKey: String?
+        rootKey: String?,
     ) {
         setPreferencesFromResource(R.xml.settings, rootKey)
 
@@ -108,7 +108,7 @@ class WearableSettingsFragment : PreferenceFragment() {
         logoutPreference = findPreference(getString(R.string.pk_logout_preference))!!
         logoutPreference.summary = getString(
             R.string.you_are_logged_in_with_instance,
-            getBaseUrl()
+            getBaseUrl(),
         )
         logoutPreference.setOnPreferenceClickListener {
             logout()
@@ -143,9 +143,10 @@ class WearableSettingsFragment : PreferenceFragment() {
                 val text = preference.text
                 if (!text.isNullOrEmpty()) {
                     text
-                } else getString(R.string.not_set)
+                } else {
+                    getString(R.string.not_set)
+                }
             }
-
 
         unitPreference =
             findPreference<CarUiListPreference>(Constants.KEY_UNIT)?.apply {
@@ -159,7 +160,7 @@ class WearableSettingsFragment : PreferenceFragment() {
         unitPreference.value = getUnit()
 
         timeFormatPreference = findPreference<ListPreference>(
-            getString(R.string.pk_time_format)
+            getString(R.string.pk_time_format),
         )?.apply {
             summaryProvider = dropDownPreferenceSummaryProvider
             setOnPreferenceChangeListener { _, newValue ->
@@ -175,7 +176,7 @@ class WearableSettingsFragment : PreferenceFragment() {
         timeFormatPreference.value = getTimeFormat().toString()
 
         fetchGlucoseIntervalPreference = findPreference<CarUiEditTextPreference>(
-            "pk_glucose_fetch_interval"
+            "pk_glucose_fetch_interval",
         )?.apply {
             setOnPreferenceChangeListener { _, newValue ->
                 val value = newValue?.toString()?.toInt() ?: 1
@@ -199,13 +200,13 @@ class WearableSettingsFragment : PreferenceFragment() {
             initThresholdPreference(getString(R.string.pk_thresholds_targetLow))
 
         thresholdTargetHighPreference = initThresholdPreference(
-            getString(R.string.pk_thresholds_targetHigh)
+            getString(R.string.pk_thresholds_targetHigh),
         )
 
         thresholdHighPreference = initThresholdPreference(getString(R.string.pk_thresholds_high))
 
         criticalNotificationIntervalPreference = findPreference(
-            getString(R.string.pk_alarmLow_notification_interval)
+            getString(R.string.pk_alarmLow_notification_interval),
         )!!
         criticalNotificationIntervalPreference.setOnPreferenceChangeListener { _, newValue ->
             setCriticalNotificationInterval(newValue.toString().toLong())
@@ -214,7 +215,7 @@ class WearableSettingsFragment : PreferenceFragment() {
         criticalNotificationIntervalPreference.summaryProvider = editTextPreferenceSummaryProvider
 
         glucoseNotificationPreference = findPreference(
-            getString(R.string.pk_glucoseNotification_setting)
+            getString(R.string.pk_glucoseNotification_setting),
         )!!
 
         alarmLowPreference = findPreference(getString(R.string.pk_alarmLow_setting))!!
@@ -232,27 +233,27 @@ class WearableSettingsFragment : PreferenceFragment() {
      */
     private fun initThresholdPreference(
         key: String,
-    ): EditTextPreference {
-        return findPreference<EditTextPreference>(key)?.apply {
-            summaryProvider = Preference.SummaryProvider<EditTextPreference> { preference ->
-                val text = preference.text
-                if (!text.isNullOrEmpty()) {
-                    sgvToUnit(text.toInt(), isUnitMmol()).oneDecimalPrecision()
-                } else getString(R.string.not_set)
+    ): EditTextPreference = findPreference<EditTextPreference>(key)?.apply {
+        summaryProvider = Preference.SummaryProvider<EditTextPreference> { preference ->
+            val text = preference.text
+            if (!text.isNullOrEmpty()) {
+                sgvToUnit(text.toInt(), isUnitMmol()).oneDecimalPrecision()
+            } else {
+                getString(R.string.not_set)
             }
-            setOnPreferenceChangeListener { preference, newValue ->
-                val value: Float = newValue?.toString()?.toFloat() ?: 0.0f
-                setThresholdValue(
-                    preference.key,
-                    unitToSvg(value, isUnitMmol()).toLong()
-                )
-                true
-            }
-            setOnBindEditTextListener {
-                it.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
-            }
-        }!!
-    }
+        }
+        setOnPreferenceChangeListener { preference, newValue ->
+            val value: Float = newValue?.toString()?.toFloat() ?: 0.0f
+            setThresholdValue(
+                preference.key,
+                unitToSvg(value, isUnitMmol()).toLong(),
+            )
+            true
+        }
+        setOnBindEditTextListener {
+            it.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
+        }
+    }!!
 
     /**
      *  Update preference text values

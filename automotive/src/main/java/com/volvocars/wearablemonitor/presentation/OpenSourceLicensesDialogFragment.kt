@@ -30,7 +30,7 @@ class OpenSourceLicensesDialogFragment : DialogFragment() {
             .setTitle("Open Source Licenses")
             .setView(webView)
             .setPositiveButton(
-                "OK"
+                "OK",
             ) { dialog: DialogInterface, _: Int -> dialog.dismiss() }
             .create()
     }

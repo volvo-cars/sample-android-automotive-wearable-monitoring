@@ -7,5 +7,5 @@ fun ThresholdsDto.toThresholds() = Thresholds(
     bgHigh,
     bgLow,
     bgTargetBottom,
-    bgTargetTop
+    bgTargetTop,
 )

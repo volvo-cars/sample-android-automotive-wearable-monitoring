@@ -4,5 +4,5 @@ import com.volvocars.wearablemonitor.data.remote.dto.DeviceStatusDto
 import com.volvocars.wearablemonitor.domain.model.DeviceStatus
 
 fun DeviceStatusDto.toDeviceStatus() = DeviceStatus(
-    advanced = advanced
+    advanced = advanced,
 )

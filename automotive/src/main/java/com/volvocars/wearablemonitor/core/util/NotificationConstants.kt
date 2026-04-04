@@ -2,7 +2,6 @@ package com.volvocars.wearablemonitor.core.util
 
 object NotificationConstants {
 
-
     // Notification service
     const val GLUCOSE_CRITICAL_NOTIFICATION_ID = "999"
     const val GLUCOSE_CRITICAL_NOTIFICATION_NAME = "com.volvocars.wearablemonitor.glucose_critical"

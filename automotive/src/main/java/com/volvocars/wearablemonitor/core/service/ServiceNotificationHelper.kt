@@ -18,14 +18,14 @@ class ServiceNotificationHelper @Inject constructor(
 ) {
     fun showForegroundServiceNotification() = showInfoNotification(
         context.getString(R.string.configurationsRequired_title),
-        context.getString(R.string.configurationsRequired_text)
+        context.getString(R.string.configurationsRequired_text),
     )
 
     fun showGlucoseInfoNotification(
         glucoseValue: String,
         diff: String,
         unit: String,
-        direction: String
+        direction: String,
     ) {
         val title = context.getString(R.string.notification_info_title, glucoseValue, direction)
         val text = context.getString(R.string.notification_info_text, diff, unit)
@@ -36,20 +36,20 @@ class ServiceNotificationHelper @Inject constructor(
     fun showMissingNetworkNotification() {
         showInfoNotification(
             context.getString(R.string.missing_network_title),
-            context.getString(R.string.missing_network_text)
+            context.getString(R.string.missing_network_text),
         )
     }
 
     fun showRequireConfigurationNotification() {
         showInfoNotification(
             context.getString(R.string.configurationsRequired_title),
-            context.getString(R.string.configurationsRequired_text)
+            context.getString(R.string.configurationsRequired_text),
         )
     }
 
     fun showGlucoseCriticalHighNotification(
         glucoseValue: String,
-        unit: String
+        unit: String,
     ) {
         val title = context.getString(R.string.alarm_high_notification_title)
         val text = context.getString(R.string.alarm_high_notification_text, glucoseValue, unit)
@@ -59,7 +59,7 @@ class ServiceNotificationHelper @Inject constructor(
             text,
             NotificationConstants.GLUCOSE_CRITICAL_NOTIFICATION_ID,
             mainActivityPendingIntent,
-            glucoseCriticalNotificationActionButtons()
+            glucoseCriticalNotificationActionButtons(),
         )
     }
 
@@ -75,7 +75,7 @@ class ServiceNotificationHelper @Inject constructor(
             text,
             NotificationConstants.GLUCOSE_CRITICAL_NOTIFICATION_ID,
             mainActivityPendingIntent,
-            glucoseCriticalNotificationActionButtons()
+            glucoseCriticalNotificationActionButtons(),
         )
     }
 
@@ -88,13 +88,15 @@ class ServiceNotificationHelper @Inject constructor(
 
     private fun glucoseCriticalNotificationActionButtons() = listOf(
         NotificationActionButton(
-            0, R.string.alarm_critical_notification_buttonText_snack, findSnackIntent
+            0,
+            R.string.alarm_critical_notification_buttonText_snack,
+            findSnackIntent,
         ),
         NotificationActionButton(
             0,
             R.string.alarm_critical_notification_buttonText_parking,
-            findParkingIntent
-        )
+            findParkingIntent,
+        ),
     )
 
     private fun showInfoNotification(
@@ -104,7 +106,7 @@ class ServiceNotificationHelper @Inject constructor(
         title,
         text,
         NotificationConstants.GLUCOSE_INFO_NOTIFICATION_CHANNEL_ID,
-        mainActivityPendingIntent
+        mainActivityPendingIntent,
     )
 
     private val findSnackIntent = PendingIntent.getActivity(
@@ -112,8 +114,9 @@ class ServiceNotificationHelper @Inject constructor(
         0,
         Intent(
             Intent.ACTION_VIEW,
-            NotificationConstants.GOOGLE_MAPS_FIND_NEAREST_CONVENIENCE_STORE_URI.toUri()
-        ).setPackage(NotificationConstants.GOOGLE_MAPS_PACKAGE_NAME), PendingIntent.FLAG_IMMUTABLE
+            NotificationConstants.GOOGLE_MAPS_FIND_NEAREST_CONVENIENCE_STORE_URI.toUri(),
+        ).setPackage(NotificationConstants.GOOGLE_MAPS_PACKAGE_NAME),
+        PendingIntent.FLAG_IMMUTABLE,
     )
 
     private val findParkingIntent = PendingIntent.getActivity(
@@ -121,14 +124,15 @@ class ServiceNotificationHelper @Inject constructor(
         0,
         Intent(
             Intent.ACTION_VIEW,
-            NotificationConstants.GOOGLE_MAPS_FIND_NEAREST_PARKING_URI.toUri()
-        ).setPackage(NotificationConstants.GOOGLE_MAPS_PACKAGE_NAME), PendingIntent.FLAG_IMMUTABLE
+            NotificationConstants.GOOGLE_MAPS_FIND_NEAREST_PARKING_URI.toUri(),
+        ).setPackage(NotificationConstants.GOOGLE_MAPS_PACKAGE_NAME),
+        PendingIntent.FLAG_IMMUTABLE,
     )
 
     private val mainActivityPendingIntent = PendingIntent.getActivity(
         context,
         0,
         Intent(context, MainActivity::class.java),
-        PendingIntent.FLAG_IMMUTABLE
+        PendingIntent.FLAG_IMMUTABLE,
     )
 }

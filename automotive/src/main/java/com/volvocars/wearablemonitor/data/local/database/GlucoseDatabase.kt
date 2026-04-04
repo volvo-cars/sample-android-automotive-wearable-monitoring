@@ -8,7 +8,7 @@ import com.volvocars.wearablemonitor.data.local.entity.GlucoseEntity
 @Database(
     entities = [GlucoseEntity::class],
     version = 2,
-    exportSchema = false
+    exportSchema = false,
 )
 abstract class GlucoseDatabase : RoomDatabase() {
     abstract fun glucoseDao(): GlucoseDao

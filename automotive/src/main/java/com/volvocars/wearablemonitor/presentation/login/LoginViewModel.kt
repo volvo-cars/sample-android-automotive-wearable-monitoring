@@ -1,12 +1,8 @@
 package com.volvocars.wearablemonitor.presentation.login
 
-import android.app.Activity
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.android.car.ui.core.CarUi
-import com.android.car.ui.toolbar.ToolbarController
-import com.volvocars.wearablemonitor.R
 import com.volvocars.wearablemonitor.domain.model.ServerStatus
 import com.volvocars.wearablemonitor.domain.usecase.FetchServerStatus
 import com.volvocars.wearablemonitor.domain.usecase.IsUserSignedIn
@@ -14,12 +10,13 @@ import com.volvocars.wearablemonitor.domain.usecase.SetBaseUrl
 import com.volvocars.wearablemonitor.domain.usecase.SetPreferenceFromServerStatus
 import com.volvocars.wearablemonitor.domain.usecase.SetUserSignedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.ktor.client.features.HttpRequestTimeoutException
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
@@ -27,9 +24,8 @@ class LoginViewModel @Inject constructor(
     private val isUserSignedIn: IsUserSignedIn,
     private val setBaseUrl: SetBaseUrl,
     private val setUserSignedIn: SetUserSignedIn,
-    private val setPreferenceFromServerStatus: SetPreferenceFromServerStatus
+    private val setPreferenceFromServerStatus: SetPreferenceFromServerStatus,
 ) : ViewModel() {
-    private lateinit var toolbarController: ToolbarController
 
     private val _serverStatus = MutableStateFlow(LoginState())
     val serverStatus = _serverStatus.asStateFlow()
@@ -38,32 +34,77 @@ class LoginViewModel @Inject constructor(
     val errorMessage = _errorMessage.asSharedFlow()
 
     /**
-     * Try to login to the server.
+     * Validate and attempt to login to the server.
      *
-     * @param url - URL of the device.
+     * Emits [LoginState.urlError] for field-level problems (empty / missing https)
+     * without hitting the network. Network timeouts are caught and surfaced
+     * through [LoginState.errorMessage].
+     *
+     * @param url - URL of the NightScout device.
      */
-    fun login(
-        url: String
-    ) = viewModelScope.launch {
-        _serverStatus.value = serverStatus.value.copy(isLoading = true)
-        getServerStatus(url).collect { result ->
-            Log.d(TAG, "login: $result")
-            result.onSuccess {
+    fun login(url: String) = viewModelScope.launch {
+        // --- client-side validation ---
+        val trimmed = url.trim()
+        when {
+            trimmed.isBlank() -> {
                 _serverStatus.value = serverStatus.value.copy(
-                    serverStatus = listOf(it),
-                    isLoading = false,
-                    isSignedIn = true,
+                    urlError = ERROR_URL_EMPTY,
                     isError = false,
-                )
-            }.onFailure {
-                _serverStatus.value = serverStatus.value.copy(
-                    serverStatus = listOf(),
                     isLoading = false,
-                    isSignedIn = false,
-                    isError = true,
-                    errorMessage = it.message
                 )
+                return@launch
             }
+
+            !trimmed.startsWith("https://") -> {
+                _serverStatus.value = serverStatus.value.copy(
+                    urlError = ERROR_URL_HTTPS,
+                    isError = false,
+                    isLoading = false,
+                )
+                return@launch
+            }
+        }
+
+        // Clear any previous field error and start loading.
+        _serverStatus.value = serverStatus.value.copy(
+            urlError = null,
+            isError = false,
+            isLoading = true,
+        )
+
+        // --- network call ---
+        try {
+            getServerStatus(trimmed).collect { result ->
+                Log.d(TAG, "login: $result")
+                result.onSuccess {
+                    _serverStatus.value = serverStatus.value.copy(
+                        serverStatus = listOf(it),
+                        isLoading = false,
+                        isSignedIn = true,
+                        isError = false,
+                    )
+                }.onFailure { cause ->
+                    val message = if (cause is HttpRequestTimeoutException) {
+                        ERROR_TIMEOUT
+                    } else {
+                        cause.message ?: ERROR_GENERIC
+                    }
+                    _serverStatus.value = serverStatus.value.copy(
+                        serverStatus = emptyList(),
+                        isLoading = false,
+                        isSignedIn = false,
+                        isError = true,
+                        errorMessage = message,
+                    )
+                }
+            }
+        } catch (e: HttpRequestTimeoutException) {
+            _serverStatus.value = serverStatus.value.copy(
+                isLoading = false,
+                isSignedIn = false,
+                isError = true,
+                errorMessage = ERROR_TIMEOUT,
+            )
         }
     }
 
@@ -75,13 +116,12 @@ class LoginViewModel @Inject constructor(
         setPreferenceFromServerStatus(serverStatus)
     }
 
-    fun initToolbar(activity: Activity) {
-        toolbarController = CarUi.requireToolbar(activity)
-        toolbarController.setLogo(R.mipmap.wearable_monitor_ic_launcher_round)
-        toolbarController.setTitle(R.string.app_name)
-    }
-
     companion object {
         val TAG = LoginViewModel::class.simpleName
+
+        const val ERROR_URL_EMPTY = "URL field cannot be empty"
+        const val ERROR_URL_HTTPS = "URL must start with https://"
+        const val ERROR_TIMEOUT = "Server did not respond in time. Check the URL and your network connection."
+        const val ERROR_GENERIC = "An unexpected error occurred"
     }
 }

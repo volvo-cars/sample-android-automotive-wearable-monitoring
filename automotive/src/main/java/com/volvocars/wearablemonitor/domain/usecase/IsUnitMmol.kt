@@ -4,9 +4,7 @@ import com.volvocars.wearablemonitor.core.util.Constants
 import javax.inject.Inject
 
 class IsUnitMmol @Inject constructor(
-    private val getUnit: GetUnit
+    private val getUnit: GetUnit,
 ) {
-    operator fun invoke(): Boolean {
-        return getUnit.invoke() == Constants.KEY_MMOL
-    }
+    operator fun invoke(): Boolean = getUnit.invoke() == Constants.KEY_MMOL
 }

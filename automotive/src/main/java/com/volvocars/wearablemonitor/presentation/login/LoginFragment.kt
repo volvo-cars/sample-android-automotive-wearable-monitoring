@@ -13,6 +13,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import com.android.car.ui.core.CarUi
 import com.volvocars.wearablemonitor.R
 import com.volvocars.wearablemonitor.core.service.WearableMonitorService
 import com.volvocars.wearablemonitor.core.util.NotificationConstants.ACTION_REQUIRE_CONFIGURATION
@@ -29,10 +30,9 @@ class LoginFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentLoginBinding.inflate(layoutInflater)
-
         return binding.root
     }
 
@@ -50,7 +50,11 @@ class LoginFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.initToolbar(requireActivity())
+        // Toolbar is a UI concern — initialised here, not in the ViewModel.
+        CarUi.requireToolbar(requireActivity()).apply {
+            setLogo(R.mipmap.wearable_monitor_ic_launcher_round)
+            setTitle(R.string.app_name)
+        }
     }
 
     override fun onDestroyView() {
@@ -64,6 +68,10 @@ class LoginFragment : Fragment() {
                 binding.login.visibility = state.loginButtonVisibility()
                 binding.loading.visibility = state.loadingVisibility()
 
+                // Show inline field error (empty / missing https) on the text field.
+                binding.url.error = state.urlError
+
+                // Show network / server errors as a Toast.
                 if (state.isError) {
                     Toast.makeText(requireContext(), state.errorMessage, LENGTH_LONG).show()
                 }
@@ -71,7 +79,7 @@ class LoginFragment : Fragment() {
                 if (state.isSignedIn) {
                     viewModel.saveServerInformation(
                         binding.url.text.toString(),
-                        state.serverStatus.first()
+                        state.serverStatus.first(),
                     )
                     loginSuccess()
                 }
@@ -79,17 +87,10 @@ class LoginFragment : Fragment() {
         }
     }
 
-    /**
-     *  Try to login with the baseurl provided in url edittext
-     */
     private fun tryLoginIn() {
-        val urlFieldText = binding.url.text.toString()
-        viewModel.login(urlFieldText)
+        viewModel.login(binding.url.text.toString())
     }
 
-    /**
-     * When we receive a successful api call and the api is enabled
-     */
     private fun loginSuccess() {
         findNavController().navigate(R.id.diabetesMonitorFragment)
     }
@@ -109,6 +110,16 @@ class LoginFragment : Fragment() {
             }
             false
         }
+        // Clear the inline error as soon as the user starts editing.
+        binding.url.addTextChangedListener(
+            object : android.text.TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    binding.url.error = null
+                }
+                override fun afterTextChanged(s: android.text.Editable?) = Unit
+            },
+        )
     }
 
     companion object {

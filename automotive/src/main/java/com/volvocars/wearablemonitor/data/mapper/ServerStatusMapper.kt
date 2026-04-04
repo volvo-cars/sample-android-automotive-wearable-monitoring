@@ -10,5 +10,5 @@ fun ServerStatusDto.toServerStatus() = ServerStatus(
     serverTimeEpoch = serverTimeEpoch,
     settings = settings.toSettings(),
     status = status,
-    version = version
+    version = version,
 )

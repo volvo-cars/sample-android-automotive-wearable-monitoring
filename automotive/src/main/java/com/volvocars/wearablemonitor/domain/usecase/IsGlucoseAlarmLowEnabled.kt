@@ -4,9 +4,7 @@ import com.volvocars.wearablemonitor.domain.repository.PreferenceRepository
 import javax.inject.Inject
 
 class IsGlucoseAlarmLowEnabled @Inject constructor(
-    private val preferenceRepository: PreferenceRepository
+    private val preferenceRepository: PreferenceRepository,
 ) {
-    operator fun invoke(): Boolean {
-        return preferenceRepository.isGlucoseAlarmLowEnabled()
-    }
+    operator fun invoke(): Boolean = preferenceRepository.isGlucoseAlarmLowEnabled()
 }

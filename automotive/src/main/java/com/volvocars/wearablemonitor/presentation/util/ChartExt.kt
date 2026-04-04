@@ -14,7 +14,7 @@ import java.util.TimeZone
 
 fun YAxis.configureGlucoseValues(
     limitLines: List<LimitLine>,
-    isUnitMmol: Boolean
+    isUnitMmol: Boolean,
 ) {
     removeAllLimitLines()
     addLimitLine(limitLines[0])
@@ -47,12 +47,10 @@ fun XAxis.configure(timeFormat: Long, locale: Locale) {
 }
 
 private fun xAxisValueFormatter(timeFormat: Long, locale: Locale) = object : ValueFormatter() {
-    override fun getFormattedValue(value: Float): String {
-        return when (timeFormat) {
-            Constants.TIME_FORMAT_DEFAULT_VALUE -> SimpleDateFormat("H:mm", locale)
-            else -> SimpleDateFormat("hh.mm aa", locale)
-        }.apply {
-            timeZone = TimeZone.getDefault()
-        }.format(Calendar.getInstance().apply { timeInMillis = value.toLong() }.time)
-    }
+    override fun getFormattedValue(value: Float): String = when (timeFormat) {
+        Constants.TIME_FORMAT_DEFAULT_VALUE -> SimpleDateFormat("H:mm", locale)
+        else -> SimpleDateFormat("hh.mm aa", locale)
+    }.apply {
+        timeZone = TimeZone.getDefault()
+    }.format(Calendar.getInstance().apply { timeInMillis = value.toLong() }.time)
 }

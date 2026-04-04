@@ -14,7 +14,7 @@ import javax.inject.Inject
 class NotificationUtil @Inject constructor(
     @ApplicationContext private val context: Context,
     private val notificationManager: NotificationManager,
-    private val notificationChannelHelper: NotificationChannelHelper
+    private val notificationChannelHelper: NotificationChannelHelper,
 ) {
 
     fun displayInfoNotification(
@@ -30,7 +30,7 @@ class NotificationUtil @Inject constructor(
         notificationId,
         NotificationManager.IMPORTANCE_DEFAULT,
         contentIntent,
-        actionButtons
+        actionButtons,
     ).also { displayNotification(it) }
 
     fun displayHeadsUpNotification(
@@ -46,7 +46,7 @@ class NotificationUtil @Inject constructor(
         notificationId,
         NotificationManager.IMPORTANCE_HIGH,
         contentIntent,
-        actionButton
+        actionButton,
     ).also { displayNotification(it) }
 
     fun deleteNotificationChannel(id: String) {
@@ -74,7 +74,7 @@ class NotificationUtil @Inject constructor(
         notificationId: String,
         priority: Int,
         contentIntent: PendingIntent? = null,
-        actionButton: List<NotificationActionButton>? = null
+        actionButton: List<NotificationActionButton>? = null,
     ): Notification = NotificationCompat.Builder(context, notificationId)
         .setSmallIcon(icon)
         .setContentIntent(contentIntent)
@@ -87,7 +87,7 @@ class NotificationUtil @Inject constructor(
                 notificationBuilder.addAction(
                     it.icon,
                     context.getString(it.text),
-                    it.pendingIntent
+                    it.pendingIntent,
                 )
             }
         }.build()

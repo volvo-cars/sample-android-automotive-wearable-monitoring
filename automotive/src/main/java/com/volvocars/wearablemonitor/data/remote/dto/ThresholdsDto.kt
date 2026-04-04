@@ -7,5 +7,5 @@ data class ThresholdsDto(
     @SerialName("bgHigh") val bgHigh: Long,
     @SerialName("bgLow") val bgLow: Long,
     @SerialName("bgTargetBottom") val bgTargetBottom: Long,
-    @SerialName("bgTargetTop") val bgTargetTop: Long
+    @SerialName("bgTargetTop") val bgTargetTop: Long,
 )

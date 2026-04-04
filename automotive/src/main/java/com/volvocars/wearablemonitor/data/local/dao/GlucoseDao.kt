@@ -29,7 +29,6 @@ interface GlucoseDao {
     @Query("SELECT * FROM glucose_values ORDER BY date DESC LIMIT :counts")
     fun fetchGlucoseEntities(counts: Int): Flow<List<GlucoseEntity>>
 
-
     /**
      * The idea is to wipe all the data before insert new
      * (so we only cache the data from the latest API call)

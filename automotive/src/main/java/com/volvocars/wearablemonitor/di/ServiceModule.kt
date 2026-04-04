@@ -16,7 +16,6 @@ object ServiceModule {
     @ServiceScoped
     @Provides
     fun provideNotificationManager(
-        @ApplicationContext context: Context
+        @ApplicationContext context: Context,
     ) = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
 }

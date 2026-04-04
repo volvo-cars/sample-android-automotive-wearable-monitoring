@@ -7,17 +7,17 @@ import android.content.IntentFilter
 import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.work.PeriodicWorkRequest
 import com.android.car.ui.core.CarUi
 import com.android.car.ui.toolbar.MenuItem
 import com.android.car.ui.toolbar.ToolbarController
@@ -30,7 +30,6 @@ import com.volvocars.wearablemonitor.core.service.WearableMonitorService
 import com.volvocars.wearablemonitor.core.util.NotificationConstants
 import com.volvocars.wearablemonitor.core.worker.GlucoseFetchWorker
 import com.volvocars.wearablemonitor.databinding.FragmentWearableMonitorBinding
-import com.volvocars.wearablemonitor.domain.model.Glucose
 import com.volvocars.wearablemonitor.presentation.model.GlucoseSummary
 import com.volvocars.wearablemonitor.presentation.settings.WearableSettingsActivity
 import com.volvocars.wearablemonitor.presentation.util.calculateDifference
@@ -41,38 +40,32 @@ import com.volvocars.wearablemonitor.presentation.util.oneDecimalPrecision
 import com.volvocars.wearablemonitor.presentation.util.toColor
 import com.volvocars.wearablemonitor.presentation.util.toLimitLines
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 import java.util.Locale
-import java.util.concurrent.TimeUnit
+import javax.inject.Inject
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class WearableMonitorFragment : Fragment() {
     private var _binding: FragmentWearableMonitorBinding? = null
     private val binding get() = _binding!!
     private val viewModel: WearableMonitorViewModel by viewModels()
-    private lateinit var _locale: Locale
+    private lateinit var locale: Locale
     private lateinit var minuteUpdateReceiver: BroadcastReceiver
     private lateinit var toolbarController: ToolbarController
-    lateinit var glucoseFetchHandler: Handler
-    private val glucoseFetcher = object : Runnable {
-        override fun run() {
-            viewModel.fetchGlucoseValues()
 
-            val timeInMillis = TimeUnit.MINUTES.toMillis(
-                viewModel.getGlucoseFetchInterval().toLong()
-            )
-
-            glucoseFetchHandler.postDelayed(this, timeInMillis)
-        }
-    }
+    @Inject
+    lateinit var glucoseFetchWorker: PeriodicWorkRequest
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentWearableMonitorBinding.inflate(inflater)
-        glucoseFetchHandler = Handler(Looper.getMainLooper())
-        _locale = Locale.getDefault()
+        locale = Locale.getDefault()
         startForegroundService()
+        // Schedule the periodic WorkManager job once when the view is first created.
+        GlucoseFetchWorker.create(requireContext(), glucoseFetchWorker)
 
         toolbarController = CarUi.requireToolbar(requireActivity()).apply {
             setMenuItems(initMenuItems())
@@ -84,44 +77,43 @@ class WearableMonitorFragment : Fragment() {
     private fun initMenuItems() = listOf(
         MenuItem.builder(requireContext()).setToSettings().setOnClickListener {
             WearableSettingsActivity.startActivity(requireContext())
-        }.build()
+        }.build(),
     )
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        getGlucosePoints()
+        observeGlucosePoints()
     }
 
     override fun onResume() {
         super.onResume()
-        glucoseFetchHandler.post(glucoseFetcher)
-        GlucoseFetchWorker.create(requireContext(), viewModel.getGlucoseFetchWorker())
+        // Trigger one immediate refresh; WorkManager handles the periodic cadence.
+        viewModel.fetchGlucoseValues()
         renderChart()
         startMinuteUpdater()
     }
 
     override fun onPause() {
         super.onPause()
-        glucoseFetchHandler.removeCallbacksAndMessages(glucoseFetcher)
         requireActivity().unregisterReceiver(minuteUpdateReceiver)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         _binding = null
     }
 
-    /**
-     * Get notified when system locale changes
-     */
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        _locale = newConfig.locales[0]
+        locale = newConfig.locales[0]
     }
 
-    private fun getGlucosePoints() = viewLifecycleOwner.lifecycleScope.launch {
+    private fun observeGlucosePoints() = viewLifecycleOwner.lifecycleScope.launch {
         repeatOnLifecycle(Lifecycle.State.RESUMED) {
             viewModel.glucoseValues.collect { state ->
+                state.error?.let { msg ->
+                    Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
+                }
                 if (state.glucoseValues.isNotEmpty()) {
                     setData(state.glucoseValues, viewModel.isUnitMmol())
                 }
@@ -132,21 +124,17 @@ class WearableMonitorFragment : Fragment() {
     /**
      * Update UI components in [WearableMonitorFragment]
      *
-     * @param points List of sorted [Glucose] values
+     * @param points List of sorted [GlucoseSummary] values
      */
     private fun setData(points: List<GlucoseSummary>, isUnitMmol: Boolean) {
         val entries = points.map { point ->
-            val xAxis = point.date.toFloat()
-            val yAxis = if (isUnitMmol) point.sgvMmol else point.sgvUnit
-
-            Entry(xAxis, yAxis)
+            Entry(point.date.toFloat(), if (isUnitMmol) point.sgvMmol else point.sgvUnit)
         }
 
         val circleColors = points.map { point ->
             point.sgv.toColor(requireContext(), viewModel.getThresholds())
         }
 
-        // create a dataset and give it a type
         val glucoseDataSet = LineDataSet(entries, "GlucoseEntries").apply {
             axisDependency = YAxis.AxisDependency.LEFT
             color = Color.TRANSPARENT
@@ -171,52 +159,38 @@ class WearableMonitorFragment : Fragment() {
         binding.lastUpdated.text = points.last().getRelativeTimeSpan()
     }
 
-    /**
-     * Get notified when system minute changes
-     */
     private fun startMinuteUpdater() {
-        IntentFilter().apply {
-            addAction(Intent.ACTION_TIME_TICK)
-        }.also {
-            minuteUpdateReceiver = object : BroadcastReceiver() {
-                override fun onReceive(context: Context?, intent: Intent?) {
-                    viewModel.glucoseValues.value.glucoseValues.lastOrNull()?.let { glucose ->
-                        binding.lastUpdated.text = glucose.getRelativeTimeSpan()
-                    }
+        minuteUpdateReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                viewModel.glucoseValues.value.glucoseValues.lastOrNull()?.let { glucose ->
+                    binding.lastUpdated.text = glucose.getRelativeTimeSpan()
                 }
             }
-            requireActivity().registerReceiver(minuteUpdateReceiver, it)
         }
+        requireActivity().registerReceiver(
+            minuteUpdateReceiver,
+            IntentFilter(Intent.ACTION_TIME_TICK),
+        )
     }
 
-    /**
-     * Render the chart in the monitoring view.
-     */
     private fun renderChart() {
         configureGlucoseChart()
         Log.d(TAG, "renderChart: ${viewModel.getThresholds()}")
-        binding.glucoseChart.xAxis.configure(viewModel.getTimeFormat(), _locale)
+        binding.glucoseChart.xAxis.configure(viewModel.getTimeFormat(), locale)
         binding.glucoseChart.axisLeft.configureGlucoseValues(
             viewModel.getThresholds().toLimitLines(requireContext(), viewModel.isUnitMmol()),
-            viewModel.isUnitMmol()
+            viewModel.isUnitMmol(),
         )
         binding.glucoseChart.axisRight.isEnabled = false
     }
 
     private fun configureGlucoseChart() {
         binding.glucoseChart.apply {
-            // no description yet
             description.isEnabled = false
-
-            // disable touch gestures
             setTouchEnabled(false)
             dragDecelerationFrictionCoef = 0.9f
-
-            // enable scaling and dragging
             setDrawGridBackground(false)
             keepScreenOn = true
-
-            // set an alternative background color
             setBackgroundColor(Color.TRANSPARENT)
         }
     }
@@ -226,7 +200,6 @@ class WearableMonitorFragment : Fragment() {
             setValueTextColor(Color.WHITE)
             setValueTextSize(4f)
         }
-
         binding.glucoseChart.apply {
             setData(data)
             notifyDataSetChanged()
@@ -250,10 +223,7 @@ class WearableMonitorFragment : Fragment() {
                 lastFetchedGlucoseValue.sgvUnit.toString()
             }
             setTextColor(
-                lastFetchedGlucoseValue.sgv.toColor(
-                    requireContext(),
-                    viewModel.getThresholds()
-                )
+                lastFetchedGlucoseValue.sgv.toColor(requireContext(), viewModel.getThresholds()),
             )
         }
     }
@@ -261,29 +231,30 @@ class WearableMonitorFragment : Fragment() {
     private fun modifyGlucoseDiff(
         beforeLastFetchedGlucoseValue: GlucoseSummary,
         lastFetchedGlucoseValue: GlucoseSummary,
-        isUnitMmol: Boolean
+        isUnitMmol: Boolean,
     ) {
         val valueDiff = calculateDifference(
             lastFetchedGlucoseValue.sgv,
             beforeLastFetchedGlucoseValue.sgv,
-            isUnitMmol
+            isUnitMmol,
         )
         val units = resources.getStringArray(R.array.unit_entries)
 
         binding.glucoseDiff.text = getString(
             R.string.glucoseDiffText,
-            valueDiff, (if (isUnitMmol) units[0] else units[1])
+            valueDiff,
+            (if (isUnitMmol) units[0] else units[1]),
         )
     }
 
     private fun startForegroundService() {
         WearableMonitorService.startAsForeground(
             requireContext(),
-            NotificationConstants.ACTION_SHOW_GLUCOSE_VALUES
+            NotificationConstants.ACTION_SHOW_GLUCOSE_VALUES,
         )
     }
 
     companion object {
-        val TAG = WearableMonitorFragment::class.simpleName
+        private const val TAG = "WearableMonitorFragment"
     }
 }

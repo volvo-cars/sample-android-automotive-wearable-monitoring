@@ -4,9 +4,7 @@ import com.volvocars.wearablemonitor.domain.repository.PreferenceRepository
 import javax.inject.Inject
 
 class GetGlucoseFetchInterval @Inject constructor(
-    private val preferenceRepository: PreferenceRepository
+    private val preferenceRepository: PreferenceRepository,
 ) {
-    operator fun invoke(): Int {
-        return preferenceRepository.getGlucoseFetchInterval()
-    }
+    operator fun invoke(): Int = preferenceRepository.getGlucoseFetchInterval()
 }

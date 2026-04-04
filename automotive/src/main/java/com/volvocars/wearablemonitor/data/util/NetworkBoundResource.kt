@@ -1,35 +1,37 @@
 package com.volvocars.wearablemonitor.data.util
 
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 
 /**
- * An inline function that will make an api call and if the call is successful,
- * it will emit and also store the data in a local database.
+ * Offline-first network-bound resource helper.
  *
- * Otherwise it will emit the error of call
+ * Emits cached data immediately, then kicks off a remote fetch and persists the
+ * result so the DB flow re-emits the fresh data automatically.  Any network error
+ * is surfaced via [Result.failure] so callers can decide how to handle it.
  *
- * @param query The database query from the dao that should be called
- * @param fetch The web service api call that should be called
- * @param saveFetchResult A lambda that saves the data from the api call to the database
- * @param shouldFetch Weather this request should fetch or not, default set to true
- * @return A flow of the [ResultType] wrapped in [Result]
+ * @param query     Returns a DB [Flow] that is kept alive for downstream observation.
+ * @param fetch     Executes the remote API call and returns a [Result].
+ * @param saveFetchResult  Persists a successful fetch result; skipped on failure.
  */
 inline fun <ResultType, RequestType> networkBoundResource(
-    crossinline query: () -> Flow<ResultType>,
-    crossinline fetch: suspend () -> RequestType,
+    crossinline query: () -> Flow<Result<ResultType>>,
+    crossinline fetch: suspend () -> Result<RequestType>,
     crossinline saveFetchResult: suspend (RequestType) -> Unit,
-    crossinline shouldFetch: (ResultType) -> Boolean = { true },
 ) = flow {
-    runCatching {
-        val data = query().first()
-        val flow = if (shouldFetch(data)) {
-            saveFetchResult(fetch())
-            query().map { it }
-        } else {
-            query().map { it }
-        }
+    // 1. Emit whatever is in cache right away (may be empty).
+    emit(query().first())
 
-        emitAll(flow)
+    // 2. Fetch from the network and persist on success.
+    val fetchResult = fetch()
+    if (fetchResult.isSuccess) {
+        saveFetchResult(fetchResult.getOrThrow())
+    } else {
+        emit(Result.failure(fetchResult.exceptionOrNull() ?: Exception("Unknown network error")))
     }
-}
 
+    // 3. Re-emit the DB flow so observers always see the freshest data.
+    emitAll(query())
+}

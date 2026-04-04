@@ -8,7 +8,7 @@ import com.volvocars.wearablemonitor.domain.util.ThresholdUnit
 import javax.inject.Inject
 
 class PreferenceRepositoryImpl @Inject constructor(
-    private val sharedPreferenceStorage: SharedPreferenceStorage
+    private val sharedPreferenceStorage: SharedPreferenceStorage,
 ) : PreferenceRepository {
     override fun setPreferenceFromServerStatus(serverStatus: ServerStatus) {
         sharedPreferenceStorage.setPreferenceFromServerStatus(serverStatus)
