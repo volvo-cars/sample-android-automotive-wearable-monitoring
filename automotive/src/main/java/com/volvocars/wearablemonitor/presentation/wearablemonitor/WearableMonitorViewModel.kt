@@ -61,6 +61,6 @@ class WearableMonitorViewModel @Inject constructor(
     fun getTimeFormat(): Long = getTimeFormat.invoke()
 
     companion object {
-        val TAG = WearableMonitorViewModel::class.simpleName
+        private const val TAG = "WearableMonitorViewModel"
     }
 }

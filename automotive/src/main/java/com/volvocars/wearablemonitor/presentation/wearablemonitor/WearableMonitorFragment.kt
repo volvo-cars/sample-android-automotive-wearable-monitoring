@@ -49,7 +49,7 @@ class WearableMonitorFragment : Fragment() {
     private var _binding: FragmentWearableMonitorBinding? = null
     private val binding get() = _binding!!
     private val viewModel: WearableMonitorViewModel by viewModels()
-    private lateinit var _locale: Locale
+    private lateinit var locale: Locale
     private lateinit var minuteUpdateReceiver: BroadcastReceiver
     private lateinit var toolbarController: ToolbarController
 
@@ -62,7 +62,7 @@ class WearableMonitorFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentWearableMonitorBinding.inflate(inflater)
-        _locale = Locale.getDefault()
+        locale = Locale.getDefault()
         startForegroundService()
         // Schedule the periodic WorkManager job once when the view is first created.
         GlucoseFetchWorker.create(requireContext(), glucoseFetchWorker)
@@ -105,7 +105,7 @@ class WearableMonitorFragment : Fragment() {
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        _locale = newConfig.locales[0]
+        locale = newConfig.locales[0]
     }
 
     private fun observeGlucosePoints() = viewLifecycleOwner.lifecycleScope.launch {
@@ -176,7 +176,7 @@ class WearableMonitorFragment : Fragment() {
     private fun renderChart() {
         configureGlucoseChart()
         Log.d(TAG, "renderChart: ${viewModel.getThresholds()}")
-        binding.glucoseChart.xAxis.configure(viewModel.getTimeFormat(), _locale)
+        binding.glucoseChart.xAxis.configure(viewModel.getTimeFormat(), locale)
         binding.glucoseChart.axisLeft.configureGlucoseValues(
             viewModel.getThresholds().toLimitLines(requireContext(), viewModel.isUnitMmol()),
             viewModel.isUnitMmol(),
@@ -255,6 +255,6 @@ class WearableMonitorFragment : Fragment() {
     }
 
     companion object {
-        val TAG = WearableMonitorFragment::class.simpleName
+        private const val TAG = "WearableMonitorFragment"
     }
 }
